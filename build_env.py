@@ -682,11 +682,11 @@ if __name__ == "__main__":
     gst_rtsp_server_grp.add_argument('--with-gst-rtsp-server',
                                      help='build gst-rtsp-server (default, version:{0})'.format(
                                          gst_rtsp_server_default_version),
-                                     dest='with_gst_rtsp_server', action='store_true', default=True)
+                                     dest='with_gst_rtsp_server', action='store_true', default=False)
     gst_rtsp_server_grp.add_argument('--without-gst-rtsp-server', help='build without gst-rtsp-server',
                                      dest='with_gst_rtsp_server',
                                      action='store_false',
-                                     default=False)
+                                     default=True)
     parser.add_argument('--gst-rtsp-server-version',
                         help='gst-rtsp-server version (default: {0})'.format(gst_rtsp_server_default_version),
                         default=gst_rtsp_server_default_version)
