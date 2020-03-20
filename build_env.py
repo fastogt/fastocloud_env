@@ -374,7 +374,7 @@ def str2bool(v):
 
 if __name__ == "__main__":
     # openssl_default_version = '1.1.1b'
-    glib_default_version = '2.60.2'
+    # glib_default_version = '2.60.2'
     # cmake_default_version = '3.4.0'
     meson_default_version = '0.49.2'
     srt_default_version = '1.4.1'
@@ -641,7 +641,7 @@ if __name__ == "__main__":
                         help='install FastoGT packages (--with-common --with-fastotv-protocol) (default: True)',
                         dest='install_fastogt_packages', type=str2bool, default=True)
     parser.add_argument('--install-gstreamer-packages',
-                        help='install FastoGT packages  (--with-glib --with-glib-networking --with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --gst-libav) (default: True)',
+                        help='install FastoGT packages  (--with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --gst-libav) (default: True)',
                         dest='install_gstreamer_packages', type=str2bool, default=True)
 
     argv = parser.parse_args()
@@ -708,10 +708,10 @@ if __name__ == "__main__":
 
     # if argv.with_openssl:
     #    request.build_openssl(argv.openssl_version, True)
-    if argv.with_glib and arg_install_gstreamer_packages:
-        request.build_glib(argv.glib_version)
-    if argv.with_glib_networking and arg_install_gstreamer_packages:
-        request.build_glib_networking(argv.glib_version)
+    # if argv.with_glib and arg_install_gstreamer_packages:
+    #    request.build_glib(argv.glib_version)
+    # if argv.with_glib_networking and arg_install_gstreamer_packages:
+    #    request.build_glib_networking(argv.glib_version)
 
     if argv.with_gstreamer and arg_install_gstreamer_packages:
         request.build_gstreamer(argv.gstreamer_version)
