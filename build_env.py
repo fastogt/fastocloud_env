@@ -378,14 +378,8 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_libav(self, version):
-        compiler_flags = []
-        url = build_utils.generate_fastogt_git_path('gst-libav')
-        self._clone_and_build_via_autogen(url, compiler_flags)
-
-    def build_gst_rtsp_server(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
-                                                                  GST_PLUGINS_UGLY_ARCH_EXT)
+        url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
 
@@ -412,7 +406,6 @@ if __name__ == "__main__":
     gst_plugins_bad_default_version = gstreamer_default_version
     gst_plugins_ugly_default_version = gstreamer_default_version
     gst_libav_default_version = gstreamer_default_version
-    gst_rtsp_server_default_version = gstreamer_default_version
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
@@ -677,20 +670,6 @@ if __name__ == "__main__":
                         help='gst-libav version (default: {0})'.format(gst_libav_default_version),
                         default=gst_libav_default_version)
 
-    # gst-rtsp-server
-    gst_rtsp_server_grp = parser.add_mutually_exclusive_group()
-    gst_rtsp_server_grp.add_argument('--with-gst-rtsp-server',
-                                     help='build gst-rtsp-server (default, version:{0})'.format(
-                                         gst_rtsp_server_default_version),
-                                     dest='with_gst_rtsp_server', action='store_true', default=False)
-    gst_rtsp_server_grp.add_argument('--without-gst-rtsp-server', help='build without gst-rtsp-server',
-                                     dest='with_gst_rtsp_server',
-                                     action='store_false',
-                                     default=True)
-    parser.add_argument('--gst-rtsp-server-version',
-                        help='gst-rtsp-server version (default: {0})'.format(gst_rtsp_server_default_version),
-                        default=gst_rtsp_server_default_version)
-
     # other
     parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
@@ -798,8 +777,5 @@ if __name__ == "__main__":
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gst_libav_version)
-
-    if argv.with_gst_rtsp_server and arg_install_gstreamer_packages:
-        request.build_gst_rtsp_server(argv.gst_rtsp_server_version)
 
     check_plugins()
