@@ -313,7 +313,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_fastoml(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(build_utils.generate_fastogt_git_path('fastoml'), cmake_flags)
+        self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
 
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release', '-Dgtk_doc=disabled']
@@ -334,7 +334,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_plugins_bad(self, version, build_mfx: bool, build_vaapi: bool):
         compiler_flags = ['--buildtype=release', '-Dopenexr=disabled']
-        url = build_utils.generate_fastogt_git_path('gst-plugins-bad')
+        url = build_utils.generate_fastogt_github_path('gst-plugins-bad')
         self._clone_and_build_via_meson(url, compiler_flags)
         if build_mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
@@ -352,7 +352,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_fastoml(self):
         compiler_flags = ['--buildtype=release']
-        url = build_utils.generate_fastogt_git_path('gst-fastoml')
+        url = build_utils.generate_fastogt_github_path('gst-fastoml')
         self._clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_libav(self, version):
