@@ -13,10 +13,6 @@ if sys.version_info < (3, 5, 0):  # meson limitations
     print('Tried to start script with an unsupported version of Python. build_env requires Python 3.5.0 or greater')
     sys.exit(1)
 
-GLIB_SRC_ROOT = "http://ftp.acc.umu.se/pub/gnome/sources/glib"
-GLIB_ARCH_COMP = "xz"
-GLIB_ARCH_EXT = "tar." + GLIB_ARCH_COMP
-
 GSTREAMER_SRC_ROOT = "https://gstreamer.freedesktop.org/src/"
 GSTREAMER_ARCH_COMP = "xz"
 GSTREAMER_ARCH_EXT = "tar." + GSTREAMER_ARCH_COMP
@@ -40,10 +36,6 @@ GST_PLUGINS_UGLY_ARCH_EXT = 'tar.' + GST_PLUGINS_UGLY_ARCH_COMP
 GST_LIBAV_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_LIBAV_ARCH_COMP = 'xz'
 GST_LIBAV_ARCH_EXT = 'tar.' + GST_LIBAV_ARCH_COMP
-
-GLIB_NETWORKING_SRC_ROOT = 'https://ftp.gnome.org/pub/GNOME/sources/glib-networking'
-GLIB_NETWORKING_ARCH_COMP = 'xz'
-GLIB_NETWORKING_ARCH_EXT = 'tar.' + GLIB_NETWORKING_ARCH_COMP
 
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
@@ -87,7 +79,7 @@ class Debian(OperationSystem):
                 'libudev-dev']
 
     def get_gst_build_libs(self):
-        return ['libmount-dev', 'libssl-dev',
+        return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libfaad-dev', 'libmp3lame-dev',
@@ -113,7 +105,7 @@ class RedHat(OperationSystem):
                 'libudev-devel']
 
     def get_gst_build_libs(self):
-        return ['libmount-devel', 'openssl-devel',
+        return ['libmount-devel', 'openssl-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
                 'librtmp-devel', 'libsoup', 'libsoup-devel', 'libx264-devel', 'alsa-lib-devel', 'lame-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev',
@@ -134,7 +126,7 @@ class Arch(OperationSystem):
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo', 'udev']
 
     def get_gst_build_libs(self) -> list:
-        return ['libutil-linux', 'openssl',
+        return ['libutil-linux', 'openssl', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
                 'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2',
                 'zlib'  # 'libffi', 'pcre'
@@ -153,7 +145,7 @@ class FreeBSD(OperationSystem):
         return ['autoconf', 'automake', 'libtool', 'pkgconf', 'gettext', 'bison', 'flex', 'cairo', 'libudev-devd']
 
     def get_gst_build_libs(self):
-        return ['openssl',
+        return ['openssl', 'glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
                 'librtmp', 'libsoup', 'libx264', 'alsa-lib', 'libjpeg-turbo',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
@@ -173,7 +165,7 @@ class Windows64(OperationSystem):
         return []
 
     def get_gst_build_libs(self):
-        return []
+        return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking']
 
     def get_gst_repo_libs(self):
         return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking', 'mingw-w64-x86_64-gstreamer',
@@ -190,7 +182,7 @@ class Windows32(OperationSystem):
         return []
 
     def get_gst_build_libs(self):
-        return []
+        return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking']
 
     def get_gst_repo_libs(self):
         return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking', 'mingw-w64-i686-gstreamer',
@@ -206,7 +198,7 @@ class MacOSX(OperationSystem):
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo']
 
     def get_gst_build_libs(self):
-        return []
+        return ['glib2-devel', 'glib-networking']
 
     def get_gst_repo_libs(self):
         return ['glib2-devel', 'glib-networking', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
@@ -322,20 +314,6 @@ class BuildRequest(build_utils.BuildRequest):
     def build_fastoml(self):
         cmake_flags = []
         self._clone_and_build_via_cmake(build_utils.generate_fastogt_git_path('fastoml'), cmake_flags)
-
-    def build_glib(self, version):
-        compiler_flags = ['--buildtype=release', '-Dgtk_doc=false']
-        glib_version_short = version[:version.rfind('.')]
-        url = '{0}/{1}/glib-{2}.{3}'.format(GLIB_SRC_ROOT, glib_version_short,
-                                            version, GLIB_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
-
-    def build_glib_networking(self, version):
-        glib_version_short = version[:version.rfind('.')]
-        compiler_flags = ['--buildtype=release', '-Dopenssl=enabled']
-        url = '{0}/{1}/glib-networking-{2}.{3}'.format(GLIB_NETWORKING_SRC_ROOT, glib_version_short,
-                                                       version, GLIB_NETWORKING_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
 
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release', '-Dgtk_doc=disabled']
@@ -545,28 +523,6 @@ if __name__ == "__main__":
     fastoml_grp.add_argument('--without-fastoml', help='build without fastoml', dest='with_fastoml',
                              action='store_false',
                              default=True)
-
-    # glib
-    glib_grp = parser.add_mutually_exclusive_group()
-    glib_grp.add_argument('--with-glib', help='build glib (default, version:{0})'.format(glib_default_version),
-                          dest='with_glib', action='store_true', default=True)
-    glib_grp.add_argument('--without-glib', help='build without glib', dest='with_glib', action='store_false',
-                          default=False)
-    parser.add_argument('--glib-version', help='glib version (default: {0})'.format(glib_default_version),
-                        default=glib_default_version)
-
-    # glib-networking
-    glib_networking_grp = parser.add_mutually_exclusive_group()
-    glib_networking_grp.add_argument('--with-glib-networking',
-                                     help='build glib-networking (default, version:{0})'.format(glib_default_version),
-                                     dest='with_glib_networking', action='store_true', default=True)
-    glib_networking_grp.add_argument('--without-glib-networking', help='build without glib-networking',
-                                     dest='with_glib_networking',
-                                     action='store_false',
-                                     default=False)
-    parser.add_argument('--glib-networking-version',
-                        help='glib networking version (default: {0})'.format(glib_default_version),
-                        default=glib_default_version)
 
     # openssl
     # openssl_grp = parser.add_mutually_exclusive_group()
