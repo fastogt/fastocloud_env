@@ -708,10 +708,6 @@ if __name__ == "__main__":
 
     # if argv.with_openssl:
     #    request.build_openssl(argv.openssl_version, True)
-    # if argv.with_glib and arg_install_gstreamer_packages:
-    #    request.build_glib(argv.glib_version)
-    # if argv.with_glib_networking and arg_install_gstreamer_packages:
-    #    request.build_glib_networking(argv.glib_version)
 
     if argv.with_gstreamer and arg_install_gstreamer_packages:
         request.build_gstreamer(argv.gstreamer_version)

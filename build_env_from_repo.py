@@ -13,7 +13,7 @@ class BuildRequestRepo(BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
 
-    def get_system_libs(self):
+    def get_system_libs(self, repo_build=False):
         dep_libs = super(BuildRequestRepo, self).get_system_libs(True)
         return dep_libs
 
