@@ -356,9 +356,9 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_libav(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = []
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_autogen(url, compiler_flags)
 
 
 def str2bool(v):
