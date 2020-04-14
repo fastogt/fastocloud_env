@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import argparse
 
-from pyfastogt import system_info
-from check_plugins import check_plugins
 from build_env import BuildRequest, str2bool
+from check_plugins import check_plugins
+from pyfastogt import system_info
 
 
 # Script for building environment on clean machine from repo
@@ -13,8 +13,8 @@ class BuildRequestRepo(BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
 
-    def get_system_libs(self, repo_build=False):
-        dep_libs = super(BuildRequestRepo, self).get_system_libs(True)
+    def get_system_libs(self):
+        dep_libs = super(BuildRequestRepo, self).get_system_libs(False, True)
         return dep_libs
 
 
