@@ -83,7 +83,7 @@ class Debian(OperationSystem):
                 'libudev-dev']
 
     def get_nvidia_libs(self) -> list:
-        return ['nvidia-cuda-dev']
+        return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
 
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
