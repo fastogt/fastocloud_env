@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     request = BuildRequestRepo(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
     if argv.with_system and arg_install_other_packages:
-        request.install_system()
+        request.install_system(False)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
