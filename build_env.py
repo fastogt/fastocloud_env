@@ -4,8 +4,9 @@ import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
 
-from check_plugins import check_plugins
 from pyfastogt import system_info, build_utils, utils
+
+from check_plugins import check_plugins
 
 # Script for building environment on clean machine
 
@@ -287,8 +288,8 @@ class BuildRequest(build_utils.BuildRequest):
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
 
-    def install_system(self, with_nvidia):
-        dep_libs = self.get_system_libs(with_nvidia)
+    def install_system(self, with_nvidia, repo_build):
+        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
 
@@ -696,7 +697,7 @@ if __name__ == "__main__":
         request.prepare_docker()
 
     if argv.with_system and arg_install_other_packages:
-        request.install_system(argv.with_nvidia)
+        request.install_system(argv.with_nvidia, False)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()

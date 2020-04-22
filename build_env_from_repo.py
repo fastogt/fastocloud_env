@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 
+from pyfastogt import system_info
+
 from build_env import BuildRequest, str2bool
 from check_plugins import check_plugins
-from pyfastogt import system_info
 
 
 # Script for building environment on clean machine from repo
@@ -13,8 +14,8 @@ class BuildRequestRepo(BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
 
-    def get_system_libs(self):
-        dep_libs = super(BuildRequestRepo, self).get_system_libs(with_nvidia=False, repo_build=True)
+    def get_system_libs(self, with_nvidia=False, repo_build=False):
+        dep_libs = super(BuildRequestRepo, self).get_system_libs(with_nvidia=with_nvidia, repo_build=True)
         return dep_libs
 
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
 
     request = BuildRequestRepo(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
     if argv.with_system and arg_install_other_packages:
-        request.install_system(with_nvidia=False)
+        request.install_system(with_nvidia=False, repo_build=False)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
