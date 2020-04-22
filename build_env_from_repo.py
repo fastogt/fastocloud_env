@@ -14,7 +14,7 @@ class BuildRequestRepo(BuildRequest):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
 
     def get_system_libs(self):
-        dep_libs = super(BuildRequestRepo, self).get_system_libs(False, True)
+        dep_libs = super(BuildRequestRepo, self).get_system_libs(with_nvidia=False, repo_build=True)
         return dep_libs
 
 
