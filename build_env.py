@@ -4,9 +4,8 @@ import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
 
-from pyfastogt import system_info, build_utils, utils
-
 from check_plugins import check_plugins
+from pyfastogt import system_info, build_utils, utils
 
 # Script for building environment on clean machine
 
@@ -385,9 +384,9 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_libav(self, version):
-        compiler_flags = []
+        compiler_flags = ['--buildtype=release']
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
-        self._download_and_build_via_autogen(url, compiler_flags)
+        self._clone_and_build_via_meson(url, compiler_flags)
 
 
 def str2bool(v):
@@ -510,6 +509,13 @@ if __name__ == "__main__":
                          default=False)
     parser.add_argument('--srt-version', help='srt version (default: {0})'.format(srt_default_version),
                         default=srt_default_version)
+
+    # ffmpeg
+    ffmpeg_grp = parser.add_mutually_exclusive_group()
+    ffmpeg_grp.add_argument('--with-ffmpeg', help='build ffmpeg (default, version: git master)', dest='with_ffmpeg',
+                            action='store_true', default=True)
+    ffmpeg_grp.add_argument('--without-ffmpeg', help='build without ffmpeg', dest='with_ffmpeg', action='store_false',
+                            default=False)
 
     # opencv
     opencv_grp = parser.add_mutually_exclusive_group()
@@ -727,6 +733,9 @@ if __name__ == "__main__":
 
     if argv.with_srt and arg_install_other_packages:
         request.build_srt(argv.srt_version)
+
+    if argv.with_ffmpeg and arg_install_other_packages:
+        request.build_ffmpeg()
 
     if argv.with_opencv and arg_install_other_packages:
         request.build_opencv()
