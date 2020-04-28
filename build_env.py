@@ -4,8 +4,9 @@ import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
 
-from check_plugins import check_plugins
 from pyfastogt import system_info, build_utils, utils
+
+from check_plugins import check_plugins
 
 # Script for building environment on clean machine
 
@@ -76,7 +77,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'cmake', 'python3-pip']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkg-config', 'gettext', 'bison', 'flex', 'libcairo2-dev',
@@ -105,7 +106,7 @@ class Debian(OperationSystem):
 
 class RedHat(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'cmake', 'python3-pip']
+        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo-gobject-devel',
@@ -130,7 +131,7 @@ class RedHat(OperationSystem):
 
 class Arch(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo', 'udev']
@@ -152,7 +153,7 @@ class Arch(OperationSystem):
 
 class FreeBSD(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'dbus']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel', 'dbus']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconf', 'gettext', 'bison', 'flex', 'cairo', 'libudev-devd']
@@ -214,7 +215,7 @@ class Windows32(OperationSystem):
 
 class MacOSX(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'cmake', 'python3-pip']
+        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo']
