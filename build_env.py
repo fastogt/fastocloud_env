@@ -9,7 +9,7 @@ from pyfastogt import system_info, build_utils, utils
 
 from check_plugins import check_plugins
 
-_file_path = os.path.dirname(__file__)
+_file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
 
