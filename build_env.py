@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import os
 import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
@@ -312,8 +313,9 @@ class BuildRequest(build_utils.BuildRequest):
         # post install step
         platform = self.platform()
         platform_name = platform.name()
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         if platform_name == 'linux':
-            subprocess.call(['cp', 'nginx/fastocloud', '/etc/nginx/sites-enabled/fastocloud'])
+            subprocess.call(['cp', os.path.join(script_dir, 'nginx/fastocloud'), '/etc/nginx/sites-enabled/fastocloud'])
 
     def build_faac(self):
         compiler_flags = []
