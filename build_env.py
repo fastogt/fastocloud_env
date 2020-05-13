@@ -9,6 +9,8 @@ from pyfastogt import system_info, build_utils, utils
 
 from check_plugins import check_plugins
 
+_file_path = os.path.dirname(__file__)
+
 # Script for building environment on clean machine
 
 if sys.version_info < (3, 5, 0):  # meson limitations
@@ -313,9 +315,8 @@ class BuildRequest(build_utils.BuildRequest):
         # post install step
         platform = self.platform()
         platform_name = platform.name()
-        script_dir = os.path.dirname(os.path.abspath(__file__))
         if platform_name == 'linux':
-            subprocess.call(['cp', os.path.join(script_dir, 'nginx/fastocloud'), '/etc/nginx/sites-enabled/fastocloud'])
+            subprocess.call(['cp', os.path.join(_file_path, 'nginx/fastocloud'), '/etc/nginx/sites-enabled/fastocloud'])
 
     def build_faac(self):
         compiler_flags = []
