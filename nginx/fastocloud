@@ -1,0 +1,19 @@
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  server_name _;
+
+  location /fastocloud/hls/ {
+    alias /home/fastocloud/streamer/hls/;
+  }
+  location /fastocloud/cods/ {
+    alias /home/fastocloud/streamer/cods/;
+  }
+  location /fastocloud/vods/ {
+    alias /home/fastocloud/streamer/vods/;
+  }
+  location /fastocloud/timeshifts/ {
+    alias /home/fastocloud/streamer/timeshifts/;
+  }
+}

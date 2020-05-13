@@ -38,6 +38,14 @@ if __name__ == "__main__":
     tools_grp.add_argument('--without-tools', help='build without tools dependencies', dest='with_tools',
                            action='store_false', default=False)
 
+    # nginx
+    nginx_grp = parser.add_mutually_exclusive_group()
+    nginx_grp.add_argument('--with-nginx', help='install nginx and fastocloud scripts', dest='with_nginx',
+                           action='store_true', default=True)
+    nginx_grp.add_argument('--without-nginx', help='without nginx and fastocloud scripts', dest='with_nginx',
+                           action='store_false',
+                           default=False)
+
     # json-c
     jsonc_grp = parser.add_mutually_exclusive_group()
     jsonc_grp.add_argument('--with-json-c', help='build json-c (default, version: git master)', dest='with_jsonc',
@@ -98,6 +106,9 @@ if __name__ == "__main__":
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
+
+    if argv.with_nginx and arg_install_other_packages:
+        request.install_nginx()
 
     if argv.with_jsonc and arg_install_other_packages:
         request.build_jsonc()

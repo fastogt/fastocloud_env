@@ -307,6 +307,14 @@ class BuildRequest(build_utils.BuildRequest):
         self._install_via_python3('streamlink')
         self._install_via_python3('speedtest-cli')
 
+    def install_nginx(self):
+        self._install_package('nginx')
+        # post install step
+        platform = self.platform()
+        platform_name = platform.name()
+        if platform_name == 'linux':
+            subprocess.call(['cp', 'nginx/fastocloud', '/etc/nginx/sites-enabled/fastocloud'])
+
     def build_faac(self):
         compiler_flags = []
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
@@ -440,6 +448,14 @@ if __name__ == "__main__":
     #                       default=False)
     # parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
     #                    default=cmake_default_version)
+
+    # nginx
+    nginx_grp = parser.add_mutually_exclusive_group()
+    nginx_grp.add_argument('--with-nginx', help='install nginx and fastocloud scripts', dest='with_nginx',
+                           action='store_true', default=True)
+    nginx_grp.add_argument('--without-nginx', help='without nginx and fastocloud scripts', dest='with_nginx',
+                           action='store_false',
+                           default=False)
 
     # faac
     faac_grp = parser.add_mutually_exclusive_group()
@@ -708,6 +724,9 @@ if __name__ == "__main__":
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
+
+    if argv.with_nginx and arg_install_other_packages:
+        request.install_nginx()
 
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
