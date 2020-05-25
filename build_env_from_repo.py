@@ -53,6 +53,15 @@ if __name__ == "__main__":
     jsonc_grp.add_argument('--without-json-c', help='build without json-c', dest='with_jsonc', action='store_false',
                            default=False)
 
+    # tinyxml2
+    tinyxml2_grp = parser.add_mutually_exclusive_group()
+    tinyxml2_grp.add_argument('--with-tinyxml2', help='build tinyxml2 (default, version: git master)',
+                              dest='with_tinyxml2',
+                              action='store_true', default=True)
+    tinyxml2_grp.add_argument('--without-tinyxml2', help='build without tinyxml2', dest='with_tinyxml2',
+                              action='store_false',
+                              default=False)
+    
     # libev
     libev_grp = parser.add_mutually_exclusive_group()
     libev_grp.add_argument('--with-libev', help='build libev (default, version: git master)', dest='with_libev',
@@ -112,6 +121,8 @@ if __name__ == "__main__":
 
     if argv.with_jsonc and arg_install_other_packages:
         request.build_jsonc()
+    if argv.with_tinyxml2 and arg_install_other_packages:
+       request.build_tinyxml2()
     if argv.with_libev and arg_install_other_packages:
         request.build_libev()
     if argv.with_common and arg_install_fastogt_packages:
