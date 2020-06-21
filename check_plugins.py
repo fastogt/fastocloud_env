@@ -130,7 +130,9 @@ PLUGINS = ['decodebin',
            'tinyyolov2',
            'tinyyolov3',
            'detectionoverlay',
-           'kvssink']
+           'kvssink',
+           'nvinfer',
+           'nvvideoconvert']
 
 
 def check_plugins():
