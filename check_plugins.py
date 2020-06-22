@@ -137,7 +137,8 @@ PLUGINS = ['decodebin',
            'nvv4l2h264enc',
            'nvv4l2h265enc',
            'nvv4l2vp8enc',
-           'nvv4l2vp9enc']
+           'nvv4l2vp9enc',
+           'nvdsosd']
 
 
 def check_plugins():
