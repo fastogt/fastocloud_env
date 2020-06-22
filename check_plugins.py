@@ -133,7 +133,11 @@ PLUGINS = ['decodebin',
            'kvssink',
            'nvinfer',
            'nvvideoconvert', 
-           'nvstreammux']
+           'nvstreammux',
+           'nvv4l2h264enc',
+           'nvv4l2h265enc',
+           'nvv4l2vp8enc',
+           'nvv4l2vp9enc']
 
 
 def check_plugins():
