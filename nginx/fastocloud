@@ -16,4 +16,7 @@ server {
   location /fastocloud/timeshifts/ {
     alias /home/fastocloud/streamer/timeshifts/;
   }
+  location /fastocloud/proxy/ {
+    alias /home/fastocloud/streamer/proxy/;
+  }
 }
