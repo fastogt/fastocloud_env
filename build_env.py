@@ -100,7 +100,7 @@ class Debian(OperationSystem):
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libfaad-dev', 'libmp3lame-dev',
-                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev',
+                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
                 ]  # libgstreamer-plugins-base1.0-dev
@@ -128,7 +128,7 @@ class RedHat(OperationSystem):
         return ['libmount-devel', 'openssl-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
                 'librtmp-devel', 'libsoup', 'libsoup-devel', 'libx264-devel', 'alsa-lib-devel', 'lame-devel',
-                'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev',
+                'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
                 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
                 ]
 
