@@ -371,7 +371,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
 
     def build_aws(self):
-        cmake_flags = ['-DBUILD_ONLY=\"s3;sts\"']
+        cmake_flags = ['-DBUILD_ONLY=s3;sts']
         self._clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
 
     def build_gstreamer(self, version):
