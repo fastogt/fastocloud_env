@@ -46,6 +46,8 @@ GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
 
 TINYXML2_URL = 'https://github.com/leethomason/tinyxml2'
+AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
+AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
@@ -368,6 +370,10 @@ class BuildRequest(build_utils.BuildRequest):
         cmake_flags = []
         self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
 
+    def build_aws(self):
+        cmake_flags = ['-DBUILD_ONLY=\"s3\"', '-DBUILD_ONLY=\"sts\"']
+        self._clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
+
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release', '-Dgtk_doc=disabled']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
@@ -407,6 +413,10 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         url = build_utils.generate_fastogt_github_path('gst-fastoml')
         self._clone_and_build_via_meson(url, compiler_flags)
+
+    def build_gst_awss3(self):
+        compiler_flags = ['--buildtype=release']
+        self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
@@ -616,6 +626,15 @@ if __name__ == "__main__":
                              action='store_false',
                              default=True)
 
+    # aws
+    aws_grp = parser.add_mutually_exclusive_group()
+    aws_grp.add_argument('--with-aws', help='build aws (default, version: git master)',
+                         dest='with_aws',
+                         action='store_true', default=False)
+    aws_grp.add_argument('--without-aws', help='build without aws', dest='with_aws',
+                         action='store_false',
+                         default=True)
+
     # openssl
     # openssl_grp = parser.add_mutually_exclusive_group()
     # openssl_grp.add_argument('--with-openssl',
@@ -703,6 +722,15 @@ if __name__ == "__main__":
     gst_fastoml_grp.add_argument('--without-gst-fastoml', help='build without gst-fastoml', dest='with_gst_fastoml',
                                  action='store_false',
                                  default=True)
+
+    # gst-aws-s3
+    gst_awss3_grp = parser.add_mutually_exclusive_group()
+    gst_awss3_grp.add_argument('--with-gst-awss3', help='build gst-awss3 (default, version: git master)',
+                               dest='with_gst_awss3',
+                               action='store_true', default=False)
+    gst_awss3_grp.add_argument('--without-gst-awss3', help='build without gst-awss3', dest='with_gst_awss3',
+                               action='store_false',
+                               default=True)
 
     # gst-libav
     gst_libav_grp = parser.add_mutually_exclusive_group()
@@ -811,6 +839,8 @@ if __name__ == "__main__":
         request.build_tinyxml2()
     if argv.with_libev and arg_install_other_packages:
         request.build_libev()
+    if argv.with_aws and arg_install_other_packages:
+        request.build_aws()
     if argv.with_common and arg_install_fastogt_packages:
         request.build_common()
 
@@ -840,6 +870,9 @@ if __name__ == "__main__":
 
     if argv.with_gst_fastoml and arg_install_gstreamer_packages:
         request.build_gst_fastoml()
+
+    if argv.with_awss3 and arg_install_gstreamer_packages:
+        request.build_gst_awss3()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gst_libav_version)
