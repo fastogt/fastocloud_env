@@ -871,7 +871,7 @@ if __name__ == "__main__":
     if argv.with_gst_fastoml and arg_install_gstreamer_packages:
         request.build_gst_fastoml()
 
-    if argv.with_awss3 and arg_install_gstreamer_packages:
+    if argv.with_gst_awss3 and arg_install_gstreamer_packages:
         request.build_gst_awss3()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
