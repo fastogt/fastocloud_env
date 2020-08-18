@@ -100,7 +100,7 @@ class Debian(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
-                'libblkid-dev', 'libsoup2.4', 'libsoup2.4-dev', 'libjpeg-dev',
+                'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libfaad-dev', 'libmp3lame-dev', 'libopus-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
