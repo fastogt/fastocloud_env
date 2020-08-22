@@ -101,7 +101,8 @@ class Debian(OperationSystem):
         return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
-                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libfaad-dev', 'libmp3lame-dev', 'libopus-dev',
+                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
+                'libopus-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
@@ -129,7 +130,7 @@ class RedHat(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-devel', 'openssl-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
-                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'alsa-lib-devel', 'lame-devel',
+                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
                 'libopus-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
                 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
@@ -177,7 +178,7 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['openssl', 'glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'alsa-lib', 'libjpeg-turbo', 'libopus',
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
