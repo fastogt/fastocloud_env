@@ -608,16 +608,12 @@ if __name__ == "__main__":
                             action='store_false',
                             default=False)
 
-    # fastotv_protocol
-    fastotv_protocol_grp = parser.add_mutually_exclusive_group()
-    fastotv_protocol_grp.add_argument('--with-fastotv-protocol',
-                                      help='build fastotv_protocol (default, version: git master)',
-                                      dest='with_fastotv_protocol',
-                                      action='store_true', default=True)
-    fastotv_protocol_grp.add_argument('--without-fastotv-protocol', help='build without fastotv_protocol',
-                                      dest='with_fastotv_protocol',
-                                      action='store_false',
-                                      default=False)
+    # fastotv_cpp
+    fastotv_cpp_grp = parser.add_mutually_exclusive_group()
+    fastotv_cpp_grp.add_argument('--with-fastotv-cpp', help='build fastotv_cpp (default, version: git master)',
+                                 dest='with_fastotv_cpp', action='store_true', default=True)
+    fastotv_cpp_grp.add_argument('--without-fastotv-cpp', help='build without fastotv_cpp', dest='with_fastotv_cpp',
+                                 action='store_false', default=False)
 
     # fastoml
     fastoml_grp = parser.add_mutually_exclusive_group()
@@ -774,7 +770,7 @@ if __name__ == "__main__":
                         help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
-                        help='install FastoGT packages (--with-common --with-fastotv-protocol) (default: True)',
+                        help='install FastoGT packages (--with-common --with-fastotv-cpp) (default: True)',
                         dest='install_fastogt_packages', type=str2bool, default=True)
     parser.add_argument('--install-gstreamer-packages',
                         help='install FastoGT packages  (--with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --with-gst-libav --with-gst-rtsp) (default: True)',
@@ -846,8 +842,8 @@ if __name__ == "__main__":
     if argv.with_common and arg_install_fastogt_packages:
         request.build_common()
 
-    if argv.with_fastotv_protocol and arg_install_fastogt_packages:
-        request.build_fastotv_protocol()
+    if argv.with_fastotv_cpp and arg_install_fastogt_packages:
+        request.build_fastotv_cpp()
 
     if argv.with_fastoml and arg_install_fastogt_packages:
         request.build_fastoml()
