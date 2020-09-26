@@ -142,13 +142,14 @@ PLUGINS = ['decodebin',
            's3sink',
            'nvinfer',
            'nvtracker',
-           'nvvideoconvert', 
+           'nvvideoconvert',
            'nvstreammux',
            'nvv4l2h264enc',
            'nvv4l2h265enc',
            'nvv4l2vp8enc',
            'nvv4l2vp9enc',
-           'nvdsosd']
+           'nvdsosd',
+           'dsfastogt']
 
 
 def check_plugins():
