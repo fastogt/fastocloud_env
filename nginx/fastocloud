@@ -4,6 +4,8 @@ server {
 
   server_name _;
 
+  add_header Access-Control-Allow-Origin *;
+  
   location /fastocloud/hls/ {
     alias /home/fastocloud/streamer/hls/;
   }
