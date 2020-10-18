@@ -21,4 +21,7 @@ server {
   location /fastocloud/proxy/ {
     alias /home/fastocloud/streamer/proxy/;
   }
+  location /fastocloud/data/ {
+    alias /home/fastocloud/streamer/data/;
+  }
 }
