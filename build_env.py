@@ -448,7 +448,7 @@ if __name__ == "__main__":
     # cmake_default_version = '3.4.0'
     meson_default_version = '0.49.2'
     srt_default_version = '1.4.2'
-    gstreamer_default_version = '1.18.1'
+    gstreamer_default_version = '1.18.2'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
