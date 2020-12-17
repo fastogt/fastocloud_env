@@ -14,10 +14,6 @@ class BuildRequestRepo(BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
 
-    def get_system_libs(self, with_nvidia=False, repo_build=False):
-        dep_libs = super(BuildRequestRepo, self).get_system_libs(with_nvidia=with_nvidia, repo_build=True)
-        return dep_libs
-
 
 if __name__ == "__main__":
     host_os = system_info.get_os()
@@ -61,7 +57,7 @@ if __name__ == "__main__":
     tinyxml2_grp.add_argument('--without-tinyxml2', help='build without tinyxml2', dest='with_tinyxml2',
                               action='store_false',
                               default=False)
-    
+
     # libev
     libev_grp = parser.add_mutually_exclusive_group()
     libev_grp.add_argument('--with-libev', help='build libev (default, version: git master)', dest='with_libev',
@@ -107,7 +103,7 @@ if __name__ == "__main__":
 
     request = BuildRequestRepo(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
     if argv.with_system and arg_install_other_packages:
-        request.install_system(with_nvidia=False, repo_build=True)
+        request.install_system(with_nvidia=False, with_mongo=False, with_gstreamer=True, repo_build=True)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
@@ -118,7 +114,7 @@ if __name__ == "__main__":
     if argv.with_jsonc and arg_install_other_packages:
         request.build_jsonc()
     if argv.with_tinyxml2 and arg_install_other_packages:
-       request.build_tinyxml2()
+        request.build_tinyxml2()
     if argv.with_libev and arg_install_other_packages:
         request.build_libev()
     if argv.with_common and arg_install_fastogt_packages:

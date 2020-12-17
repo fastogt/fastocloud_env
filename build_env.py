@@ -79,6 +79,10 @@ class OperationSystem(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def get_mongo_libs(self) -> list:
+        pass
+
+    @abstractmethod
     def get_gst_build_libs(self):
         pass
 
@@ -96,6 +100,9 @@ class Debian(OperationSystem):
 
     def get_nvidia_libs(self) -> list:
         return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
+
+    def get_mongo_libs(self) -> list:
+        return ['libmongoc-dev']
 
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
@@ -127,6 +134,9 @@ class RedHat(OperationSystem):
     def get_nvidia_libs(self) -> list:
         return []
 
+    def get_mongo_libs(self) -> list:
+        return ['libmongoc-devel']
+
     def get_gst_build_libs(self):
         return ['libmount-devel', 'openssl-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
@@ -153,6 +163,9 @@ class Arch(OperationSystem):
     def get_nvidia_libs(self) -> list:
         return []
 
+    def get_mongo_libs(self) -> list:
+        return ['libmongoc']
+
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'openssl', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
@@ -174,6 +187,9 @@ class FreeBSD(OperationSystem):
 
     def get_nvidia_libs(self) -> list:
         return []
+
+    def get_mongo_libs(self) -> list:
+        return ['libmongoc']
 
     def get_gst_build_libs(self):
         return ['openssl', 'glib2-devel', 'glib-networking',
@@ -198,6 +214,9 @@ class Windows64(OperationSystem):
     def get_nvidia_libs(self) -> list:
         return []
 
+    def get_mongo_libs(self) -> list:
+        return []
+
     def get_gst_build_libs(self):
         return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking']
 
@@ -217,6 +236,9 @@ class Windows32(OperationSystem):
         return []
 
     def get_nvidia_libs(self) -> list:
+        return []
+
+    def get_mongo_libs(self) -> list:
         return []
 
     def get_gst_build_libs(self):
@@ -239,6 +261,9 @@ class MacOSX(OperationSystem):
     def get_nvidia_libs(self) -> list:
         return []
 
+    def get_mongo_libs(self) -> list:
+        return ['libmongo']
+
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking']
 
@@ -251,7 +276,7 @@ class BuildRequest(build_utils.BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         build_utils.BuildRequest.__init__(self, platform, arch_name, dir_path, prefix_path)
 
-    def get_system_libs(self, with_nvidia=False, repo_build=False):
+    def get_system_libs(self, with_nvidia, with_mongo, with_gstreamer, repo_build):
         platform = self.platform_
         platform_name = platform.name()
         ar = platform.architecture()
@@ -291,21 +316,26 @@ class BuildRequest(build_utils.BuildRequest):
         if not current_system:
             raise NotImplementedError("Unknown platform '%s'" % platform_name)
 
-        if repo_build:
-            dep_libs.extend(current_system.get_gst_repo_libs())
-        else:
-            dep_libs.extend(current_system.get_gst_build_libs())
+        if with_gstreamer:
+            if repo_build:
+                dep_libs.extend(current_system.get_gst_repo_libs())
+            else:
+                dep_libs.extend(current_system.get_gst_build_libs())
 
         if with_nvidia:
             dep_libs.extend(current_system.get_nvidia_libs())
+
+        if with_mongo:
+            dep_libs.extend(current_system.get_mongo_libs())
 
         return dep_libs
 
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
 
-    def install_system(self, with_nvidia, repo_build):
-        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, repo_build=repo_build)
+    def install_system(self, with_nvidia, with_mongo, with_gstreamer, repo_build):
+        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_mongo=with_mongo, with_gstreamer=with_gstreamer,
+                                        repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
 
@@ -552,6 +582,15 @@ if __name__ == "__main__":
                             action='store_false',
                             default=True)
 
+    # mongo
+    mongo_grp = parser.add_mutually_exclusive_group()
+    mongo_grp.add_argument('--with-mongo', help='build mongo (default, version: git master)',
+                           dest='with_mongo',
+                           action='store_true', default=False)
+    mongo_grp.add_argument('--without-mongo', help='build without mongo', dest='with_mongo',
+                           action='store_false',
+                           default=True)
+
     # srt
     srt_grp = parser.add_mutually_exclusive_group()
     srt_grp.add_argument('--with-srt', help='build srt (default, version:{0})'.format(srt_default_version),
@@ -791,7 +830,8 @@ if __name__ == "__main__":
         request.prepare_docker()
 
     if argv.with_system and arg_install_other_packages:
-        request.install_system(argv.with_nvidia, False)
+        request.install_system(with_nvidia=argv.with_nvidia, with_mongo=argv.with_mongo, with_gstreamer=True,
+                               repo_build=False)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
