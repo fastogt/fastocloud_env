@@ -75,6 +75,10 @@ class OperationSystem(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def get_build_gst_exec(self) -> list:
+        pass
+
+    @abstractmethod
     def get_nvidia_libs(self) -> list:
         pass
 
@@ -95,8 +99,10 @@ class Debian(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkg-config', 'gettext', 'bison', 'flex', 'libcairo2-dev',
-                'libudev-dev']
+        return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev']
+
+    def get_build_gst_exec(self) -> list:
+        return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
@@ -110,13 +116,13 @@ class Debian(OperationSystem):
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
                 'libopus-dev',
-                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
+                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev', 'libcairo2-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
                 ]  # libgstreamer-plugins-base1.0-dev
 
     def get_gst_repo_libs(self):
-        return ['libglib2.0-dev', 'glib-networking', 'libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
+        return ['libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
                 'libgstreamer-plugins-good1.0-dev', 'libgstreamer-plugins-bad1.0-dev', 'libgstrtspserver-1.0-dev',
                 'gstreamer1.0-tools',
                 'gstreamer1.0-plugins-base', 'gstreamer1.0-plugins-good', 'gstreamer1.0-plugins-bad',
@@ -128,8 +134,10 @@ class RedHat(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo-gobject-devel',
-                'libudev-devel']
+        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel']
+
+    def get_build_gst_exec(self) -> list:
+        return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
@@ -143,11 +151,12 @@ class RedHat(OperationSystem):
                 'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
                 'libopus-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
+                'cairo-gobject-devel',
                 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['glib2-devel', 'glib-networking', 'gstreamer1', 'gstreamer1-plugins-base',
+        return ['gstreamer1', 'gstreamer1-plugins-base',
                 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad-free', 'gstreamer1-plugins-ugly-free', 'gstreamer1-libav',
                 'gstreamer1-rtsp-server']
@@ -158,7 +167,10 @@ class Arch(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo', 'udev']
+        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev']
+
+    def get_build_gst_exec(self) -> list:
+        return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
@@ -169,12 +181,12 @@ class Arch(OperationSystem):
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'openssl', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
-                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'opus',
+                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'opus', 'cairo',
                 'zlib'  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['glibc', 'glib-networking', 'gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
+        return ['gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
                 'gstreamer-plugins-bad', 'gstreamer-plugins-ugly', 'gstreamer-libav', 'gstreamer-rtsp-server']
 
 
@@ -183,7 +195,10 @@ class FreeBSD(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel', 'dbus']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconf', 'gettext', 'bison', 'flex', 'cairo', 'libudev-devd']
+        return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd']
+
+    def get_build_gst_exec(self) -> list:
+        return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
@@ -194,12 +209,12 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['openssl', 'glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus',
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'cairo',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['glib2-devel', 'glib-networking', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
 
 
@@ -209,6 +224,9 @@ class Windows64(OperationSystem):
                 'mingw-w64-x86_64-ninja', 'mingw-w64-x86_64-cmake', 'mingw-w64-x86_64-python3-pip']
 
     def get_build_exec(self) -> list:
+        return []
+
+    def get_build_gst_exec(self) -> list:
         return []
 
     def get_nvidia_libs(self) -> list:
@@ -221,7 +239,7 @@ class Windows64(OperationSystem):
         return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking']
 
     def get_gst_repo_libs(self):
-        return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking', 'mingw-w64-x86_64-gstreamer',
+        return ['mingw-w64-x86_64-gstreamer',
                 'mingw-w64-x86_64-gst-plugins-base', 'mingw-w64-x86_64-gst-plugins-good',
                 'mingw-w64-x86_64-gst-plugins-bad', 'mingw-w64-x86_64-gst-plugins-ugly', 'mingw-w64-x86_64-gst-libav',
                 'mingw-w64-x86_64-gst-rtsp-server']
@@ -233,6 +251,9 @@ class Windows32(OperationSystem):
                 'mingw-w64-i686-ninja', 'mingw-w64-i686-cmake', 'mingw-w64-i686-python3-pip']
 
     def get_build_exec(self) -> list:
+        return []
+
+    def get_build_gst_exec(self) -> list:
         return []
 
     def get_nvidia_libs(self) -> list:
@@ -256,7 +277,10 @@ class MacOSX(OperationSystem):
         return ['git', 'yasm', 'nasm', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'gettext', 'bison', 'flex', 'cairo']
+        return ['autoconf', 'automake', 'libtool', 'pkgconfig']
+
+    def get_build_gst_exec(self) -> list:
+        return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
@@ -265,10 +289,10 @@ class MacOSX(OperationSystem):
         return ['libmongo']
 
     def get_gst_build_libs(self):
-        return ['glib2-devel', 'glib-networking']
+        return ['glib2-devel', 'glib-networking', 'cairo']
 
     def get_gst_repo_libs(self):
-        return ['glib2-devel', 'glib-networking', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
 
 
@@ -287,39 +311,31 @@ class BuildRequest(build_utils.BuildRequest):
             distribution = system_info.linux_get_dist()
             if distribution == 'DEBIAN':
                 current_system = Debian()
-                dep_libs.extend(current_system.get_required_exec())
-                dep_libs.extend(current_system.get_build_exec())
             elif distribution == 'RHEL':
                 current_system = RedHat()
-                dep_libs.extend(current_system.get_required_exec())
-                dep_libs.extend(current_system.get_build_exec())
             elif distribution == 'ARCH':
                 current_system = Arch()
-                dep_libs.extend(current_system.get_required_exec())
-                dep_libs.extend(current_system.get_build_exec())
         elif platform_name == 'freebsd':
             current_system = FreeBSD()
-            dep_libs.extend(current_system.get_required_exec())
-            dep_libs.extend(current_system.get_build_exec())
         elif platform_name == 'macosx':
             current_system = MacOSX()
-            dep_libs.extend(current_system.get_required_exec())
-            dep_libs.extend(current_system.get_build_exec())
         elif platform_name == 'windows':
             if ar.bit() == 64:
                 current_system = Windows64()
-                dep_libs.extend(current_system.get_required_exec())
             elif ar.bit() == 32:
                 current_system = Windows32()
-                dep_libs.extend(current_system.get_required_exec())
 
         if not current_system:
             raise NotImplementedError("Unknown platform '%s'" % platform_name)
+
+        dep_libs.extend(current_system.get_required_exec())
+        dep_libs.extend(current_system.get_build_exec())
 
         if with_gstreamer:
             if repo_build:
                 dep_libs.extend(current_system.get_gst_repo_libs())
             else:
+                dep_libs.extend(current_system.get_build_gst_exec())
                 dep_libs.extend(current_system.get_gst_build_libs())
 
         if with_nvidia:

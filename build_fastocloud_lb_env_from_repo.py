@@ -4,7 +4,6 @@ import argparse
 from pyfastogt import system_info
 
 from build_env import BuildRequest, str2bool
-from check_plugins import check_plugins
 
 
 # Script for building environment on clean machine from repo
@@ -34,29 +33,12 @@ if __name__ == "__main__":
     tools_grp.add_argument('--without-tools', help='build without tools dependencies', dest='with_tools',
                            action='store_false', default=False)
 
-    # nginx
-    nginx_grp = parser.add_mutually_exclusive_group()
-    nginx_grp.add_argument('--with-nginx', help='install nginx and fastocloud scripts', dest='with_nginx',
-                           action='store_true', default=True)
-    nginx_grp.add_argument('--without-nginx', help='without nginx and fastocloud scripts', dest='with_nginx',
-                           action='store_false',
-                           default=False)
-
     # json-c
     jsonc_grp = parser.add_mutually_exclusive_group()
     jsonc_grp.add_argument('--with-json-c', help='build json-c (default, version: git master)', dest='with_jsonc',
                            action='store_true', default=True)
     jsonc_grp.add_argument('--without-json-c', help='build without json-c', dest='with_jsonc', action='store_false',
                            default=False)
-
-    # tinyxml2
-    tinyxml2_grp = parser.add_mutually_exclusive_group()
-    tinyxml2_grp.add_argument('--with-tinyxml2', help='build tinyxml2 (default, version: git master)',
-                              dest='with_tinyxml2',
-                              action='store_true', default=True)
-    tinyxml2_grp.add_argument('--without-tinyxml2', help='build without tinyxml2', dest='with_tinyxml2',
-                              action='store_false',
-                              default=False)
 
     # libev
     libev_grp = parser.add_mutually_exclusive_group()
@@ -108,13 +90,9 @@ if __name__ == "__main__":
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
 
-    if argv.with_nginx and arg_install_other_packages:
-        request.install_nginx()
-
     if argv.with_jsonc and arg_install_other_packages:
         request.build_jsonc()
-    if argv.with_tinyxml2 and arg_install_other_packages:
-        request.build_tinyxml2()
+
     if argv.with_libev and arg_install_other_packages:
         request.build_libev()
     if argv.with_common and arg_install_fastogt_packages:
@@ -122,5 +100,3 @@ if __name__ == "__main__":
 
     if argv.with_fastotv_cpp and arg_install_fastogt_packages:
         request.build_fastotv_cpp()
-
-    check_plugins()

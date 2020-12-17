@@ -19,7 +19,7 @@ cd ../
 rm -rf pyfastogt
 
 # build env for service
-./build_fastocloud_lb_env_from_repo.py --without-fastotv-cpp
+./build_fastocloud_lb_env_from_repo.py
 
 # add user
 useradd -m -U -d /home/$USER $USER -s /bin/bash
