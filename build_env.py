@@ -332,10 +332,10 @@ class BuildRequest(build_utils.BuildRequest):
         dep_libs.extend(current_system.get_build_exec())
 
         if with_gstreamer:
+            dep_libs.extend(current_system.get_build_gst_exec())
             if repo_build:
                 dep_libs.extend(current_system.get_gst_repo_libs())
             else:
-                dep_libs.extend(current_system.get_build_gst_exec())
                 dep_libs.extend(current_system.get_gst_build_libs())
 
         if with_nvidia:
