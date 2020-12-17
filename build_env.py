@@ -122,7 +122,7 @@ class Debian(OperationSystem):
                 ]  # libgstreamer-plugins-base1.0-dev
 
     def get_gst_repo_libs(self):
-        return ['libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
+        return ['libcairo2-dev', 'libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
                 'libgstreamer-plugins-good1.0-dev', 'libgstreamer-plugins-bad1.0-dev', 'libgstrtspserver-1.0-dev',
                 'gstreamer1.0-tools',
                 'gstreamer1.0-plugins-base', 'gstreamer1.0-plugins-good', 'gstreamer1.0-plugins-bad',
@@ -156,7 +156,7 @@ class RedHat(OperationSystem):
                 ]
 
     def get_gst_repo_libs(self):
-        return ['gstreamer1', 'gstreamer1-plugins-base',
+        return ['cairo-gobject-devel', 'gstreamer1', 'gstreamer1-plugins-base',
                 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad-free', 'gstreamer1-plugins-ugly-free', 'gstreamer1-libav',
                 'gstreamer1-rtsp-server']
@@ -186,7 +186,7 @@ class Arch(OperationSystem):
                 ]
 
     def get_gst_repo_libs(self):
-        return ['gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
+        return ['cairo', 'gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
                 'gstreamer-plugins-bad', 'gstreamer-plugins-ugly', 'gstreamer-libav', 'gstreamer-rtsp-server']
 
 
@@ -214,7 +214,7 @@ class FreeBSD(OperationSystem):
                 ]
 
     def get_gst_repo_libs(self):
-        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
 
 
@@ -266,7 +266,7 @@ class Windows32(OperationSystem):
         return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking']
 
     def get_gst_repo_libs(self):
-        return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking', 'mingw-w64-i686-gstreamer',
+        return ['mingw-w64-i686-gstreamer',
                 'mingw-w64-i686-gst-plugins-base', 'mingw-w64-i686-gst-plugins-good',
                 'mingw-w64-i686-gst-plugins-bad', 'mingw-w64-i686-gst-plugins-ugly', 'mingw-w64-i686-gst-libav',
                 'mingw-w64-i686-gst-rtsp-server']
@@ -292,7 +292,7 @@ class MacOSX(OperationSystem):
         return ['glib2-devel', 'glib-networking', 'cairo']
 
     def get_gst_repo_libs(self):
-        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
 
 
