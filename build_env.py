@@ -99,7 +99,7 @@ class Debian(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev']
+        return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
@@ -111,7 +111,7 @@ class Debian(OperationSystem):
         return ['libmongoc-dev']
 
     def get_gst_build_libs(self):
-        return ['libmount-dev', 'libssl-dev', 'libglib2.0-dev', 'glib-networking',
+        return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
@@ -134,7 +134,7 @@ class RedHat(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel']
+        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel', 'openssl-devel']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
@@ -146,7 +146,7 @@ class RedHat(OperationSystem):
         return ['libmongoc-devel']
 
     def get_gst_build_libs(self):
-        return ['libmount-devel', 'openssl-devel', 'glib2-devel', 'glib-networking',
+        return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
                 'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
                 'libopus-devel',
@@ -167,7 +167,7 @@ class Arch(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev']
+        return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev', 'openssl']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
@@ -179,7 +179,7 @@ class Arch(OperationSystem):
         return ['libmongoc']
 
     def get_gst_build_libs(self) -> list:
-        return ['libutil-linux', 'openssl', 'glibc', 'glib-networking',
+        return ['libutil-linux', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
                 'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'opus', 'cairo',
                 'zlib'  # 'libffi', 'pcre'
@@ -195,7 +195,7 @@ class FreeBSD(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel', 'dbus']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd']
+        return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd', 'openssl']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
@@ -207,7 +207,7 @@ class FreeBSD(OperationSystem):
         return ['libmongoc']
 
     def get_gst_build_libs(self):
-        return ['openssl', 'glib2-devel', 'glib-networking',
+        return ['glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
                 'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'cairo',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
@@ -489,9 +489,6 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    # openssl_default_version = '1.1.1b'
-    # glib_default_version = '2.60.2'
-    # cmake_default_version = '3.4.0'
     meson_default_version = '0.49.2'
     srt_default_version = '1.4.2'
     gstreamer_default_version = '1.18.2'
@@ -519,15 +516,6 @@ if __name__ == "__main__":
                            action='store_true', default=True)
     tools_grp.add_argument('--without-tools', help='build without tools dependencies', dest='with_tools',
                            action='store_false', default=False)
-
-    # cmake
-    # cmake_grp = parser.add_mutually_exclusive_group()
-    # cmake_grp.add_argument('--with-cmake', help='build cmake (default, version:{0})'.format(meson_default_version),
-    #                       dest='with_cmake', action='store_true', default=True)
-    # cmake_grp.add_argument('--without-cmake', help='build without cmake', dest='with_cmake', action='store_false',
-    #                       default=False)
-    # parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
-    #                    default=cmake_default_version)
 
     # nginx
     nginx_grp = parser.add_mutually_exclusive_group()
@@ -688,17 +676,6 @@ if __name__ == "__main__":
                          action='store_false',
                          default=True)
 
-    # openssl
-    # openssl_grp = parser.add_mutually_exclusive_group()
-    # openssl_grp.add_argument('--with-openssl',
-    #                         help='build openssl (default, version:{0})'.format(openssl_default_version),
-    #                         dest='with_openssl', action='store_true', default=True)
-    # openssl_grp.add_argument('--without-openssl', help='build without openssl', dest='with_openssl',
-    #                         action='store_false',
-    #                         default=False)
-    # parser.add_argument('--openssl-version', help='openssl version (default: {0})'.format(openssl_default_version),
-    #                    default=openssl_default_version)
-
     # gstreamer
     gstreamer_grp = parser.add_mutually_exclusive_group()
     gstreamer_grp.add_argument('--with-gstreamer',
@@ -858,9 +835,6 @@ if __name__ == "__main__":
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
 
-    # if argv.with_cmake:
-    #    request.build_cmake(argv.cmake_version)
-
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
 
@@ -903,9 +877,6 @@ if __name__ == "__main__":
 
     if argv.with_fastoml and arg_install_fastogt_packages:
         request.build_fastoml()
-
-    # if argv.with_openssl:
-    #    request.build_openssl(argv.openssl_version, True)
 
     if argv.with_gstreamer and arg_install_gstreamer_packages:
         request.build_gstreamer(argv.gstreamer_version)

@@ -4,7 +4,6 @@ import argparse
 from pyfastogt import system_info
 
 from build_env import BuildRequest, str2bool
-from check_plugins import check_plugins
 
 
 # Script for building environment on clean machine from repo
@@ -111,5 +110,3 @@ if __name__ == "__main__":
 
     if argv.with_fastotv_cpp and arg_install_fastogt_packages:
         request.build_fastotv_cpp()
-
-    check_plugins()
