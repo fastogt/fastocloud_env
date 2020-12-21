@@ -143,7 +143,7 @@ class RedHat(OperationSystem):
         return []
 
     def get_mongo_libs(self) -> list:
-        return ['libmongoc-devel']
+        return ['mongo-c-driver-devel']
 
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
