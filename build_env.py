@@ -384,7 +384,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_voaac(self):
         compiler_flags = []
-        self._download_and_build_via_bootstrap(VOOAAC_URL, compiler_flags)
+        self._download_and_build_via_autogen(VOOAAC_URL, compiler_flags)
 
     def build_libva(self):
         compiler_flags = ['--buildtype=release', '-Dwith_x11=yes']
