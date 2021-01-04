@@ -50,7 +50,6 @@ AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
-VOOAAC_URL = 'https://github.com/mstorsjo/vo-aacenc/archive/v0.1.3.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
 LIBVA_URL = 'https://github.com/intel/libva'
 LIBVA_UTILS_URL = 'https://github.com/intel/libva-utils'
@@ -116,7 +115,7 @@ class Debian(OperationSystem):
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
-                'libopus-dev',
+                'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev', 'libcairo2-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
@@ -150,7 +149,7 @@ class RedHat(OperationSystem):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
                 'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
-                'libopus-devel',
+                'libopus-devel', 'libvo-aacenc-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
                 'cairo-gobject-devel',
                 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
@@ -182,8 +181,9 @@ class Arch(OperationSystem):
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
-                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'opus', 'cairo',
-                'zlib'  # 'libffi', 'pcre'
+                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2',
+                'opus', 'ocaml-voaacenc',
+                'cairo', 'zlib'  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
@@ -210,7 +210,7 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'cairo',
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'cairo',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
@@ -381,10 +381,6 @@ class BuildRequest(build_utils.BuildRequest):
     def build_faac(self):
         compiler_flags = []
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
-
-    def build_voaac(self):
-        compiler_flags = []
-        self._download_and_build_via_autogen(VOOAAC_URL, compiler_flags)
 
     def build_libva(self):
         compiler_flags = ['--buildtype=release', '-Dwith_x11=yes']
@@ -846,9 +842,6 @@ if __name__ == "__main__":
 
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
-
-    if argv.with_voaac and arg_install_other_packages:
-        request.build_voaac()
 
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
