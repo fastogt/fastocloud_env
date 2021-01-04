@@ -548,7 +548,7 @@ if __name__ == "__main__":
                               action='store_true', default=True)
     openh264_grp.add_argument('--without-openh264', help='build without openh264', dest='with_openh264',
                               action='store_false',
-                              default=False)
+                              default=True)
 
     # libva
     libva_grp = parser.add_mutually_exclusive_group()
@@ -838,8 +838,8 @@ if __name__ == "__main__":
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
 
-    # if argv.with_openh264 and arg_install_other_packages:
-    #    request.build_openh264()
+    if argv.with_openh264 and arg_install_other_packages:
+        request.build_openh264()
 
     if (argv.with_libva or argv.with_mfx) and arg_install_other_packages:
         request.build_libva()
