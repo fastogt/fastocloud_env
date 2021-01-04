@@ -50,6 +50,7 @@ AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
+VOOAAC_URL = 'https://github.com/mstorsjo/vo-aacenc/archive/v0.1.3.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
 LIBVA_URL = 'https://github.com/intel/libva'
 LIBVA_UTILS_URL = 'https://github.com/intel/libva-utils'
@@ -381,6 +382,10 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = []
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
 
+    def build_voaac(self):
+        compiler_flags = []
+        self._download_and_build_via_bootstrap(VOOAAC_URL, compiler_flags)
+
     def build_libva(self):
         compiler_flags = ['--buildtype=release', '-Dwith_x11=yes']
         self._clone_and_build_via_meson(LIBVA_URL, compiler_flags)
@@ -531,6 +536,13 @@ if __name__ == "__main__":
                           action='store_true', default=True)
     faac_grp.add_argument('--without-faac', help='build without faac', dest='with_faac', action='store_false',
                           default=False)
+
+    # voaac
+    voaac_grp = parser.add_mutually_exclusive_group()
+    voaac_grp.add_argument('--with-voaac', help='build voaac (default, version: git master)', dest='with_voaac',
+                           action='store_true', default=True)
+    voaac_grp.add_argument('--without-voaac', help='build without voaac', dest='with_voaac', action='store_false',
+                           default=False)
 
     # meson
     meson_grp = parser.add_mutually_exclusive_group()
@@ -834,6 +846,9 @@ if __name__ == "__main__":
 
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
+
+    if argv.with_voaac and arg_install_other_packages:
+        request.build_voaac()
 
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
