@@ -376,6 +376,9 @@ class BuildRequest(build_utils.BuildRequest):
         platform = self.platform()
         platform_name = platform.name()
         if platform_name == 'linux':
+            nginx_dir = '/etc/nginx/sites-enabled/'
+            if not os.path.exists(nginx_dir):
+                os.makedirs(nginx_dir)
             subprocess.call(['cp', os.path.join(_file_path, 'nginx/fastocloud'), '/etc/nginx/sites-enabled/fastocloud'])
 
     def build_faac(self):
