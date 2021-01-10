@@ -67,6 +67,8 @@ if __name__ == "__main__":
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
                         default=arch_host_os)
     parser.add_argument('--prefix', help='prefix path (default: None)', default=None)
+    parser.add_argument('--docker', help='docker build (default: False)', dest='docker', action='store_true',
+                        default=False)
 
     parser.add_argument('--install-other-packages',
                         help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
@@ -79,11 +81,15 @@ if __name__ == "__main__":
 
     arg_platform = argv.platform
     arg_prefix_path = argv.prefix
+    argv_docker = argv.docker
     arg_architecture = argv.architecture
     arg_install_other_packages = argv.install_other_packages
     arg_install_fastogt_packages = argv.install_fastogt_packages
 
     request = BuildRequestRepo(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
+    if argv_docker:
+        request.prepare_docker()
+
     if argv.with_system and arg_install_other_packages:
         request.install_system(with_nvidia=False, with_mongo=True, with_gstreamer=False, repo_build=True)
 
