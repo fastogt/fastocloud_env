@@ -349,7 +349,6 @@ class BuildRequest(build_utils.BuildRequest):
 
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
-        print('Docker env prepared')
 
     def install_system(self, with_nvidia, with_mongo, with_gstreamer, repo_build):
         dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_mongo=with_mongo, with_gstreamer=with_gstreamer,
