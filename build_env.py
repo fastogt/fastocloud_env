@@ -349,6 +349,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
+        print('Docker env prepared')
 
     def install_system(self, with_nvidia, with_mongo, with_gstreamer, repo_build):
         dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_mongo=with_mongo, with_gstreamer=with_gstreamer,
@@ -493,7 +494,7 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    meson_default_version = '0.49.2'
+    meson_default_version = '0.50.0'
     srt_default_version = '1.4.2'
     gstreamer_default_version = '1.18.2'
     gst_plugins_base_default_version = gstreamer_default_version
@@ -816,7 +817,7 @@ if __name__ == "__main__":
                         help='install FastoGT packages (--with-common --with-fastotv-cpp) (default: True)',
                         dest='install_fastogt_packages', type=str2bool, default=True)
     parser.add_argument('--install-gstreamer-packages',
-                        help='install FastoGT packages  (--with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --with-gst-libav --with-gst-rtsp) (default: True)',
+                        help='install GStreamer packages  (--with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --with-gst-libav --with-gst-rtsp) (default: True)',
                         dest='install_gstreamer_packages', type=str2bool, default=True)
 
     argv = parser.parse_args()
