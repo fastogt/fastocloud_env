@@ -367,7 +367,7 @@ class BuildRequest(build_utils.BuildRequest):
             subprocess.call(['dbus-uuidgen', '--ensure'])
 
     def install_tools(self):
-        self._install_via_python3('streamlink')
+        self.update_pyfastostream()
         self._install_via_python3('speedtest-cli')
 
     def install_nginx(self):
