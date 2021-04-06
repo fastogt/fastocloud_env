@@ -803,9 +803,6 @@ if __name__ == "__main__":
                               dest='with_gst_nice',
                               action='store_false',
                               default=True)
-    parser.add_argument('--gst-nice-version',
-                        help='gst-nice version (default: {0})'.format(gst_nice_default_version),
-                        default=gst_nice_default_version)
 
     # gst-rtsp-server
     gst_rtsp_grp = parser.add_mutually_exclusive_group()
