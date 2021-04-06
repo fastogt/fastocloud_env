@@ -478,7 +478,7 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
-    def build_gst_nice(self, version):
+    def build_gst_nice(self):
         compiler_flags = ['--buildtype=release']
         self._clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
 
@@ -935,7 +935,7 @@ if __name__ == "__main__":
         request.build_gst_libav(argv.gst_libav_version)
 
     if argv.with_gst_nice and arg_install_gstreamer_packages:
-        request.build_gst_nice(argv.gst_nice_version)
+        request.build_gst_nice()
 
     if argv.with_gst_rtsp and arg_install_gstreamer_packages:
         request.build_gst_rtsp(argv.gst_rtsp_version)
