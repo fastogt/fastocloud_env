@@ -500,7 +500,7 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    meson_default_version = '0.50.0'
+    meson_default_version = '0.52.0'
     srt_default_version = '1.4.2'
     gstreamer_default_version = '1.18.4'
     gst_plugins_base_default_version = gstreamer_default_version
