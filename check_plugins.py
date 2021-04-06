@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import subprocess
 import os
+import subprocess
 from subprocess import CalledProcessError
 
 HEADER = '\033[95m'
@@ -151,7 +151,8 @@ PLUGINS = ['decodebin',
            'nvv4l2vp8enc',
            'nvv4l2vp9enc',
            'nvdsosd',
-           'dsfastogt']
+           'dsfastogt',
+           'webrtcbin']
 
 
 def check_plugins():

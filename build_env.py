@@ -41,6 +41,10 @@ GST_LIBAV_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_LIBAV_ARCH_COMP = 'xz'
 GST_LIBAV_ARCH_EXT = 'tar.' + GST_LIBAV_ARCH_COMP
 
+GST_NICE_SRC_ROOT = GSTREAMER_SRC_ROOT
+GST_NICE_ARCH_COMP = 'xz'
+GST_NICE_ARCH_EXT = 'tar.' + GST_NICE_ARCH_COMP
+
 GST_RTSP_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
@@ -126,7 +130,7 @@ class Debian(OperationSystem):
                 'libgstreamer-plugins-good1.0-dev', 'libgstreamer-plugins-bad1.0-dev', 'libgstrtspserver-1.0-dev',
                 'gstreamer1.0-tools',
                 'gstreamer1.0-plugins-base', 'gstreamer1.0-plugins-good', 'gstreamer1.0-plugins-bad',
-                'gstreamer1.0-plugins-ugly', 'gstreamer1.0-libav', 'gstreamer1.0-rtsp']
+                'gstreamer1.0-plugins-ugly', 'gstreamer1.0-libav', 'gstreamer1.0-nice', 'gstreamer1.0-rtsp']
 
 
 class RedHat(OperationSystem):
@@ -159,7 +163,7 @@ class RedHat(OperationSystem):
         return ['cairo-gobject-devel', 'gstreamer1', 'gstreamer1-plugins-base',
                 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad-free', 'gstreamer1-plugins-ugly-free', 'gstreamer1-libav',
-                'gstreamer1-rtsp-server']
+                'gstreamer1-nice', 'gstreamer1-rtsp-server']
 
 
 class Arch(OperationSystem):
@@ -188,7 +192,8 @@ class Arch(OperationSystem):
 
     def get_gst_repo_libs(self):
         return ['cairo', 'gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
-                'gstreamer-plugins-bad', 'gstreamer-plugins-ugly', 'gstreamer-libav', 'gstreamer-rtsp-server']
+                'gstreamer-plugins-bad', 'gstreamer-plugins-ugly', 'gstreamer-libav', 'gstreamer-nice',
+                'gstreamer-rtsp-server']
 
 
 class FreeBSD(OperationSystem):
@@ -216,7 +221,8 @@ class FreeBSD(OperationSystem):
 
     def get_gst_repo_libs(self):
         return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
-                'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
+                'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-nice',
+                'gstreamer1-rtsp-server']
 
 
 class Windows64(OperationSystem):
@@ -243,7 +249,7 @@ class Windows64(OperationSystem):
         return ['mingw-w64-x86_64-gstreamer',
                 'mingw-w64-x86_64-gst-plugins-base', 'mingw-w64-x86_64-gst-plugins-good',
                 'mingw-w64-x86_64-gst-plugins-bad', 'mingw-w64-x86_64-gst-plugins-ugly', 'mingw-w64-x86_64-gst-libav',
-                'mingw-w64-x86_64-gst-rtsp-server']
+                'mingw-w64-x86_64-gst-nice', 'mingw-w64-x86_64-gst-rtsp-server']
 
 
 class Windows32(OperationSystem):
@@ -270,7 +276,7 @@ class Windows32(OperationSystem):
         return ['mingw-w64-i686-gstreamer',
                 'mingw-w64-i686-gst-plugins-base', 'mingw-w64-i686-gst-plugins-good',
                 'mingw-w64-i686-gst-plugins-bad', 'mingw-w64-i686-gst-plugins-ugly', 'mingw-w64-i686-gst-libav',
-                'mingw-w64-i686-gst-rtsp-server']
+                'mingw-w64-i686-gst-nice', 'mingw-w64-i686-gst-rtsp-server']
 
 
 class MacOSX(OperationSystem):
@@ -294,7 +300,8 @@ class MacOSX(OperationSystem):
 
     def get_gst_repo_libs(self):
         return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
-                'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-rtsp-server']
+                'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-nice',
+                'gstreamer1-rtsp-server']
 
 
 class BuildRequest(build_utils.BuildRequest):
@@ -474,6 +481,11 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
+    def build_gst_nice(self, version):
+        compiler_flags = ['--buildtype=release']
+        url = '{0}gst-nice/gst-nice-{1}.{2}'.format(GST_NICE_SRC_ROOT, version, GST_NICE_ARCH_EXT)
+        self._download_and_build_via_meson(url, compiler_flags)
+
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
@@ -501,6 +513,7 @@ if __name__ == "__main__":
     gst_plugins_ugly_default_version = gstreamer_default_version
     gst_libav_default_version = gstreamer_default_version
     gst_rtsp_default_version = gstreamer_default_version
+    gst_nice_default_version = gstreamer_default_version
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
@@ -786,6 +799,20 @@ if __name__ == "__main__":
                         help='gst-libav version (default: {0})'.format(gst_libav_default_version),
                         default=gst_libav_default_version)
 
+    # gst-nice
+    gst_nice_grp = parser.add_mutually_exclusive_group()
+    gst_nice_grp.add_argument('--with-gst-nice',
+                              help='build gst-nice (default, version:{0})'.format(
+                                  gst_nice_default_version),
+                              dest='with_gst_nice', action='store_true', default=True)
+    gst_nice_grp.add_argument('--without-gst-nice', help='build without gst-nice',
+                              dest='with_gst_nice',
+                              action='store_false',
+                              default=False)
+    parser.add_argument('--gst-nice-version',
+                        help='gst-nice version (default: {0})'.format(gst_nice_default_version),
+                        default=gst_nice_default_version)
+
     # gst-rtsp-server
     gst_rtsp_grp = parser.add_mutually_exclusive_group()
     gst_rtsp_grp.add_argument('--with-gst-rtsp',
@@ -911,6 +938,9 @@ if __name__ == "__main__":
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gst_libav_version)
+
+    if argv.with_gst_nice and arg_install_gstreamer_packages:
+        request.build_gst_nice(argv.gst_nice_version)
 
     if argv.with_gst_rtsp and arg_install_gstreamer_packages:
         request.build_gst_rtsp(argv.gst_rtsp_version)
