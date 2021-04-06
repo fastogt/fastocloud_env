@@ -797,13 +797,12 @@ if __name__ == "__main__":
     # gst-nice
     gst_nice_grp = parser.add_mutually_exclusive_group()
     gst_nice_grp.add_argument('--with-gst-nice',
-                              help='build gst-nice (default, version:{0})'.format(
-                                  gst_nice_default_version),
-                              dest='with_gst_nice', action='store_true', default=True)
+                              help='build gst-awss3 (default, version: git master)'
+                              dest='with_gst_nice', action='store_true', default=False)
     gst_nice_grp.add_argument('--without-gst-nice', help='build without gst-nice',
                               dest='with_gst_nice',
                               action='store_false',
-                              default=False)
+                              default=True)
     parser.add_argument('--gst-nice-version',
                         help='gst-nice version (default: {0})'.format(gst_nice_default_version),
                         default=gst_nice_default_version)
