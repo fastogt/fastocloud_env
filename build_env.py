@@ -915,6 +915,9 @@ if __name__ == "__main__":
     if argv.with_gst_plugins_good and arg_install_gstreamer_packages:
         request.build_gst_plugins_good(argv.gst_plugins_good_version)
 
+    if argv.with_gst_nice and arg_install_gstreamer_packages:
+        request.build_gst_nice()
+
     if argv.with_gst_plugins_bad and arg_install_gstreamer_packages:
         request.build_gst_plugins_bad(argv.gst_plugins_bad_version, build_mfx, build_vaapi)
 
@@ -929,9 +932,6 @@ if __name__ == "__main__":
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gst_libav_version)
-
-    if argv.with_gst_nice and arg_install_gstreamer_packages:
-        request.build_gst_nice()
 
     if argv.with_gst_rtsp and arg_install_gstreamer_packages:
         request.build_gst_rtsp(argv.gst_rtsp_version)
