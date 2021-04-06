@@ -41,10 +41,6 @@ GST_LIBAV_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_LIBAV_ARCH_COMP = 'xz'
 GST_LIBAV_ARCH_EXT = 'tar.' + GST_LIBAV_ARCH_COMP
 
-GST_NICE_SRC_ROOT = GSTREAMER_SRC_ROOT
-GST_NICE_ARCH_COMP = 'xz'
-GST_NICE_ARCH_EXT = 'tar.' + GST_NICE_ARCH_COMP
-
 GST_RTSP_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
@@ -52,6 +48,7 @@ GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
 TINYXML2_URL = 'https://github.com/leethomason/tinyxml2'
 AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
+GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
 
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
@@ -483,8 +480,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_nice(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}gst-nice/gst-nice-{1}.{2}'.format(GST_NICE_SRC_ROOT, version, GST_NICE_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
 
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
@@ -513,7 +509,6 @@ if __name__ == "__main__":
     gst_plugins_ugly_default_version = gstreamer_default_version
     gst_libav_default_version = gstreamer_default_version
     gst_rtsp_default_version = gstreamer_default_version
-    gst_nice_default_version = gstreamer_default_version
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
