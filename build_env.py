@@ -115,7 +115,7 @@ class Debian(OperationSystem):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
-                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
+                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev', 'libvpx-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev', 'libcairo2-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
@@ -149,7 +149,7 @@ class RedHat(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
-                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
+                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel', 'libvpx-devel',
                 'libopus-devel', 'libvo-aacenc-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
                 'cairo-gobject-devel',
@@ -182,7 +182,7 @@ class Arch(OperationSystem):
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
-                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2',
+                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'vpx',
                 'opus', 'ocaml-voaacenc',
                 'cairo', 'zlib'  # 'libffi', 'pcre'
                 ]
@@ -212,7 +212,7 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'cairo',
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'cairo', 'libvpx',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
