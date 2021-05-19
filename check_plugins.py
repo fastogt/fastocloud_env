@@ -24,6 +24,7 @@ def print_error(msg):
 PLUGINS = ['decodebin',
            'fakesink',
            'testsink',
+           'testsrcbin',
            'videotestsrc',
            'audiotestsrc',
            'ximagesrc',
