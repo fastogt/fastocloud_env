@@ -117,13 +117,13 @@ class Debian(OperationSystem):
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev', 'libvpx-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
-                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev', 'libcairo2-dev',
+                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
                 ]  # libgstreamer-plugins-base1.0-dev
 
     def get_gst_repo_libs(self):
-        return ['libcairo2-dev', 'libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
+        return ['libgstreamer1.0-dev', 'libgstreamer-plugins-base1.0-dev',
                 'libgstreamer-plugins-good1.0-dev', 'libgstreamer-plugins-bad1.0-dev', 'libgstrtspserver-1.0-dev',
                 'gstreamer1.0-tools',
                 'gstreamer1.0-plugins-base', 'gstreamer1.0-plugins-good', 'gstreamer1.0-plugins-bad',
@@ -152,12 +152,11 @@ class RedHat(OperationSystem):
                 'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel', 'libvpx-devel',
                 'libopus-devel', 'libvo-aacenc-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
-                'cairo-gobject-devel',
                 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['cairo-gobject-devel', 'gstreamer1', 'gstreamer1-plugins-base',
+        return ['gstreamer1', 'gstreamer1-plugins-base',
                 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad-free', 'gstreamer1-plugins-ugly-free', 'gstreamer1-libav',
                 'gstreamer1-nice', 'gstreamer1-rtsp-server']
@@ -184,11 +183,11 @@ class Arch(OperationSystem):
                 'libdrm', 'libproxy',
                 'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'vpx',
                 'opus', 'ocaml-voaacenc',
-                'cairo', 'zlib'  # 'libffi', 'pcre'
+                'zlib'  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['cairo', 'gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
+        return ['gstreamer', 'gstreamer-plugins-base', 'gstreamer-plugins-good',
                 'gstreamer-plugins-bad', 'gstreamer-plugins-ugly', 'gstreamer-libav', 'gstreamer-nice',
                 'gstreamer-rtsp-server']
 
@@ -212,12 +211,12 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'cairo', 'libvpx',
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'libvpx',
                 'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
-        return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-nice',
                 'gstreamer1-rtsp-server']
 
@@ -293,10 +292,10 @@ class MacOSX(OperationSystem):
         return ['libmongo']
 
     def get_gst_build_libs(self):
-        return ['glib2-devel', 'glib-networking', 'cairo']
+        return ['glib2-devel', 'glib-networking']
 
     def get_gst_repo_libs(self):
-        return ['cairo', 'gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
+        return ['gstreamer1', 'gstreamer1-plugins-base', 'gstreamer1-plugins-good',
                 'gstreamer1-plugins-bad', 'gstreamer1-plugins-ugly', 'gstreamer1-libav', 'gstreamer1-nice',
                 'gstreamer1-rtsp-server']
 
