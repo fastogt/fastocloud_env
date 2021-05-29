@@ -115,11 +115,13 @@ class Debian(OperationSystem):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
-                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev', 'libvpx-dev',
+                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
+                'libvpx-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
-                'zlib1g-dev', 'libbz2-dev'  # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
+                'libsrtp2-dev', 'zlib1g-dev', 'libbz2-dev'
+                # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
                 ]  # libgstreamer-plugins-base1.0-dev
 
     def get_gst_repo_libs(self):
@@ -149,10 +151,11 @@ class RedHat(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
-                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel', 'libvpx-devel',
+                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
+                'libvpx-devel',
                 'libopus-devel', 'libvo-aacenc-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
-                'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
+                'libsrtp2-devel', 'libxcb-devel', 'zlib-devel'  # 'libffi-devel', 'pcre-devel'
                 ]
 
     def get_gst_repo_libs(self):
@@ -183,7 +186,7 @@ class Arch(OperationSystem):
                 'libdrm', 'libproxy',
                 'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'vpx',
                 'opus', 'ocaml-voaacenc',
-                'zlib'  # 'libffi', 'pcre'
+                'srtp2', 'zlib'  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
@@ -211,8 +214,9 @@ class FreeBSD(OperationSystem):
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
                 'libdrm', 'libproxy',
-                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac', 'libvpx',
-                'libxcb', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
+                'librtmp', 'libsoup', 'libx264', 'libx265', 'alsa-lib', 'libjpeg-turbo', 'libopus', 'libvoaac',
+                'libvpx',
+                'libxcb', 'lsrtp2', 'lzlib', 'gdk-pixbuf2',  # 'libffi', 'pcre'
                 ]
 
     def get_gst_repo_libs(self):
@@ -801,7 +805,7 @@ if __name__ == "__main__":
     gst_nice_grp.add_argument('--without-gst-nice', help='build without gst-nice',
                               dest='with_gst_nice',
                               action='store_false',
-                              default=True)
+                              default=False)
 
     # gst-rtsp-server
     gst_rtsp_grp = parser.add_mutually_exclusive_group()
