@@ -418,7 +418,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_tinyxml2(self):
         compiler_flags = []
         url = build_utils.generate_fastogt_github_path('tinyxml2')
-        self._download_and_build_via_cmake(url, compiler_flags)
+        self._clone_and_build_via_cmake(url, compiler_flags)
 
     def build_opencv(self):
         compiler_flags = ['-DBUILD_JAVA=OFF', '-DBUILD_TESTS=OFF', '-DWITH_GSTREAMER=OFF',
