@@ -45,7 +45,6 @@ GST_RTSP_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
 
-TINYXML2_URL = 'https://github.com/leethomason/tinyxml2'
 AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
@@ -418,7 +417,8 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_tinyxml2(self):
         compiler_flags = []
-        self._clone_and_build_via_cmake(TINYXML2_URL, compiler_flags)
+        url = build_utils.generate_fastogt_github_path('tinyxml2')
+        self._download_and_build_via_cmake(url, compiler_flags)
 
     def build_opencv(self):
         compiler_flags = ['-DBUILD_JAVA=OFF', '-DBUILD_TESTS=OFF', '-DWITH_GSTREAMER=OFF',
