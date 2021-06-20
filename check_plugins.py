@@ -156,6 +156,7 @@ PLUGINS = ['decodebin',
            'nvv4l2vp9enc',
            'nvdsosd',
            'dsfastogt',
+           'fastogtbackground',
            'webrtcbin']
 
 
