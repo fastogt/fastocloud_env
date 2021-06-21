@@ -164,7 +164,7 @@ def check_plugins():
     with open(os.devnull, 'w') as devnull:
         for plugin in PLUGINS:
             try:
-                subprocess.check_output(['gst-inspect-1.0', plugin], stderr=devnull)
+                subprocess.check_output(['gst-inspect-1.0', plugin], env={'LD_LIBRARY_PATH':'$LD_LIBRARY_PATH:/usr/local/TensorRT-7.2.2.3/lib:/usr/local/VideoFX/lib/', 'GST_PLUGIN_PATH':'/usr/local/lib/gstreamer-1.0/'}, stderr=devnull)
                 print_success('Check plugin {0}, success return code: {1}'.format(plugin, 0))
             except CalledProcessError as e:
                 print_error('Check plugin {0}, failed return code: {1}'.format(plugin, e.returncode))
