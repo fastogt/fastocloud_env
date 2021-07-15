@@ -227,7 +227,7 @@ class FreeBSD(OperationSystem):
 class Windows64(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'mingw-w64-x86_64-yasm', 'mingw-w64-x86_64-nasm', 'mingw-w64-x86_64-gcc', 'make', 'autoconf', 'automake',
-                'mingw-w64-x86_64-ninja', 'mingw-w64-x86_64-cmake', 'mingw-w64-x86_64-python3-pip']
+                'mingw-w64-x86_64-ninja', 'mingw-w64-x86_64-cmake', 'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
@@ -254,7 +254,7 @@ class Windows64(OperationSystem):
 class Windows32(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'mingw-w64-i686-yasm', 'mingw-w64-i686-nasm', 'mingw-w64-i686-gcc', 'make', 'autoconf', 'automake',
-                'mingw-w64-i686-ninja', 'mingw-w64-i686-cmake', 'mingw-w64-i686-python3-pip']
+                'mingw-w64-i686-ninja', 'mingw-w64-i686-cmake', 'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
