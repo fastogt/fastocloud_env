@@ -248,7 +248,7 @@ class Windows64(OperationSystem):
         return ['mingw-w64-x86_64-gstreamer',
                 'mingw-w64-x86_64-gst-plugins-base', 'mingw-w64-x86_64-gst-plugins-good',
                 'mingw-w64-x86_64-gst-plugins-bad', 'mingw-w64-x86_64-gst-plugins-ugly', 'mingw-w64-x86_64-gst-libav',
-                'mingw-w64-x86_64-gst-nice', 'mingw-w64-x86_64-gst-rtsp-server']
+                'mingw-w64-x86_64-libnice', 'mingw-w64-x86_64-gst-rtsp-server']
 
 
 class Windows32(OperationSystem):
@@ -275,7 +275,7 @@ class Windows32(OperationSystem):
         return ['mingw-w64-i686-gstreamer',
                 'mingw-w64-i686-gst-plugins-base', 'mingw-w64-i686-gst-plugins-good',
                 'mingw-w64-i686-gst-plugins-bad', 'mingw-w64-i686-gst-plugins-ugly', 'mingw-w64-i686-gst-libav',
-                'mingw-w64-i686-gst-rtsp-server']
+                'mingw-w64-i686-libnice', 'mingw-w64-i686-gst-rtsp-server']
 
 
 class MacOSX(OperationSystem):
