@@ -417,11 +417,6 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}/v{1}.{2}'.format(SRT_SRC_URL, version, SRT_ARCH_EXT)
         self._download_and_build_via_cmake(url, compiler_flags)
 
-    def build_tinyxml2(self):
-        compiler_flags = []
-        url = build_utils.generate_fastogt_github_path('tinyxml2')
-        self._clone_and_build_via_cmake(url, compiler_flags)
-
     def build_opencv(self):
         compiler_flags = ['-DBUILD_JAVA=OFF', '-DBUILD_TESTS=OFF', '-DWITH_GSTREAMER=OFF',
                           '-DOPENCV_GENERATE_PKGCONFIG=ON']
@@ -649,15 +644,6 @@ if __name__ == "__main__":
                            action='store_true', default=True)
     jsonc_grp.add_argument('--without-json-c', help='build without json-c', dest='with_jsonc', action='store_false',
                            default=False)
-
-    # tinyxml2
-    tinyxml2_grp = parser.add_mutually_exclusive_group()
-    tinyxml2_grp.add_argument('--with-tinyxml2', help='build tinyxml2 (default, version: git master)',
-                              dest='with_tinyxml2',
-                              action='store_true', default=True)
-    tinyxml2_grp.add_argument('--without-tinyxml2', help='build without tinyxml2', dest='with_tinyxml2',
-                              action='store_false',
-                              default=False)
 
     # libev
     libev_grp = parser.add_mutually_exclusive_group()
@@ -896,8 +882,6 @@ if __name__ == "__main__":
 
     if argv.with_jsonc and arg_install_other_packages:
         request.build_jsonc()
-    if argv.with_tinyxml2 and arg_install_other_packages:
-        request.build_tinyxml2()
     if argv.with_libev and arg_install_other_packages:
         request.build_libev()
     if argv.with_aws and arg_install_other_packages:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-from pyfastogt import system_info
+from pyfastogt import system_info, build_utils
 
 from build_env import BuildRequest, str2bool
 
@@ -12,6 +12,11 @@ from build_env import BuildRequest, str2bool
 class BuildRequestRepo(BuildRequest):
     def __init__(self, platform, arch_name, dir_path, prefix_path):
         super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
+
+    def build_tinyxml2(self):
+        compiler_flags = []
+        url = build_utils.generate_fastogt_github_path('tinyxml2')
+        self._clone_and_build_via_cmake(url, compiler_flags)
 
 
 if __name__ == "__main__":
