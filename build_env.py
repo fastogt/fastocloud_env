@@ -5,9 +5,8 @@ import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
 
-from pyfastogt import system_info, build_utils, utils
-
 from check_plugins import check_plugins
+from pyfastogt import system_info, build_utils, utils
 
 _file_path = os.path.dirname(os.path.abspath(__file__))
 
