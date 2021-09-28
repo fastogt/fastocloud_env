@@ -1,4 +1,7 @@
 server {
+  access_log /var/log/nginx/fastocloud_access.log;
+  error_log /var/log/nginx/fastocloud_error.log;
+
   listen 81;
   listen [::]:81;
 
