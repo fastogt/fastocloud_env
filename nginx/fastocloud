@@ -27,4 +27,8 @@ server {
   location /fastocloud/data/ {
     alias /home/fastocloud/streamer/data/;
   }
+  
+  location /status {
+    stub_status;
+  }
 }
