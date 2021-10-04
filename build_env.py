@@ -5,8 +5,9 @@ import subprocess
 import sys
 from abc import ABCMeta, abstractmethod
 
-from check_plugins import check_plugins
 from pyfastogt import system_info, build_utils, utils
+
+from check_plugins import check_plugins
 
 _file_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -445,14 +446,15 @@ class BuildRequest(build_utils.BuildRequest):
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
-    def build_gst_plugins_bad(self, version, build_mfx: bool, build_vaapi: bool):
+    def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
         compiler_flags = ['--buildtype=release', '-Dopenexr=disabled']
-        url = build_utils.generate_fastogt_github_path('gst-plugins-bad')
-        self._clone_and_build_via_meson(url, compiler_flags)
-        if build_mfx:
+        url = '{0}gst-plugins-good/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
+                                                                   GST_PLUGINS_GOOD_ARCH_EXT)
+        self._download_and_build_via_meson(url, compiler_flags)
+        if mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
             self._clone_and_build_via_cmake(GSTREAMER_MFX_URL, compiler_flags_mfx)
-        if build_vaapi:
+        if vaapi:
             compiler_flags_vaapi = ['--buildtype=release']
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
             self._download_and_build_via_meson(url, compiler_flags_vaapi)
