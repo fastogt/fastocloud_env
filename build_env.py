@@ -448,8 +448,8 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
         compiler_flags = ['--buildtype=release', '-Dopenexr=disabled']
-        url = '{0}gst-plugins-good/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
-                                                                   GST_PLUGINS_GOOD_ARCH_EXT)
+        url = '{0}gst-plugins-good/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_BAD_SRC_ROOT, version,
+                                                                   GST_PLUGINS_BAD_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
         if mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
