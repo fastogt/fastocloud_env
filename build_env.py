@@ -481,7 +481,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_nice(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
+        self._clone_and_build_via_meson(GST_NICE_URL, compiler_flags, '0.1.18')
 
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
