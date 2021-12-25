@@ -57,7 +57,7 @@ INTEL_VAAPI_DRIVER_URL = 'https://github.com/intel/intel-vaapi-driver'
 GMM_LIB_URL = 'https://github.com/intel/gmmlib'
 INTEL_MEDIA_DRIVER_URL = 'https://github.com/intel/media-driver'
 MEDIA_SDK_URL = 'https://github.com/Intel-Media-SDK/MediaSDK'
-GSTREAMER_MFX_URL = 'https://github.com/intel/gstreamer-media-SDK'
+GSTREAMER_MFX_URL = 'https://github.com/fastogt/gstreamer-media-SDK'
 OPENCV_URL = 'https://github.com/opencv/opencv'
 
 SRT_SRC_URL = 'https://github.com/Haivision/srt/archive/'
