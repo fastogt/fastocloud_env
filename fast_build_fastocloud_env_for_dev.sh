@@ -41,7 +41,8 @@ cd ../
 rm -rf pyfastogt
 
 # build env for service
-./build_env.py
+./build_env.py "$@"
 
 # add user
 useradd -m -U -d /home/$USER $USER -s /bin/bash
+usermod -a -G video $USER

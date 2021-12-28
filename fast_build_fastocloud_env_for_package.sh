@@ -45,3 +45,4 @@ rm -rf pyfastogt
 
 # add user
 useradd -m -U -d /home/$USER $USER -s /bin/bash
+usermod -a -G video $USER
