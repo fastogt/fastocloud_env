@@ -831,7 +831,6 @@ if __name__ == "__main__":
                         dest='install_gstreamer_packages', type=str2bool, default=True)
 
     argv = parser.parse_args()
-    print(argv)
 
     arg_platform = argv.platform
     arg_prefix_path = argv.prefix
