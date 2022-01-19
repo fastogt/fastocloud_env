@@ -454,9 +454,9 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_cmake(url, compiler_flags)
 
     def build_wpe_backend(self, version):
-        compiler_flags = []
+        compiler_flags = ['--buildtype=release']
         url = '{0}/wpebackend-fdo-{1}.{2}'.format(WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
-        self._clone_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags)
 
     def build_srt(self, version):
         compiler_flags = []
