@@ -68,6 +68,10 @@ WPE_BACKEND_URL = 'https://wpewebkit.org/releases'
 WPE_BACKEND_ARCH_COMP = 'xz'
 WPE_BACKEND_ARCH_EXT = 'tar.' + WPE_BACKEND_ARCH_COMP
 
+WPE_WEBKIT_URL = 'https://wpewebkit.org/releases'
+WPE_WEBKIT_ARCH_COMP = 'xz'
+WPE_WEBKIT_ARCH_EXT = 'tar.' + WPE_WEBKIT_ARCH_COMP
+
 SRT_SRC_URL = 'https://github.com/Haivision/srt/archive'
 SRT_ARCH_COMP = 'gz'
 SRT_ARCH_EXT = 'tar.' + SRT_ARCH_COMP
@@ -458,6 +462,11 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}/wpebackend-fdo-{1}.{2}'.format(WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
+    def build_wpe_webkit(self, version):
+        compiler_flags = []
+        url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL, version, WPE_WEBKIT_ARCH_EXT)
+        self._download_and_build_via_cmake(url, compiler_flags)
+
     def build_srt(self, version):
         compiler_flags = []
         url = '{0}/v{1}.{2}'.format(SRT_SRC_URL, version, SRT_ARCH_EXT)
@@ -554,6 +563,7 @@ if __name__ == "__main__":
     gstreamer_default_version = '1.19.2'
     wpe_version = '1.12.0'
     wpe_backend_version = '1.12.0'
+    wpe_webkit_version = '2.35.1'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
@@ -930,6 +940,7 @@ if __name__ == "__main__":
     if build_wpe:
         request.build_wpe(wpe_version)
         request.build_wpe_backend(wpe_backend_version)
+        request.build_wpe_webkit(wpe_webkit_version)
 
     if argv.with_srt and arg_install_other_packages:
         request.build_srt(argv.srt_version)
