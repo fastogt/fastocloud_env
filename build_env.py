@@ -465,7 +465,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_wpe_webkit(self, version):
         compiler_flags = ['-DPORT=WPE', '-DUSE_SOUP2=ON', '-DENABLE_ACCESSIBILITY=OFF', '-DUSE_OPENJPEG=OFF',
-                          '-DUSE_WOFF2=OFF', '-DUSE_LCMS=OFF']
+                          '-DUSE_WOFF2=OFF', '-DUSE_LCMS=OFF', '-DENABLE_BUBBLEWRAP_SANDBOX=OFF']
         url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL, version, WPE_WEBKIT_ARCH_EXT)
         self._download_and_build_via_cmake(url, compiler_flags)
 
