@@ -125,7 +125,7 @@ class Debian(OperationSystem):
 
     def get_wpe_libs(self) -> list:
         return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby', 'libgcrypt20-dev',
-                'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev']
+                'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libx11-xcb-dev']
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
@@ -493,7 +493,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_meson(url, compiler_flags)
 
     def build_gst_plugins_base(self, version):
-        compiler_flags = ['--buildtype=release', '-Dopenexr=disabled']
+        compiler_flags = ['--buildtype=release']
         url = build_utils.generate_fastogt_github_path('gst-plugins-base')
         self._clone_and_build_via_meson(url, compiler_flags)
 
@@ -504,7 +504,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_meson(url, compiler_flags)
 
     def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
-        compiler_flags = ['--buildtype=release', '-Dopenexr=disabled']
+        compiler_flags = ['--buildtype=release']
         # url = '{0}gst-plugins-bad/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_BAD_SRC_ROOT, version,
         #                                                           GST_PLUGINS_BAD_ARCH_EXT)
         # self._download_and_build_via_meson(url, compiler_flags)
