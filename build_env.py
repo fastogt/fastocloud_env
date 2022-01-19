@@ -125,7 +125,7 @@ class Debian(OperationSystem):
 
     def get_wpe_libs(self) -> list:
         return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby', 'libgcrypt20-dev',
-                'libwebp-dev']
+                'libwebp-dev', 'libxslt1-dev']
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
