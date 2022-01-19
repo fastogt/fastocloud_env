@@ -64,6 +64,10 @@ WPE_URL = 'https://wpewebkit.org/releases'
 WPE_ARCH_COMP = 'xz'
 WPE_ARCH_EXT = 'tar.' + WPE_ARCH_COMP
 
+WPE_BACKEND_URL = 'https://wpewebkit.org/releases'
+WPE_BACKEND_ARCH_COMP = 'xz'
+WPE_BACKEND_ARCH_EXT = 'tar.' + WPE_BACKEND_ARCH_COMP
+
 SRT_SRC_URL = 'https://github.com/Haivision/srt/archive'
 SRT_ARCH_COMP = 'gz'
 SRT_ARCH_EXT = 'tar.' + SRT_ARCH_COMP
@@ -116,7 +120,7 @@ class Debian(OperationSystem):
         return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
 
     def get_wpe_libs(self) -> list:
-        return ['libegl-dev', 'libxkbcommon-dev']
+        return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev']
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
@@ -449,6 +453,11 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}/libwpe-{1}.{2}'.format(WPE_URL, version, WPE_ARCH_EXT)
         self._download_and_build_via_cmake(url, compiler_flags)
 
+    def build_wpe_backend(self, version):
+        compiler_flags = []
+        url = '{0}/wpebackend-fdo-{1}.{2}'.format(WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
+        self._clone_and_build_via_meson(url, compiler_flags)
+
     def build_srt(self, version):
         compiler_flags = []
         url = '{0}/v{1}.{2}'.format(SRT_SRC_URL, version, SRT_ARCH_EXT)
@@ -544,6 +553,7 @@ if __name__ == "__main__":
     srt_default_version = '1.4.3'
     gstreamer_default_version = '1.19.2'
     wpe_version = '1.12.0'
+    wpe_backend_version = '1.12.0'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
@@ -919,6 +929,7 @@ if __name__ == "__main__":
     build_wpe = argv.with_wpe and arg_install_other_packages
     if build_wpe:
         request.build_wpe(wpe_version)
+        request.build_wpe_backend(wpe_backend_version)
 
     if argv.with_srt and arg_install_other_packages:
         request.build_srt(argv.srt_version)
