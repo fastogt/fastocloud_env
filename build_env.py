@@ -973,11 +973,11 @@ if __name__ == "__main__":
     if argv.with_gst_plugins_base and arg_install_gstreamer_packages:
         request.build_gst_plugins_base(argv.gst_plugins_base_version)
 
-    if argv.with_gst_plugins_good and arg_install_gstreamer_packages:
-        request.build_gst_plugins_good(argv.gst_plugins_good_version)
-
     if build_wpe:
         request.build_wpe_webkit(wpe_webkit_version)
+
+    if argv.with_gst_plugins_good and arg_install_gstreamer_packages:
+        request.build_gst_plugins_good(argv.gst_plugins_good_version)
 
     if argv.with_gst_nice and arg_install_gstreamer_packages:
         request.build_gst_nice()
