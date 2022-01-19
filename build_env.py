@@ -942,7 +942,6 @@ if __name__ == "__main__":
     if build_wpe:
         request.build_wpe(wpe_version)
         request.build_wpe_backend(wpe_backend_version)
-        request.build_wpe_webkit(wpe_webkit_version)
 
     if argv.with_srt and arg_install_other_packages:
         request.build_srt(argv.srt_version)
@@ -973,6 +972,9 @@ if __name__ == "__main__":
 
     if argv.with_gst_plugins_base and arg_install_gstreamer_packages:
         request.build_gst_plugins_base(argv.gst_plugins_base_version)
+
+    if build_wpe:
+        request.build_wpe_webkit(wpe_webkit_version)
 
     if argv.with_gst_plugins_good and arg_install_gstreamer_packages:
         request.build_gst_plugins_good(argv.gst_plugins_good_version)
