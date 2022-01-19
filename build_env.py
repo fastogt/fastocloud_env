@@ -463,7 +463,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_meson(url, compiler_flags)
 
     def build_wpe_webkit(self, version):
-        compiler_flags = []
+        compiler_flags = ['-DPORT=WPE']
         url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL, version, WPE_WEBKIT_ARCH_EXT)
         self._download_and_build_via_cmake(url, compiler_flags)
 
