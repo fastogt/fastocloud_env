@@ -91,7 +91,8 @@ if __name__ == "__main__":
         request.prepare_docker()
 
     if argv.with_system and arg_install_other_packages:
-        request.install_system(with_nvidia=False, with_mongo=True, with_gstreamer=False, repo_build=True)
+        request.install_system(with_nvidia=False, with_wpe=False, with_mongo=True, with_gstreamer=False,
+                               repo_build=True)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
