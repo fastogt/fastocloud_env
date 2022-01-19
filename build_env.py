@@ -124,7 +124,8 @@ class Debian(OperationSystem):
         return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
 
     def get_wpe_libs(self) -> list:
-        return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby', 'libgcrypt20-dev']
+        return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby', 'libgcrypt20-dev',
+                'libwebp-dev']
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
