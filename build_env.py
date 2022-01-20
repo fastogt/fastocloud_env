@@ -493,7 +493,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_meson(url, compiler_flags)
 
     def build_gst_plugins_base(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
         url = build_utils.generate_fastogt_github_path('gst-plugins-base')
         self._clone_and_build_via_meson(url, compiler_flags)
 
