@@ -13,8 +13,8 @@ _file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
 
-if sys.version_info < (3, 5, 0):  # meson limitations
-    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.5.0 or greater')
+if sys.version_info < (3, 5, 2):  # meson limitations
+    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.5.2 or greater')
     sys.exit(1)
 
 GSTREAMER_SRC_ROOT = "https://gstreamer.freedesktop.org/src/"
@@ -617,7 +617,7 @@ if __name__ == "__main__":
     # cmake
     cmake_grp = parser.add_mutually_exclusive_group()
     cmake_grp.add_argument('--with-cmake', help='build cmake (default, version:{0})'.format(cmake_default_version),
-                           dest='cmake', action='store_true', default=True)
+                           dest='with_cmake', action='store_true', default=True)
     cmake_grp.add_argument('--without-cmake', help='build without cmake', dest='with_cmake', action='store_false',
                            default=False)
     parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
