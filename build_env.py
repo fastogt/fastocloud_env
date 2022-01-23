@@ -112,7 +112,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-dev']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
@@ -153,7 +153,7 @@ class Debian(OperationSystem):
 
 class RedHat(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'cmake', 'python3-pip', 'python3-devel']
+        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel', 'openssl-devel']
@@ -189,7 +189,7 @@ class RedHat(OperationSystem):
 
 class Arch(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-dev']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev', 'openssl']
@@ -222,7 +222,7 @@ class Arch(OperationSystem):
 
 class FreeBSD(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel', 'dbus']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-devel', 'dbus']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd', 'openssl']
@@ -257,7 +257,7 @@ class Windows64(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-x86_64-yasm', 'mingw-w64-x86_64-nasm', 'mingw-w64-x86_64-gcc', 'mingw-w64-x86_64-ninja',
-                'mingw-w64-x86_64-cmake', 'python3-pip']
+                'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
@@ -288,7 +288,7 @@ class Windows32(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-i686-yasm', 'mingw-w64-i686-nasm', 'mingw-w64-i686-gcc', 'mingw-w64-i686-ninja',
-                'mingw-w64-i686-cmake', 'python3-pip']
+                'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
@@ -317,7 +317,7 @@ class Windows32(OperationSystem):
 
 class MacOSX(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'cmake', 'python3-pip', 'python3-devel']
+        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig']
@@ -560,6 +560,7 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
+    cmake_default_version = '3.12'
     meson_default_version = '0.55.3'
     srt_default_version = '1.4.3'
     gstreamer_default_version = '1.19.2'
@@ -612,6 +613,15 @@ if __name__ == "__main__":
                            action='store_true', default=True)
     voaac_grp.add_argument('--without-voaac', help='build without voaac', dest='with_voaac', action='store_false',
                            default=False)
+
+    # cmake
+    cmake_grp = parser.add_mutually_exclusive_group()
+    cmake_grp.add_argument('--with-cmake', help='build cmake (default, version:{0})'.format(cmake_default_version),
+                           dest='cmake', action='store_true', default=True)
+    cmake_grp.add_argument('--without-cmake', help='build without cmake', dest='with_cmake', action='store_false',
+                           default=False)
+    parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
+                        default=cmake_default_version)
 
     # meson
     meson_grp = parser.add_mutually_exclusive_group()
@@ -920,6 +930,9 @@ if __name__ == "__main__":
 
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
+
+    if argv.with_cmake and arg_install_other_packages:
+        request.build_cmake(argv.cmake_version)
 
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
