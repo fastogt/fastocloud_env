@@ -895,7 +895,7 @@ if __name__ == "__main__":
                         default=False)
 
     parser.add_argument('--install-other-packages',
-                        help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
+                        help='install other packages (--with-system --with-tools --with-cmake --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
                         help='install FastoGT packages (--with-common --with-fastotv-cpp) (default: True)',
