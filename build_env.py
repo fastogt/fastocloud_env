@@ -124,8 +124,8 @@ class Debian(OperationSystem):
         return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
 
     def get_wpe_libs(self) -> list:
-        return ['libegl-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby', 'libgcrypt20-dev',
-                'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libx11-xcb-dev', 'gperf']
+        return ['libegl-dev', 'libegl1-mesa-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby',
+                'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libx11-xcb-dev', 'gperf']
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
@@ -560,7 +560,7 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    meson_default_version = '0.54.0'
+    meson_default_version = '0.55.3'
     srt_default_version = '1.4.3'
     gstreamer_default_version = '1.19.2'
     wpe_version = '1.12.0'
