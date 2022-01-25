@@ -636,7 +636,7 @@ if __name__ == "__main__":
     openh264_grp = parser.add_mutually_exclusive_group()
     openh264_grp.add_argument('--with-openh264', help='build openh264 (default, version: git master)',
                               dest='with_openh264',
-                              action='store_true', default=True)
+                              action='store_true', default=False)
     openh264_grp.add_argument('--without-openh264', help='build without openh264', dest='with_openh264',
                               action='store_false',
                               default=True)
