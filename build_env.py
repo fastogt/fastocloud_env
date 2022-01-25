@@ -451,7 +451,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_openh264(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(OPENH264_URL, compiler_flags)
+        self._clone_and_build_via_meson(OPENH264_URL, compiler_flags, branch='v2.1.1')
 
     def build_wpe(self, version):
         compiler_flags = []
