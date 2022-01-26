@@ -134,6 +134,10 @@ PLUGINS = ['decodebin',
            'decklinkaudiosink',
            'interlace',
            'autovideoconvert',
+           
+           'glvideomixer',
+           'glalpha',
+
            'cudascale',
            'cudaconvert',
            'cudadownload',
