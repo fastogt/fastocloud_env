@@ -495,7 +495,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
         # url = build_utils.generate_fastogt_github_path('gst-plugins-base')
-        url = '{0}gst-plugins-good/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
+        url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
         self._clone_and_build_via_meson(url, compiler_flags)
 
