@@ -494,7 +494,9 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
-        url = build_utils.generate_fastogt_github_path('gst-plugins-base')
+        # url = build_utils.generate_fastogt_github_path('gst-plugins-base')
+        url = '{0}gst-plugins-good/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
+                                                                    GST_PLUGINS_GOOD_ARCH_EXT)
         self._clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_plugins_good(self, version):
@@ -561,7 +563,7 @@ if __name__ == "__main__":
     cmake_default_version = '3.12.0'
     meson_default_version = '0.55.3'
     srt_default_version = '1.4.3'
-    gstreamer_default_version = '1.19.2'
+    gstreamer_default_version = '1.20.0'
     wpe_version = '1.12.0'
     wpe_backend_version = '1.12.0'
     wpe_webkit_version = '2.34.4'
