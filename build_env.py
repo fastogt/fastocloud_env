@@ -515,12 +515,12 @@ class BuildRequest(build_utils.BuildRequest):
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
             self._clone_and_build_via_cmake(GSTREAMER_MFX_URL, compiler_flags_mfx)
         if vaapi:
-            compiler_flags_vaapi = ['--buildtype=release']
+            compiler_flags_vaapi = ['--buildtype=release', '-Dgpl=enabled']
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
             self._download_and_build_via_meson(url, compiler_flags_vaapi)
 
     def build_gst_plugins_ugly(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
         url = '{0}gst-plugins-ugly/gst-plugins-ugly-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
                                                                     GST_PLUGINS_UGLY_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
