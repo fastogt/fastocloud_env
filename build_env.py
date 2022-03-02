@@ -567,7 +567,7 @@ if __name__ == "__main__":
     gstreamer_default_version = '1.20.0'
     wpe_version = '1.12.0'
     wpe_backend_version = '1.12.0'
-    wpe_webkit_version = '2.34.5'
+    wpe_webkit_version = '2.34.6'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
