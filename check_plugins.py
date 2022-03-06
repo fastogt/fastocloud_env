@@ -135,7 +135,7 @@ PLUGINS = ['decodebin',
            'decklinkaudiosink',
            'interlace',
            'autovideoconvert',
-           
+
            'glvideomixer',
            'glalpha',
 
@@ -156,32 +156,44 @@ PLUGINS = ['decodebin',
            'srtsrc',
            'srtsink',
            'input-selector',
-           'tinyyolov2',
-           'tinyyolov3',
-           'detectionoverlay',
            'kvssink',
            's3sink',
-           'nvinfer',
-           'nvtracker',
-           'nvvideoconvert',
-           'nvstreammux',
-           'nvv4l2h264enc',
-           'nvv4l2h265enc',
-           'nvv4l2vp8enc',
-           'nvv4l2vp9enc',
-           'nvdsosd',
-           'dsfastogt',
-           'fastogtbackground',
-           'fastogtaudio',
            'webrtcbin']
+
+PLUGINS_ML = [
+    'tinyyolov2',
+    'tinyyolov3',
+    'detectionoverlay',
+    'nvinfer',
+    'nvtracker',
+    'nvvideoconvert',
+    'nvstreammux',
+    'nvv4l2h264enc',
+    'nvv4l2h265enc',
+    'nvv4l2vp8enc',
+    'nvv4l2vp9enc',
+    'nvdsosd',
+    'dsfastogt',
+    'fastogtbackground',
+    'fastogtaudio'
+]
 
 
 def check_plugins():
     env = os.environ
     env['LD_LIBRARY_PATH'] = '$LD_LIBRARY_PATH:/usr/local/TensorRT-7.2.2.3/lib:/usr/local/VideoFX/lib/'
-    env['GST_PLUGIN_PATH'] = '/usr/local/lib/gstreamer-1.0/'
+    env['GST_PLUGIN_PATH'] = '$GST_PLUGIN_PATH:/usr/local/lib/gstreamer-1.0/'
     with open(os.devnull, 'w') as devnull:
+        print('\nPlugins for FastoCloud COM/PRO:')
         for plugin in PLUGINS:
+            try:
+                subprocess.check_output(['gst-inspect-1.0', plugin], env=env, stderr=devnull)
+                print_success('Check plugin {0}, success return code: {1}'.format(plugin, 0))
+            except CalledProcessError as e:
+                print_error('Check plugin {0}, failed return code: {1}'.format(plugin, e.returncode))
+
+        print('\nPlugins for FastoCloud ML:')
+        for plugin in PLUGINS_ML:
             try:
                 subprocess.check_output(['gst-inspect-1.0', plugin], env=env, stderr=devnull)
                 print_success('Check plugin {0}, success return code: {1}'.format(plugin, 0))
