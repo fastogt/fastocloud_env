@@ -564,7 +564,7 @@ if __name__ == "__main__":
     cmake_default_version = '3.12.0'
     meson_default_version = '0.59.0'
     srt_default_version = '1.4.4'
-    gstreamer_default_version = '1.20.1'
+    gstreamer_default_version = '1.20.2'
     wpe_version = '1.12.0'
     wpe_backend_version = '1.12.0'
     wpe_webkit_version = '2.36.0'
