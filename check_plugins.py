@@ -157,6 +157,8 @@ PLUGINS = ['decodebin',
            'srtsink',
            'input-selector',
            'kvssink',
+           'azuresink',
+           'azuresrc',
            's3sink',
            'webrtcbin']
 
