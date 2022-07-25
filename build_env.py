@@ -565,9 +565,10 @@ if __name__ == "__main__":
     meson_default_version = '0.59.0'
     srt_default_version = '1.4.4'
     gstreamer_default_version = '1.20.3'
+    # https://wpewebkit.org/release/
     wpe_version = '1.12.0'
     wpe_backend_version = '1.12.0'
-    wpe_webkit_version = '2.36.1'
+    wpe_webkit_version = '2.36.4'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
