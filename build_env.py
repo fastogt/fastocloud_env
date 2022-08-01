@@ -480,6 +480,10 @@ class BuildRequest(build_utils.BuildRequest):
                           '-DOPENCV_GENERATE_PKGCONFIG=ON']
         self._clone_and_build_via_cmake(OPENCV_URL, compiler_flags)
 
+    def build_libyaml(self):
+        cmake_flags = []
+        self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('libyaml'), cmake_flags)
+
     def build_fastoml(self):
         cmake_flags = []
         self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
@@ -746,6 +750,13 @@ if __name__ == "__main__":
     fastotv_cpp_grp.add_argument('--without-fastotv-cpp', help='build without fastotv_cpp', dest='with_fastotv_cpp',
                                  action='store_false', default=False)
 
+    # libyaml
+    libyaml_grp = parser.add_mutually_exclusive_group()
+    libyaml_grp.add_argument('--with-libyaml-cpp', help='build libyaml (default, version: git master)',
+                                 dest='with_libyaml', action='store_true', default=True)
+    libyaml_grp.add_argument('--without-libyaml-cpp', help='build without libyaml', dest='with_libyaml',
+                                 action='store_false', default=False)
+
     # fastoml
     fastoml_grp = parser.add_mutually_exclusive_group()
     fastoml_grp.add_argument('--with-fastoml', help='build fastoml (default, version: git master)',
@@ -900,7 +911,7 @@ if __name__ == "__main__":
                         help='install other packages (--with-system, --with-tools --with-cmake --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
-                        help='install FastoGT packages (--with-common --with-fastotv-cpp) (default: True)',
+                        help='install FastoGT packages (--with-common --with-fastotv-cpp --with-libyaml) (default: True)',
                         dest='install_fastogt_packages', type=str2bool, default=True)
     parser.add_argument('--install-gstreamer-packages',
                         help='install GStreamer packages  (--with-gstreamer --with-gst-plugins-base --with-gst-plugins-good --with-gst-plugins-bad --with-gst-plugins-ugly --with-gst-libav --with-gst-rtsp) (default: True)',
@@ -978,6 +989,9 @@ if __name__ == "__main__":
 
     if argv.with_fastotv_cpp and arg_install_fastogt_packages:
         request.build_fastotv_cpp()
+
+    if argv.with_libyaml and arg_install_fastogt_packages:
+        request.build_libyaml()
 
     if argv.with_fastoml and arg_install_fastogt_packages:
         request.build_fastoml()
