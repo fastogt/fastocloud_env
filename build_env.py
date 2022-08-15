@@ -173,7 +173,7 @@ class RedHat(OperationSystem):
 
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
-                'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libxfixes-devel',
+                'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libXfixes-devel',
                 'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
                 'libvpx-devel',
                 'libopus-devel', 'libvo-aacenc-devel',
