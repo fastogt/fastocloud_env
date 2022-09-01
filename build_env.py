@@ -570,9 +570,9 @@ if __name__ == "__main__":
     srt_default_version = '1.5.0'
     gstreamer_default_version = '1.20.3'
     # https://wpewebkit.org/release/
-    wpe_version = '1.12.1'
+    wpe_version = '1.12.3'
     wpe_backend_version = '1.12.1'
-    wpe_webkit_version = '2.36.6'
+    wpe_webkit_version = '2.36.7'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
