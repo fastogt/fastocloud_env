@@ -160,6 +160,8 @@ PLUGINS = ['decodebin',
            'azuresink',
            'azuresrc',
            's3sink',
+           'gssink',
+           'gssrc',
            'webrtcbin']
 
 PLUGINS_ML = [
