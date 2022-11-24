@@ -110,6 +110,9 @@ if __name__ == "__main__":
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
 
+    if argv.with_cmake and arg_install_other_packages:
+        request.build_cmake(argv.cmake_version)
+
     if argv.with_nginx and arg_install_other_packages:
         request.install_nginx()
 
