@@ -41,7 +41,7 @@ cd ../
 rm -rf pyfastogt
 
 # build env for service
-./build_fastocloud_env_from_repo.py
+./build_fastocloud_env_from_repo.py "$@"
 
 # add user
 useradd -m -U -d /home/$USER $USER -s /bin/bash
