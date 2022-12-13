@@ -81,6 +81,13 @@ if __name__ == "__main__":
     fastotv_cpp_grp.add_argument('--without-fastotv-cpp', help='build without fastotv_cpp', dest='with_fastotv_cpp',
                                  action='store_false', default=False)
 
+    # libyaml
+    libyaml_grp = parser.add_mutually_exclusive_group()
+    libyaml_grp.add_argument('--with-libyaml-cpp', help='build libyaml (default, version: git master)',
+                                 dest='with_libyaml', action='store_true', default=True)
+    libyaml_grp.add_argument('--without-libyaml-cpp', help='build without libyaml', dest='with_libyaml',
+                                 action='store_false', default=False)
+
     # other
     parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
@@ -91,7 +98,7 @@ if __name__ == "__main__":
                         help='install other packages (--with-system, --with-tools --with-cmake --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
-                        help='install FastoGT packages (--with-common --with-fastotv-cpp) (default: True)',
+                        help='install FastoGT packages (--with-common --with-fastotv-cpp --with-libyaml) (default: True)',
                         dest='install_fastogt_packages', type=str2bool, default=True)
 
     argv = parser.parse_args()
@@ -125,5 +132,8 @@ if __name__ == "__main__":
 
     if argv.with_fastotv_cpp and arg_install_fastogt_packages:
         request.build_fastotv_cpp()
+
+    if argv.with_libyaml and arg_install_fastogt_packages:
+        request.build_libyaml()
 
     check_plugins()
