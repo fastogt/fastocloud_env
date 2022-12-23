@@ -567,12 +567,12 @@ def str2bool(v):
 if __name__ == "__main__":
     cmake_default_version = '3.16.0'
     meson_default_version = '0.59.0'
-    srt_default_version = '1.5.0'
-    gstreamer_default_version = '1.20.4'
+    srt_default_version = '1.5.1'
+    gstreamer_default_version = '1.20.5'
     # https://wpewebkit.org/release/
     wpe_version = '1.14.0'
     wpe_backend_version = '1.14.0'
-    wpe_webkit_version = '2.36.8'
+    wpe_webkit_version = '2.38.2'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
