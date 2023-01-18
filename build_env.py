@@ -572,7 +572,7 @@ if __name__ == "__main__":
     # https://wpewebkit.org/release/
     wpe_version = '1.14.0'
     wpe_backend_version = '1.14.0'
-    wpe_webkit_version = '2.38.2'
+    wpe_webkit_version = '2.38.3'
     gst_plugins_base_default_version = gstreamer_default_version
     gst_plugins_good_default_version = gstreamer_default_version
     gst_plugins_bad_default_version = gstreamer_default_version
