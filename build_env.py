@@ -493,7 +493,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
 
     def build_gstreamer(self, version):
-        compiler_flags = ['--buildtype=release', '-Dgtk_doc=disabled']
+        compiler_flags = ['--buildtype=release']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
