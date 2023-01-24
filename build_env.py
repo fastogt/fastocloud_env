@@ -565,7 +565,7 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    cmake_default_version = '3.16.0'
+    cmake_default_version = '3.17.0'
     meson_default_version = '0.62.0'
     srt_default_version = '1.5.1'
     gstreamer_default_version = '1.22.0'
