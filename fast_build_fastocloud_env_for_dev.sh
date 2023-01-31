@@ -3,6 +3,7 @@ set -ex
 
 # exports
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+export DEBIAN_FRONTEND=noninteractive
 
 # variables
 USER=fastocloud
