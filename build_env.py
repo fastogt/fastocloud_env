@@ -115,7 +115,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'rustc', 'cargo']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
@@ -157,7 +157,7 @@ class Debian(OperationSystem):
 
 class RedHat(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel', 'rurst', 'cargo']
+        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel', 'openssl-devel']
@@ -261,7 +261,7 @@ class Windows64(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-x86_64-yasm', 'mingw-w64-x86_64-nasm', 'mingw-w64-x86_64-gcc', 'mingw-w64-x86_64-ninja',
-                'python3-pip', 'rust', 'cargo']
+                'python3-pip', 'rust']
 
     def get_build_exec(self) -> list:
         return []
@@ -292,7 +292,7 @@ class Windows32(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-i686-yasm', 'mingw-w64-i686-nasm', 'mingw-w64-i686-gcc', 'mingw-w64-i686-ninja',
-                'python3-pip', 'rust', 'cargo']
+                'python3-pip', 'rust']
 
     def get_build_exec(self) -> list:
         return []
@@ -321,7 +321,7 @@ class Windows32(OperationSystem):
 
 class MacOSX(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel', 'rust', 'cargo']
+        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig']
@@ -356,8 +356,6 @@ class BuildRequest(build_utils.BuildRequest):
         platform_name = platform.name()
         ar = platform.architecture()
         dep_libs = []
-
-        # TODO: change rust installation to rustup 
 
         current_system = None
         if platform_name == 'linux':
