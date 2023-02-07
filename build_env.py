@@ -115,7 +115,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'rust']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'cargo']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
@@ -157,7 +157,7 @@ class Debian(OperationSystem):
 
 class RedHat(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel', 'rust']
+        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel', 'openssl-devel']
@@ -193,7 +193,7 @@ class RedHat(OperationSystem):
 
 class Arch(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-dev', 'rust']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev', 'openssl']
@@ -226,7 +226,7 @@ class Arch(OperationSystem):
 
 class FreeBSD(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-devel', 'dbus', 'rust']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-devel', 'dbus']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd', 'openssl']
@@ -261,7 +261,7 @@ class Windows64(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-x86_64-yasm', 'mingw-w64-x86_64-nasm', 'mingw-w64-x86_64-gcc', 'mingw-w64-x86_64-ninja',
-                'python3-pip', 'rust']
+                'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
@@ -292,7 +292,7 @@ class Windows32(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-i686-yasm', 'mingw-w64-i686-nasm', 'mingw-w64-i686-gcc', 'mingw-w64-i686-ninja',
-                'python3-pip', 'rust']
+                'python3-pip']
 
     def get_build_exec(self) -> list:
         return []
@@ -321,7 +321,7 @@ class Windows32(OperationSystem):
 
 class MacOSX(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel', 'rust']
+        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig']
@@ -422,6 +422,8 @@ class BuildRequest(build_utils.BuildRequest):
     def install_tools(self):
         self.update_pyfastostream()
         self._install_via_python3('speedtest-cli')
+
+        self._install_via_cargo('cargo-c')
 
     def install_nginx(self):
         self._install_package('nginx')
@@ -865,8 +867,8 @@ if __name__ == "__main__":
 
     # gst-plugin-ndi
     gst_plugins_ndi_grp = parser.add_mutually_exclusive_group()
-    gst_plugins_ndi_grp.add_argument('--with-gst-ndi-plugin', help='build with gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_true', default=True)
-    gst_plugins_ndi_grp.add_argument('--without-gst-ndi-plugin', help='build without gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_false', default=False)
+    gst_plugins_ndi_grp.add_argument('--with-gst-ndi-plugin', help='build with gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_true', default=False)
+    gst_plugins_ndi_grp.add_argument('--without-gst-ndi-plugin', help='build without gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_false', default=True)
 
     # gst-fastoml
     gst_fastoml_grp = parser.add_mutually_exclusive_group()
