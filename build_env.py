@@ -45,10 +45,13 @@ GST_RTSP_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
 
+GST_RUST_PLUGINS = 'https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs'
+
 AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
 
+NDI_URL = 'https://github.com/Palakis/obs-ndi'
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
 LIBVA_URL = 'https://github.com/intel/libva'
@@ -112,7 +115,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
@@ -154,7 +157,7 @@ class Debian(OperationSystem):
 
 class RedHat(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel']
+        return ['git', 'yasm', 'nasm', 'gcc', 'gcc-c++', 'make', 'ninja-build', 'python3-pip', 'python3-devel', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'libudev-devel', 'openssl-devel']
@@ -190,7 +193,7 @@ class RedHat(OperationSystem):
 
 class Arch(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-dev']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-dev', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig', 'udev', 'openssl']
@@ -223,7 +226,7 @@ class Arch(OperationSystem):
 
 class FreeBSD(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-devel', 'dbus']
+        return ['git', 'yasm', 'nasm', 'gcc', 'make', 'ninja', 'python3-pip', 'python3-devel', 'dbus', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconf', 'libudev-devd', 'openssl']
@@ -258,7 +261,7 @@ class Windows64(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-x86_64-yasm', 'mingw-w64-x86_64-nasm', 'mingw-w64-x86_64-gcc', 'mingw-w64-x86_64-ninja',
-                'python3-pip']
+                'python3-pip', 'rust']
 
     def get_build_exec(self) -> list:
         return []
@@ -289,7 +292,7 @@ class Windows32(OperationSystem):
     def get_required_exec(self) -> list:
         return ['git', 'make', 'autoconf', 'automake',
                 'mingw-w64-i686-yasm', 'mingw-w64-i686-nasm', 'mingw-w64-i686-gcc', 'mingw-w64-i686-ninja',
-                'python3-pip']
+                'python3-pip', 'rust']
 
     def get_build_exec(self) -> list:
         return []
@@ -318,7 +321,7 @@ class Windows32(OperationSystem):
 
 class MacOSX(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel']
+        return ['git', 'yasm', 'nasm', 'make', 'ninja', 'python3-pip', 'python3-devel', 'rust']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'libtool', 'pkgconfig']
@@ -492,6 +495,10 @@ class BuildRequest(build_utils.BuildRequest):
         cmake_flags = ['-DBUILD_ONLY=s3;sts']
         self._clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
 
+    def build_ndi(self):
+        cmake_flags = []
+        self._clone_and_build_via_cmake(NDI_URL, cmake_flags)
+
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
@@ -537,6 +544,10 @@ class BuildRequest(build_utils.BuildRequest):
     def build_gst_awss3(self):
         compiler_flags = ['--buildtype=release']
         self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
+
+    def build_gst_ndi_plugin(self):
+        plugin = "gst-plugin-ndi" 
+        self._clone_and_build_via_cargo_c(GST_RUST_PLUGINS, plugin)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
@@ -775,6 +786,15 @@ if __name__ == "__main__":
                          action='store_false',
                          default=True)
 
+    # ndi 
+    ndi_grp = parser.add_mutually_exclusive_group()
+    ndi_grp.add_argument('--with-ndi', help='build ndi',
+                         dest='with_ndi',
+                         action='store_true', default=False)
+    ndi_grp.add_argument('--without-ndi', help='build without ndi', dest='with_ndi',
+                         action='store_false',
+                         default=True)
+
     # gstreamer
     gstreamer_grp = parser.add_mutually_exclusive_group()
     gstreamer_grp.add_argument('--with-gstreamer',
@@ -842,6 +862,11 @@ if __name__ == "__main__":
     parser.add_argument('--gst-plugins-ugly-version',
                         help='gst-plugins-ugly version (default: {0})'.format(gst_plugins_ugly_default_version),
                         default=gst_plugins_ugly_default_version)
+
+    # gst-plugin-ndi
+    gst_plugins_ndi_grp = parser.add_mutually_exclusive_group()
+    gst_plugins_ndi_grp.add_argument('--with-gst-ndi-plugin', help='build with gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_true', default=True)
+    gst_plugins_ndi_grp.add_argument('--without-gst-ndi-plugin', help='build without gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_false', default=False)
 
     # gst-fastoml
     gst_fastoml_grp = parser.add_mutually_exclusive_group()
@@ -987,6 +1012,9 @@ if __name__ == "__main__":
     if argv.with_common and arg_install_fastogt_packages:
         request.build_common()
 
+    if argv.with_ndi and arg_install_other_packages:
+        request.build_ndi()
+
     if argv.with_fastotv_cpp and arg_install_fastogt_packages:
         request.build_fastotv_cpp()
 
@@ -1022,6 +1050,9 @@ if __name__ == "__main__":
 
     if argv.with_gst_awss3 and arg_install_gstreamer_packages:
         request.build_gst_awss3()
+
+    if argv.with_gst_ndi_plugin and arg_install_gstreamer_packages:
+        request.build_gst_ndi()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gst_libav_version)
