@@ -423,7 +423,8 @@ class BuildRequest(build_utils.BuildRequest):
         self.update_pyfastostream()
         self._install_via_python3('speedtest-cli')
 
-        self._install_via_cargo('--version 0.9.13 cargo-c')
+        args_cargo = ['--version', '0.9.13', 'cargo-c']
+        self._install_via_cargo_list(args_cargo)
 
     def install_nginx(self):
         self._install_package('nginx')
