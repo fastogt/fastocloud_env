@@ -582,7 +582,7 @@ if __name__ == "__main__":
     cmake_default_version = '3.17.0'
     meson_default_version = '0.62.0'
     srt_default_version = '1.5.1'
-    gstreamer_default_version = '1.22.0'
+    gstreamer_default_version = '1.22.1'
     # https://wpewebkit.org/release/
     wpe_version = '1.14.0'
     wpe_backend_version = '1.14.0'
