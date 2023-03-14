@@ -24,7 +24,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "cygwin" ]]; then
 :
 elif [[ "$OSTYPE" == "msys" ]]; then
-    pacman -Suy --noconfirm git python3-setuptools python3-pip
+    pacman -Suy
+    pacman -S --need --noconfirm ca-certificates git python3-setuptools python3-pip
 :
 elif [[ "$OSTYPE" == "win32" ]]; then
 :
