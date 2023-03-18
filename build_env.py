@@ -267,7 +267,7 @@ class Windows64(OperationSystem):
         return []
 
     def get_build_gst_exec(self) -> list:
-        return []
+        return ['bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
@@ -298,7 +298,7 @@ class Windows32(OperationSystem):
         return []
 
     def get_build_gst_exec(self) -> list:
-        return []
+        return ['bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
         return []
