@@ -435,7 +435,7 @@ class BuildRequest(build_utils.BuildRequest):
             nginx_dir = '/etc/nginx/sites-enabled/'
             if not os.path.exists(nginx_dir):
                 os.makedirs(nginx_dir)
-            subprocess.call(['cp -r', os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/'])
+            copy_directory(os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/')
 
     def build_faac(self):
         compiler_flags = []
@@ -577,6 +577,17 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
+def copy_directory(self, dst):
+    for item in os.listdir(self):
+        s = os.path.join(self, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            os.makedirs(d, exist_ok=True)
+            self.copy_directory(s, d)
+        else:
+            os.makedirs(os.path.dirname(d), exist_ok=True)
+            with open(s, 'rb') as src_file, open(d, 'wb') as dst_file:
+                dst_file.write(src_file.read())
 
 if __name__ == "__main__":
     cmake_default_version = '3.17.0'
