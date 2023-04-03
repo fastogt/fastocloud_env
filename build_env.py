@@ -435,7 +435,7 @@ class BuildRequest(build_utils.BuildRequest):
             nginx_dir = '/etc/nginx/sites-enabled/'
             if not os.path.exists(nginx_dir):
                 os.makedirs(nginx_dir)
-            subprocess.call(['cp', os.path.join(_file_path, 'nginx/fastocloud'), '/etc/nginx/sites-enabled/fastocloud'])
+            subprocess.call(['cp -r', os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/'])
 
     def build_faac(self):
         compiler_flags = []
