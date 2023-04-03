@@ -124,7 +124,7 @@ class Debian(OperationSystem):
         return ['gettext', 'bison', 'flex']
 
     def get_nvidia_libs(self) -> list:
-        return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit']
+        return ['nvidia-cuda-dev', 'nvidia-cuda-toolkit', 'libnvidia-ml-dev']
 
     def get_wpe_libs(self) -> list:
         return ['libegl-dev', 'libegl1-mesa-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby',
