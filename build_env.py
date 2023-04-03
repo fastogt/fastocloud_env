@@ -2,6 +2,7 @@
 import argparse
 import os
 import subprocess
+import shutil
 import sys
 from abc import ABCMeta, abstractmethod
 
@@ -435,7 +436,7 @@ class BuildRequest(build_utils.BuildRequest):
             nginx_dir = '/etc/nginx/sites-enabled/'
             if not os.path.exists(nginx_dir):
                 os.makedirs(nginx_dir)
-            subprocess.call(['cp -r', os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/'])
+            shutil.copytree(os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/')
 
     def build_faac(self):
         compiler_flags = []
