@@ -119,7 +119,7 @@ class Debian(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'cargo']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
+        return ['autoconf', 'automake', 'cmake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
@@ -433,10 +433,7 @@ class BuildRequest(build_utils.BuildRequest):
         platform = self.platform()
         platform_name = platform.name()
         if platform_name == 'linux':
-            nginx_dir = '/etc/nginx/sites-enabled/'
-            if not os.path.exists(nginx_dir):
-                os.makedirs(nginx_dir)
-            shutil.copytree(os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/')
+            shutil.copytree(os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/', dirs_exist_ok=True)
 
     def build_faac(self):
         compiler_flags = []
@@ -580,7 +577,6 @@ def str2bool(v):
 
 
 if __name__ == "__main__":
-    cmake_default_version = '3.17.0'
     meson_default_version = '0.62.0'
     srt_default_version = '1.5.1'
     gstreamer_default_version = '1.22.1'
@@ -634,15 +630,6 @@ if __name__ == "__main__":
                            action='store_true', default=True)
     voaac_grp.add_argument('--without-voaac', help='build without voaac', dest='with_voaac', action='store_false',
                            default=False)
-
-    # cmake
-    cmake_grp = parser.add_mutually_exclusive_group()
-    cmake_grp.add_argument('--with-cmake', help='build cmake (default, version:{0})'.format(cmake_default_version),
-                           dest='with_cmake', action='store_true', default=True)
-    cmake_grp.add_argument('--without-cmake', help='build without cmake', dest='with_cmake', action='store_false',
-                           default=False)
-    parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
-                        default=cmake_default_version)
 
     # meson
     meson_grp = parser.add_mutually_exclusive_group()
@@ -937,7 +924,7 @@ if __name__ == "__main__":
                         default=False)
 
     parser.add_argument('--install-other-packages',
-                        help='install other packages (--with-system, --with-tools --with-cmake --with-meson --with-jsonc --with-libev) (default: True)',
+                        help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
                         help='install FastoGT packages (--with-common --with-fastotv-cpp --with-libyaml) (default: True)',
@@ -972,9 +959,6 @@ if __name__ == "__main__":
 
     if argv.with_faac and arg_install_other_packages:
         request.build_faac()
-
-    if argv.with_cmake and arg_install_other_packages:
-        request.build_cmake(argv.cmake_version)
 
     if argv.with_meson and arg_install_other_packages:
         request.build_meson(argv.meson_version)
