@@ -18,7 +18,6 @@ class BuildRequestRepo(BuildRequest):
 if __name__ == "__main__":
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
-    cmake_default_version = '3.16.0'
 
     parser = argparse.ArgumentParser(prog='build_env', usage='%(prog)s [options]')
     # system
@@ -34,15 +33,6 @@ if __name__ == "__main__":
                            action='store_true', default=True)
     tools_grp.add_argument('--without-tools', help='build without tools dependencies', dest='with_tools',
                            action='store_false', default=False)
-
-    # cmake
-    cmake_grp = parser.add_mutually_exclusive_group()
-    cmake_grp.add_argument('--with-cmake', help='build cmake (default, version:{0})'.format(cmake_default_version),
-                           dest='with_cmake', action='store_true', default=True)
-    cmake_grp.add_argument('--without-cmake', help='build without cmake', dest='with_cmake', action='store_false',
-                           default=False)
-    parser.add_argument('--cmake-version', help='cmake version (default: {0})'.format(cmake_default_version),
-                        default=cmake_default_version)
 
     # nginx
     nginx_grp = parser.add_mutually_exclusive_group()
@@ -95,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('--prefix', help='prefix path (default: None)', default=None)
 
     parser.add_argument('--install-other-packages',
-                        help='install other packages (--with-system, --with-tools --with-cmake --with-meson --with-jsonc --with-libev) (default: True)',
+                        help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
                         dest='install_other_packages', type=str2bool, default=True)
     parser.add_argument('--install-fastogt-packages',
                         help='install FastoGT packages (--with-common --with-fastotv-cpp --with-libyaml) (default: True)',
@@ -116,9 +106,6 @@ if __name__ == "__main__":
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
-
-    if argv.with_cmake and arg_install_other_packages:
-        request.build_cmake(argv.cmake_version)
 
     if argv.with_nginx and arg_install_other_packages:
         request.install_nginx()
