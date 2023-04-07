@@ -138,7 +138,7 @@ class Debian(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
-                'libblkid-dev', 'libsoup2.4-dev', 'libjpeg-dev',
+                'libblkid-dev', 'libsoup2.4-dev', 'libsoup-3.0-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
                 'libvpx-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
