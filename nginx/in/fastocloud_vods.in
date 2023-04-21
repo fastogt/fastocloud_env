@@ -1,6 +1,6 @@
 server {
-  access_log /var/log/nginx/fastocloud_cods_84_access.log;
-  error_log /var/log/nginx/fastocloud_cods_84_error.log;
+  access_log /var/log/nginx/fastocloud_vods_83_access.log;
+  error_log /var/log/nginx/fastocloud_vods_83_error.log;
 
   $listen_ports
 
@@ -30,6 +30,6 @@ server {
       video/mp2t ts;
     }
 
-    alias /home/fastocloud/streamer/cods/;
+    alias /home/fastocloud/streamer/vods/;
   }
 }
