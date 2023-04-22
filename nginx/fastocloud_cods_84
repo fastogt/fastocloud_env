@@ -2,7 +2,8 @@ server {
   access_log /var/log/nginx/fastocloud_cods_84_access.log;
   error_log /var/log/nginx/fastocloud_cods_84_error.log;
 
-  $listen_ports
+  listen 84;
+  listen [::]:84;
 
   server_name _;
 
