@@ -13,7 +13,7 @@ if sys.version_info < (3, 4):
 try:
     import yaml
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
+    subprocess.check_call([sys.executable, "-m", "pip3", "install", "pyyaml"])
 
 import socket
 
@@ -156,7 +156,6 @@ class CdnConfigCli:
     def run(self) -> None:
         argv = self._parser.parse_args()
 
-        host = argv.host
         alias = argv.alias
         connections = argv.connections
         ml_version = argv.ml_version
@@ -168,17 +167,17 @@ class CdnConfigCli:
         print("Successfullly build NGINX configs")
 
         print("Start building Fastocloud config...")
-        self._build_fastocloud_config(host, alias, ports, ml_version)
+        self._build_fastocloud_config(alias, ports, ml_version)
         print("Successfullly build Fastocloud config")
 
     # TODO
     def _build_fastocloud_config(
-        self, host: str, alias: str, ports: Dict[str, List[int]], ml_version: bool
+        self, alias: str, ports: Dict[str, List[int]], ml_version: bool
     ) -> None:
         template = FASTOCLOUD_PRO_ML_TEMPLATE if ml_version else FASTOCLOUD_PRO_TEMPLATE
 
         def config_template(port: int) -> Dict[str, str]:
-            return {"host": f"http://{host}:{port}", "type": 1}
+            return {"host": f"http://0.0.0.0:{port}", "type": 1}
 
         for k, v in ports.items():
             ports[k] = list(map(lambda port: config_template(port), v))
@@ -260,7 +259,6 @@ class CdnConfigCli:
     def __init_parser(self) -> ArgumentParser:
         parser = ArgumentParser(prog=self._prog, usage=self._usage)
 
-        parser.add_argument("--host", help="nodes hostname", default="127.0.0.1")
         parser.add_argument("--alias", help="nodes hostname alias", default="localhost")
         parser.add_argument(
             "--connections", help="number of ports to open", type=int, default=100
