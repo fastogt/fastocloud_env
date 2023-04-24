@@ -159,9 +159,7 @@ class CdnConfigCli:
 
         default_host = argv.host
         default_alias = argv.alias
-        default_type = 0
 
-        connections = argv.connections
         ml_version = argv.ml_version
 
         self._is_open_port = partial(is_open_socket, "0.0.0.0")
@@ -170,10 +168,14 @@ class CdnConfigCli:
             acc: Dict[str, List[Dict[str, Any]]], template: Dict[str, str]
         ) -> Dict[str, List[Dict[str, Any]]]:
             print("Processing ", template["name"])
+            connections = int(input("Number of nodes: "))
             for _ in range(connections):
                 while True:
                     port = input("Port: ") or self.__get_random_open_port()
-                    if self._is_open_port(int(port)) and port not in self.__already_used_ports:
+                    if (
+                        self._is_open_port(int(port))
+                        and port not in self.__already_used_ports
+                    ):
                         self.__already_used_ports.append(port)
                         break
                     else:
@@ -182,15 +184,13 @@ class CdnConfigCli:
                         )
                         continue
 
-                alias = input("Alias: ") or default_alias
-                host = input("Host: ") or default_host
-                type = input("Type: ") or default_type
+                type = int(input("Type: "))
+                if type < 0 or type >= 2:
+                    raise ValueError("wrong type value")
 
                 print()
 
-                acc[template["name"]].append(
-                    {"port": port, "host": host, "alias": alias, "type": int(type)}
-                )
+                acc[template["name"]].append({"port": port, "type": type})
 
             return acc
 
@@ -205,7 +205,7 @@ class CdnConfigCli:
         print("Successfullly build Fastocloud config")
 
         print("Start building NGINX configs for HLS, VODS, CODS...")
-        ports = self._build_nginx_config(data)
+        self._build_nginx_config(data)
         print("Successfullly build NGINX configs")
 
     def _build_fastocloud_config(
@@ -215,8 +215,7 @@ class CdnConfigCli:
 
         def config_template(node: Dict[str, Any]) -> Dict[str, str]:
             return {
-                "host": f"http://{node['host']}:{node['port']}",
-                "alias": node["alias"],
+                "host": f"http://0.0.0.0:{node['port']}",
                 "type": node["type"],
             }
 
@@ -249,7 +248,7 @@ class CdnConfigCli:
                     access_log=template["access_log"].format(port=node["port"]),
                     error_log=template["error_log"].format(port=node["port"]),
                     listen_port=port_string,
-                    alias=node["alias"],
+                    alias=template["alias"],
                 ).expandtabs(4)
 
                 new_config += "\n" + server
@@ -278,10 +277,9 @@ class CdnConfigCli:
     def __init_parser(self) -> ArgumentParser:
         parser = ArgumentParser(prog=self._prog, usage=self._usage)
 
-        parser.add_argument("--host", help="nodes host", default="0.0.0.0")
-        parser.add_argument("--alias", help="nodes hostname alias", default="localhost")
+        parser.add_argument("--host", help="nodes host", default="127.0.0.1")
         parser.add_argument(
-            "--connections", help="number of ports to open", type=int, default=1
+            "--alias", help="nodes hostname alias", default="fastocloud.com"
         )
         parser.add_argument(
             "--ml-version",
