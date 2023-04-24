@@ -20,7 +20,6 @@ import random
 
 from functools import partial, reduce
 from collections import defaultdict
-from argparse import ArgumentParser
 from contextlib import closing
 
 from typing import Dict, List, Any
@@ -150,13 +149,9 @@ class CdnConfigCli:
         self._prog = prog
         self._usage = usage
 
-        self._parser = self.__init_parser()
-
         self.__already_used_ports: List[int] = []
 
     def run(self) -> None:
-        argv = self._parser.parse_args()
-
         host = input("Host: ") or "127.0.0.1:6317"
         alias = input("Alias: ") or "fastocloud.com"
 
@@ -204,7 +199,7 @@ class CdnConfigCli:
 
         print("Start building Fastocloud config...")
         self._build_fastocloud_config(host, alias, data, ml_version)
-        print("Successfullly build Fastocloud config")
+        print("Successfully build Fastocloud config")
 
         print("Start building NGINX configs for HLS, VODS, CODS...")
         self._build_nginx_config(data)
@@ -275,22 +270,6 @@ class CdnConfigCli:
 
     def __get_listen_port_string(self, port: int) -> str:
         return f"listen {port};\n\tlisten[::]:{port};\n"
-
-    def __init_parser(self) -> ArgumentParser:
-        parser = ArgumentParser(prog=self._prog, usage=self._usage)
-
-        parser.add_argument("--host", help="nodes host", default="127.0.0.1")
-        parser.add_argument(
-            "--alias", help="nodes hostname alias", default="fastocloud.com"
-        )
-        parser.add_argument(
-            "--ml-version",
-            help="build for fastocloud ml version",
-            action="store_true",
-            default=False,
-        )
-
-        return parser
 
 
 if __name__ == "__main__":
