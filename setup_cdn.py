@@ -13,15 +13,17 @@ if sys.version_info < (3, 4):
 try:
     import yaml
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip3", "install", "pyyaml"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
 
 import socket
+import random
 
 from functools import partial, reduce
+from collections import defaultdict
 from argparse import ArgumentParser
 from contextlib import closing
 
-from typing import Dict, List
+from typing import Dict, List, Any
 
 
 NGINX_TEMPLATE = """
@@ -138,9 +140,9 @@ NGINX_SITES_ENABLED_FOLDER = "/etc/nginx/sites-enabled"
 def is_open_socket(host, port) -> bool:
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
         if sock.connect_ex((host, port)) == 0:
-            return True
-        else:
             return False
+        else:
+            return True
 
 
 class CdnConfigCli:
@@ -152,35 +154,75 @@ class CdnConfigCli:
 
         self.__already_used_ports: List[int] = []
 
-
     def run(self) -> None:
         argv = self._parser.parse_args()
 
-        alias = argv.alias
+        default_host = argv.host
+        default_alias = argv.alias
+        default_type = 0
+
         connections = argv.connections
         ml_version = argv.ml_version
 
-        self._is_open_port = partial(is_open_socket, "127.0.0.1")
+        self._is_open_port = partial(is_open_socket, "0.0.0.0")
 
-        print("Start building NGINX configs for HLS, VODS, CODS...")
-        ports = self._build_nginx_configs(connections)
-        print("Successfullly build NGINX configs")
+        def get_user_input(
+            acc: Dict[str, List[Dict[str, Any]]], template: Dict[str, str]
+        ) -> Dict[str, List[Dict[str, Any]]]:
+            print("Processing ", template["name"])
+            for _ in range(connections):
+                while True:
+                    port = input("Port: ") or self.__get_random_open_port()
+                    if self._is_open_port(int(port)) and port not in self.__already_used_ports:
+                        self.__already_used_ports.append(port)
+                        break
+                    else:
+                        print(
+                            "Port is used by another process. Try another or press 'Enter' to randomly choose open one"
+                        )
+                        continue
+
+                alias = input("Alias: ") or default_alias
+                host = input("Host: ") or default_host
+                type = input("Type: ") or default_type
+
+                print()
+
+                acc[template["name"]].append(
+                    {"port": port, "host": host, "alias": alias, "type": int(type)}
+                )
+
+            return acc
+
+        data = reduce(
+            lambda acc, template: get_user_input(acc, template),
+            (HLS_TEMPLATE, VODS_TEMPLATE, CODS_TEMPLATE),
+            defaultdict(list),
+        )
 
         print("Start building Fastocloud config...")
-        self._build_fastocloud_config(alias, ports, ml_version)
+        self._build_fastocloud_config(default_alias, data, ml_version)
         print("Successfullly build Fastocloud config")
 
-    # TODO
+        print("Start building NGINX configs for HLS, VODS, CODS...")
+        ports = self._build_nginx_config(data)
+        print("Successfullly build NGINX configs")
+
     def _build_fastocloud_config(
-        self, alias: str, ports: Dict[str, List[int]], ml_version: bool
+        self, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
     ) -> None:
         template = FASTOCLOUD_PRO_ML_TEMPLATE if ml_version else FASTOCLOUD_PRO_TEMPLATE
 
-        def config_template(port: int) -> Dict[str, str]:
-            return {"host": f"http://0.0.0.0:{port}", "type": 1}
+        def config_template(node: Dict[str, Any]) -> Dict[str, str]:
+            return {
+                "host": f"http://{node['host']}:{node['port']}",
+                "alias": node["alias"],
+                "type": node["type"],
+            }
 
-        for k, v in ports.items():
-            ports[k] = list(map(lambda port: config_template(port), v))
+        ports = {}
+        for name, nodes in data.items():
+            ports[name] = list(map(config_template, nodes))
 
         nodes = str(yaml.dump(ports))
 
@@ -188,44 +230,31 @@ class CdnConfigCli:
 
         return self._write_fastocloud_config(template["filename"], new_config)
 
-
     def _write_fastocloud_config(self, filename: str, config: str) -> None:
         config_path = os.path.join(FASTOCLOUD_CONFIG_DIR, filename)
 
         with open(config_path, "w+") as f:
             f.write(config)
 
-    def _build_nginx_configs(self, connections: int) -> Dict[str, List[int]]:
-        def closure(
-            acc: Dict[str, List[int]], template: Dict[str, str]
-        ) -> Dict[str, List[int]]:
-            listen_ports = self.__get_listen_ports(connections)
+    def _build_nginx_config(self, data: Dict[str, List[Dict[str, Any]]]) -> None:
+        for template in (HLS_TEMPLATE, VODS_TEMPLATE, CODS_TEMPLATE):
+            nodes = data[template["name"]]
 
             new_config = ""
 
-            for port in listen_ports:
-                port_string = self.__get_listen_port_string(port)
+            for node in nodes:
+                port_string = self.__get_listen_port_string(node["port"])
 
                 server = NGINX_TEMPLATE.format(
-                    access_log=template["access_log"].format(port=port),
-                    error_log=template["error_log"].format(port=port),
+                    access_log=template["access_log"].format(port=node["port"]),
+                    error_log=template["error_log"].format(port=node["port"]),
                     listen_port=port_string,
-                    alias=template["alias"],
+                    alias=node["alias"],
                 ).expandtabs(4)
 
                 new_config += "\n" + server
 
             self._write_nginx_config(template["filename"], new_config)
-
-            acc[template["name"]] = listen_ports
-
-            return acc
-
-        return reduce(
-            lambda acc, template: closure(acc, template),
-            (HLS_TEMPLATE, VODS_TEMPLATE, CODS_TEMPLATE),
-            {},
-        )
 
     def _write_nginx_config(self, filename: str, config: str) -> None:
         available_path = os.path.join(NGINX_SITES_AVAILABLE_FOLDER, filename)
@@ -237,21 +266,11 @@ class CdnConfigCli:
             enabled.write(config)
             available.write(config)
 
-    def __get_listen_ports(self, connections: int) -> List[int]:
-        disabled_ports_gen = filter(
-            None,
-            map(
-                lambda port: port
-                if not self._is_open_port(port) and port not in self.__already_used_ports
-                else None,
-                range(65536),
-            ),
-        )
-        first_connections_disabled_ports = list(
-            map(lambda _: next(disabled_ports_gen), range(connections))
-        )
-        self.__already_used_ports.extend(first_connections_disabled_ports)
-        return first_connections_disabled_ports
+    def __get_random_open_port(self) -> int:
+        while True:
+            port = random.randrange(1, 65536)
+            if self._is_open_port(port) and port not in self.__already_used_ports:
+                return port
 
     def __get_listen_port_string(self, port: int) -> str:
         return f"listen {port};\n\tlisten[::]:{port};\n"
@@ -259,9 +278,10 @@ class CdnConfigCli:
     def __init_parser(self) -> ArgumentParser:
         parser = ArgumentParser(prog=self._prog, usage=self._usage)
 
+        parser.add_argument("--host", help="nodes host", default="0.0.0.0")
         parser.add_argument("--alias", help="nodes hostname alias", default="localhost")
         parser.add_argument(
-            "--connections", help="number of ports to open", type=int, default=100
+            "--connections", help="number of ports to open", type=int, default=1
         )
         parser.add_argument(
             "--ml-version",
