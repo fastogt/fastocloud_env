@@ -69,7 +69,7 @@ server {{
 FASTOCLOUD_CONFIG_TEMPLATE = """
 log_path: ~/fastocloud_pro.log
 log_level: DEBUG
-host: 127.0.0.1:6317
+host: {host} 
 alias: {alias} 
 hls_host: https://0.0.0.0:8000
 vods_host: https://0.0.0.0:7000
@@ -157,10 +157,12 @@ class CdnConfigCli:
     def run(self) -> None:
         argv = self._parser.parse_args()
 
-        default_host = argv.host
-        default_alias = argv.alias
+        host = input("Host: ") or "127.0.0.1:6317"
+        alias = input("Alias: ") or "fastocloud.com"
 
-        ml_version = argv.ml_version
+        ml_version = True if input("ML version [Y/n]: ") == "Y" else False
+
+        print()
 
         self._is_open_port = partial(is_open_socket, "0.0.0.0")
 
@@ -201,15 +203,15 @@ class CdnConfigCli:
         )
 
         print("Start building Fastocloud config...")
-        self._build_fastocloud_config(default_alias, data, ml_version)
+        self._build_fastocloud_config(host, alias, data, ml_version)
         print("Successfullly build Fastocloud config")
 
         print("Start building NGINX configs for HLS, VODS, CODS...")
         self._build_nginx_config(data)
-        print("Successfullly build NGINX configs")
+        print("Successfully build NGINX configs")
 
     def _build_fastocloud_config(
-        self, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
+        self, host: str, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
     ) -> None:
         template = FASTOCLOUD_PRO_ML_TEMPLATE if ml_version else FASTOCLOUD_PRO_TEMPLATE
 
@@ -225,7 +227,7 @@ class CdnConfigCli:
 
         nodes = str(yaml.dump(ports))
 
-        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(alias=alias, nodes=nodes)
+        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(host=host, alias=alias, nodes=nodes)
 
         return self._write_fastocloud_config(template["filename"], new_config)
 
