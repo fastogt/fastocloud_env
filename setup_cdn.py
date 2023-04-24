@@ -67,9 +67,9 @@ server {{
 FASTOCLOUD_CONFIG_TEMPLATE = """
 log_path: ~/fastocloud_pro.log
 log_level: DEBUG
-host: 0.0.0.0:6317
+host: 127.0.0.1:6317
 alias: {alias} 
-hls_host: https://[::]:8000
+hls_host: https://0.0.0.0:8000
 vods_host: https://0.0.0.0:7000
 cods_host: http://0.0.0.0:6000
 
@@ -88,9 +88,9 @@ report_node_stats: 10
 
 {nodes}
 
-https:
-    key: /etc/letsencrypt/live/fastocloud.com-0001/privkey.pem
-    cert: /etc/letsencrypt/live/fastocloud.com-0001/fullchain.pem
+#https:
+#    key: /etc/letsencrypt/live/fastocloud.com-0001/privkey.pem
+#    cert: /etc/letsencrypt/live/fastocloud.com-0001/fullchain.pem
 """
 
 HLS_TEMPLATE = {
