@@ -20,7 +20,6 @@ import random
 
 from functools import partial, reduce
 from collections import defaultdict
-from argparse import ArgumentParser
 from contextlib import closing
 
 from typing import Dict, List, Any
@@ -69,7 +68,7 @@ server {{
 FASTOCLOUD_CONFIG_TEMPLATE = """
 log_path: ~/fastocloud_pro.log
 log_level: DEBUG
-host: 127.0.0.1:6317
+host: {host} 
 alias: {alias} 
 hls_host: https://0.0.0.0:8000
 vods_host: https://0.0.0.0:7000
@@ -150,17 +149,15 @@ class CdnConfigCli:
         self._prog = prog
         self._usage = usage
 
-        self._parser = self.__init_parser()
-
         self.__already_used_ports: List[int] = []
 
     def run(self) -> None:
-        argv = self._parser.parse_args()
+        host = input("Host: ") or "127.0.0.1:6317"
+        alias = input("Alias: ") or "fastocloud.com"
 
-        default_host = argv.host
-        default_alias = argv.alias
+        ml_version = True if input("ML version [Y/n]: ") == "Y" else False
 
-        ml_version = argv.ml_version
+        print()
 
         self._is_open_port = partial(is_open_socket, "0.0.0.0")
 
@@ -201,15 +198,15 @@ class CdnConfigCli:
         )
 
         print("Start building Fastocloud config...")
-        self._build_fastocloud_config(default_alias, data, ml_version)
-        print("Successfullly build Fastocloud config")
+        self._build_fastocloud_config(host, alias, data, ml_version)
+        print("Successfully build Fastocloud config")
 
         print("Start building NGINX configs for HLS, VODS, CODS...")
         self._build_nginx_config(data)
-        print("Successfullly build NGINX configs")
+        print("Successfully build NGINX configs")
 
     def _build_fastocloud_config(
-        self, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
+        self, host: str, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
     ) -> None:
         template = FASTOCLOUD_PRO_ML_TEMPLATE if ml_version else FASTOCLOUD_PRO_TEMPLATE
 
@@ -225,7 +222,7 @@ class CdnConfigCli:
 
         nodes = str(yaml.dump(ports))
 
-        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(alias=alias, nodes=nodes)
+        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(host=host, alias=alias, nodes=nodes)
 
         return self._write_fastocloud_config(template["filename"], new_config)
 
@@ -273,22 +270,6 @@ class CdnConfigCli:
 
     def __get_listen_port_string(self, port: int) -> str:
         return f"listen {port};\n\tlisten[::]:{port};\n"
-
-    def __init_parser(self) -> ArgumentParser:
-        parser = ArgumentParser(prog=self._prog, usage=self._usage)
-
-        parser.add_argument("--host", help="nodes host", default="127.0.0.1")
-        parser.add_argument(
-            "--alias", help="nodes hostname alias", default="fastocloud.com"
-        )
-        parser.add_argument(
-            "--ml-version",
-            help="build for fastocloud ml version",
-            action="store_true",
-            default=False,
-        )
-
-        return parser
 
 
 if __name__ == "__main__":
