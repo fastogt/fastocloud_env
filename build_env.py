@@ -955,7 +955,7 @@ if __name__ == "__main__":
 
     argv = parser.parse_args()
 
-    arg_hostname = arg.hostname
+    arg_hostname = argv.hostname
     arg_platform = argv.platform
     arg_prefix_path = argv.prefix
     argv_docker = argv.docker
