@@ -11,9 +11,11 @@ if sys.version_info < (3, 4):
     sys.exit(1)
 
 try:
-    import yaml
+    __import__("yaml")
 except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "pyyaml"])
+
+import yaml
 
 import socket
 import random
@@ -153,7 +155,8 @@ class CdnConfigBuilder:
         host = input("Host: ") or "127.0.0.1:6317"
         alias = input("Alias: ") or "fastocloud.com"
 
-        ml_version = True if input("ML version [Y/n]: ") == "Y" else False
+        silence = True if input("Silence [Y/n]") != "n" else False
+        ml_version = True if input("ML version [Y/n]: ") != "n" else False
 
         print()
 
@@ -163,7 +166,15 @@ class CdnConfigBuilder:
             acc: Dict[str, List[Dict[str, Any]]], template: Dict[str, str]
         ) -> Dict[str, List[Dict[str, Any]]]:
             print("Processing ", template["name"])
-            connections = int(input("Number of nodes: "))
+
+            while True:
+                try:
+                    connections = int(input("Number of nodes: "))
+                except Exception:
+                    continue
+
+                break
+            
             for _ in range(connections):
                 while True:
                     try:
