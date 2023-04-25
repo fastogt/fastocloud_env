@@ -361,6 +361,7 @@ class BuildRequest(build_utils.BuildRequest):
         current_system = None
         if platform_name == 'linux':
             distribution = system_info.linux_get_dist()
+            self.set_linux_hostname()
             if distribution == 'DEBIAN':
                 current_system = Debian()
             elif distribution == 'RHEL':
@@ -400,6 +401,13 @@ class BuildRequest(build_utils.BuildRequest):
             dep_libs.extend(current_system.get_mongo_libs())
 
         return dep_libs
+    
+    def set_linux_hostname(self, host="fastocloud.com"):
+        try:
+            subprocess.check_call(["hostname", "set-hostname", host])
+        except Exception:
+            with open("/etc/hostname", "w+") as f:
+                f.write(host)
 
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
@@ -433,7 +441,7 @@ class BuildRequest(build_utils.BuildRequest):
         platform = self.platform()
         platform_name = platform.name()
         if platform_name == 'linux':
-            shutil.copytree(os.path.join(_file_path, 'nginx/'), '/etc/nginx/sites-enabled/', dirs_exist_ok=True)
+            shutil.copytree(os.path.join(_file_path, 'nginx'), '/etc/nginx/sites-enabled/', dirs_exist_ok=True)
 
     def build_faac(self):
         compiler_flags = []
