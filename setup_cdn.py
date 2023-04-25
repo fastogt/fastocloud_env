@@ -19,6 +19,7 @@ import socket
 import random
 
 from functools import partial, reduce
+from urllib import parse
 from collections import defaultdict
 from contextlib import closing
 
@@ -144,11 +145,8 @@ def is_open_socket(host, port) -> bool:
             return True
 
 
-class CdnConfigCli:
-    def __init__(self, prog: str, usage: str) -> None:
-        self._prog = prog
-        self._usage = usage
-
+class CdnConfigBuilder:
+    def __init__(self) -> None:
         self.__already_used_ports: List[int] = []
 
     def run(self) -> None:
@@ -168,26 +166,45 @@ class CdnConfigCli:
             connections = int(input("Number of nodes: "))
             for _ in range(connections):
                 while True:
-                    port = input("Port: ") or self.__get_random_open_port()
+                    try:
+                        url_raw = (
+                            input("URL: ")
+                            or f"http://0.0.0.0:{self.__get_random_open_port()}"
+                        )
+                        url = parse.urlparse(url_raw)
+                    except Exception:
+                        print("Wrong url format")
+                        continue
+
                     if (
-                        self._is_open_port(int(port))
-                        and port not in self.__already_used_ports
+                        url.port
+                        and self._is_open_port(url.port)
+                        and url.port not in self.__already_used_ports
                     ):
-                        self.__already_used_ports.append(port)
+                        self.__already_used_ports.append(url.port)
                         break
                     else:
                         print(
-                            "Port is used by another process. Try another or press 'Enter' to randomly choose open one"
+                            "Port is not defined or used by another process. Try another or press 'Enter' to randomly choose open one"
                         )
                         continue
 
-                type = int(input("Type: "))
-                if type < 0 or type >= 2:
-                    raise ValueError("wrong type value")
+                while True:
+                    try:
+                        type = int(input("Type: "))
+                    except ValueError:
+                        print("Type should be an int value")
+                        continue
+
+                    if type < 0 or type >= 2:
+                        print("Type can be only 0 or 1")
+                        continue
+
+                    break
 
                 print()
 
-                acc[template["name"]].append({"port": port, "type": type})
+                acc[template["name"]].append({"url": url, "type": type})
 
             return acc
 
@@ -206,13 +223,17 @@ class CdnConfigCli:
         print("Successfully build NGINX configs")
 
     def _build_fastocloud_config(
-        self, host: str, alias: str, data: Dict[str, List[Dict[str, Any]]], ml_version: bool
+        self,
+        host: str,
+        alias: str,
+        data: Dict[str, List[Dict[str, Any]]],
+        ml_version: bool,
     ) -> None:
         template = FASTOCLOUD_PRO_ML_TEMPLATE if ml_version else FASTOCLOUD_PRO_TEMPLATE
 
         def config_template(node: Dict[str, Any]) -> Dict[str, str]:
             return {
-                "host": f"http://0.0.0.0:{node['port']}",
+                "host": node["url"].geturl(),
                 "type": node["type"],
             }
 
@@ -222,7 +243,9 @@ class CdnConfigCli:
 
         nodes = str(yaml.dump(ports))
 
-        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(host=host, alias=alias, nodes=nodes)
+        new_config = FASTOCLOUD_CONFIG_TEMPLATE.format(
+            host=host, alias=alias, nodes=nodes
+        )
 
         return self._write_fastocloud_config(template["filename"], new_config)
 
@@ -239,11 +262,12 @@ class CdnConfigCli:
             new_config = ""
 
             for node in nodes:
-                port_string = self.__get_listen_port_string(node["port"])
+                port = node["url"].port
+                port_string = self.__get_listen_port_string(port)
 
                 server = NGINX_TEMPLATE.format(
-                    access_log=template["access_log"].format(port=node["port"]),
-                    error_log=template["error_log"].format(port=node["port"]),
+                    access_log=template["access_log"].format(port=port),
+                    error_log=template["error_log"].format(port=port),
                     listen_port=port_string,
                     alias=template["alias"],
                 ).expandtabs(4)
@@ -269,9 +293,9 @@ class CdnConfigCli:
                 return port
 
     def __get_listen_port_string(self, port: int) -> str:
-        return f"listen {port};\n\tlisten[::]:{port};\n"
+        return f"listen {port};\n\tlisten [::]:{port};\n"
 
 
 if __name__ == "__main__":
-    app = CdnConfigCli("build_cdn", "%(prog)s [options]")
+    app = CdnConfigBuilder()
     app.run()
