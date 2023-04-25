@@ -18,6 +18,8 @@ if sys.version_info < (3, 7): # streamlink
     print('Tried to start script with an unsupported version of Python. build_env requires Python 3.7 or greater')
     sys.exit(1)
 
+DEFAULT_HOSTNAME = "fastocloud.com"
+
 GSTREAMER_SRC_ROOT = "https://gstreamer.freedesktop.org/src/"
 GSTREAMER_ARCH_COMP = "xz"
 GSTREAMER_ARCH_EXT = "tar." + GSTREAMER_ARCH_COMP
@@ -349,8 +351,10 @@ class MacOSX(OperationSystem):
 
 
 class BuildRequest(build_utils.BuildRequest):
-    def __init__(self, platform, arch_name, dir_path, prefix_path):
+    def __init__(self, host, platform, arch_name, dir_path, prefix_path):
         build_utils.BuildRequest.__init__(self, platform, arch_name, dir_path, prefix_path)
+
+        self.host = host
 
     def get_system_libs(self, with_nvidia, with_wpe, with_mongo, with_gstreamer, repo_build):
         platform = self.platform_
@@ -402,12 +406,9 @@ class BuildRequest(build_utils.BuildRequest):
 
         return dep_libs
     
-    def set_linux_hostname(self, host="fastocloud.com"):
-        try:
-            subprocess.check_call(["hostname", "set-hostname", host])
-        except Exception:
-            with open("/etc/hostname", "w+") as f:
-                f.write(host)
+    def set_linux_hostname(self):
+        with open("/etc/hostname", "w+") as f:
+            f.write(self.host)
 
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
@@ -441,7 +442,14 @@ class BuildRequest(build_utils.BuildRequest):
         platform = self.platform()
         platform_name = platform.name()
         if platform_name == 'linux':
-            shutil.copytree(os.path.join(_file_path, 'nginx'), '/etc/nginx/sites-enabled/', dirs_exist_ok=True)
+            src = os.path.join(_file_path, "nginx")
+            dst = "/etc/nginx/sites-enabled"
+
+            names = map(lambda name: (os.path.join(src, name), os.path.join(dst, name)), os.listdir(src))
+
+            for srcname, dstname in names:
+                shutil.copy2(srcname, dstname)
+
 
     def build_faac(self):
         compiler_flags = []
@@ -927,6 +935,7 @@ if __name__ == "__main__":
                         default=gst_rtsp_default_version)
 
     # other
+    parser.add_argument("--hostname", help="server hostname (default: {0})".format(DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
     parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
                         default=arch_host_os)
@@ -946,6 +955,7 @@ if __name__ == "__main__":
 
     argv = parser.parse_args()
 
+    arg_hostname = arg.hostname
     arg_platform = argv.platform
     arg_prefix_path = argv.prefix
     argv_docker = argv.docker
@@ -954,7 +964,7 @@ if __name__ == "__main__":
     arg_install_fastogt_packages = argv.install_fastogt_packages
     arg_install_gstreamer_packages = argv.install_gstreamer_packages
 
-    request = BuildRequest(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
+    request = BuildRequest(arg_hostname, arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
     if argv_docker:
         request.prepare_docker()
 

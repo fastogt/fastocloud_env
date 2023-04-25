@@ -155,7 +155,8 @@ class CdnConfigBuilder:
         host = input("Host: ") or "127.0.0.1:6317"
         alias = input("Alias: ") or "fastocloud.com"
 
-        ml_version = True if input("ML version [Y/n]: ") == "Y" else False
+        silence = True if input("Silence [Y/n]") != "n" else False
+        ml_version = True if input("ML version [Y/n]: ") != "n" else False
 
         print()
 
