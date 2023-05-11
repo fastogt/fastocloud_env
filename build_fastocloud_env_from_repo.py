@@ -3,7 +3,7 @@ import argparse
 
 from pyfastogt import system_info
 
-from build_env import BuildRequest, str2bool
+from build_env import BuildRequest, str2bool, DEFAULT_HOSTNAME
 from check_plugins import check_plugins
 
 
@@ -79,6 +79,7 @@ if __name__ == "__main__":
                                  action='store_false', default=False)
 
     # other
+    parser.add_argument("--hostname", help="server hostname (default: {0})".format(DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
     parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
                         default=arch_host_os)
@@ -93,13 +94,14 @@ if __name__ == "__main__":
 
     argv = parser.parse_args()
 
+    arg_hostname = argv.hostname
     arg_platform = argv.platform
     arg_prefix_path = argv.prefix
     arg_architecture = argv.architecture
     arg_install_other_packages = argv.install_other_packages
     arg_install_fastogt_packages = argv.install_fastogt_packages
 
-    request = BuildRequestRepo(arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
+    request = BuildRequestRepo(arg_hostname, arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
     if argv.with_system and arg_install_other_packages:
         request.install_system(with_nvidia=False, with_wpe=False, with_mongo=False, with_gstreamer=True,
                                repo_build=True)
