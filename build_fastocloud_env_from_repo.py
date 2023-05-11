@@ -11,8 +11,8 @@ from check_plugins import check_plugins
 
 
 class BuildRequestRepo(BuildRequest):
-    def __init__(self, platform, arch_name, dir_path, prefix_path):
-        super(BuildRequestRepo, self).__init__(platform, arch_name, dir_path, prefix_path)
+    def __init__(self, host, platform, arch_name, dir_path, prefix_path):
+        super(BuildRequestRepo, self).__init__(host, platform, arch_name, dir_path, prefix_path)
 
 
 if __name__ == "__main__":
