@@ -457,9 +457,10 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
 
     def build_libva(self):
-        compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(LIBVA_URL, compiler_flags)
-        self._clone_and_build_via_meson(LIBVA_UTILS_URL, compiler_flags)
+        compiler_flags_va = ['--buildtype=release', '-Dwith_x11=yes']
+        compiler_flags_va_utils = ['--buildtype=release', '-Ddrm=yes', '-Dx11=yes']
+        self._clone_and_build_via_meson(LIBVA_URL, compiler_flags_va)
+        self._clone_and_build_via_meson(LIBVA_UTILS_URL, compiler_flags_va_utils)
 
     def build_vaapi(self):
         compiler_flags = ['--buildtype=release']
