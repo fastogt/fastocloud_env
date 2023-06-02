@@ -131,7 +131,7 @@ class Debian(OperationSystem):
 
     def get_wpe_libs(self) -> list:
         return ['libegl-dev', 'libegl1-mesa-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby',
-                'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libx11-xcb-dev',
+                'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev',
                 'libgudev-1.0-dev', 'libgbm-dev', 'gperf', 'wayland-protocols']
 
     def get_mongo_libs(self) -> list:
@@ -143,6 +143,7 @@ class Debian(OperationSystem):
                 'libblkid-dev', 'libsoup2.4-dev', 'libsoup-3.0-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
                 'libvpx-dev',
+                'libxcb-dri3-dev', 'libx11-xcb-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
@@ -456,7 +457,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
 
     def build_libva(self):
-        compiler_flags = ['--buildtype=release', '-Dwith_x11=yes']
+        compiler_flags = ['--buildtype=release']
         self._clone_and_build_via_meson(LIBVA_URL, compiler_flags)
         self._clone_and_build_via_meson(LIBVA_UTILS_URL, compiler_flags)
 
