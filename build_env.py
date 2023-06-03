@@ -406,7 +406,7 @@ class BuildRequest(build_utils.BuildRequest):
             dep_libs.extend(current_system.get_mongo_libs())
 
         return dep_libs
-    
+        
     def set_linux_hostname(self):
         with open("/etc/hostname", "w+") as f:
             f.write(self.host)
