@@ -464,7 +464,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_vaapi(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson_system(INTEL_VAAPI_DRIVER_URL, compiler_flags)
+        self._clone_and_build_via_meson(INTEL_VAAPI_DRIVER_URL, compiler_flags)
 
     def build_mfx(self):
         compiler_flags = []
