@@ -143,7 +143,7 @@ class Debian(OperationSystem):
                 'libblkid-dev', 'libsoup2.4-dev', 'libsoup-3.0-dev', 'libjpeg-dev',
                 'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
                 'libvpx-dev',
-                'libxcb-dri3-dev', 'libx11-xcb-dev',
+                'libxcb-dri3-dev', # 'libx11-xcb-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
@@ -457,10 +457,10 @@ class BuildRequest(build_utils.BuildRequest):
         self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
 
     def build_libva(self):
-        compiler_flags_va = ['--buildtype=release', '-Dwith_x11=yes']
-        compiler_flags_va_utils = ['--buildtype=release', '-Ddrm=true', '-Dx11=true']
-        self._clone_and_build_via_meson(LIBVA_URL, compiler_flags_va)
-        self._clone_and_build_via_meson(LIBVA_UTILS_URL, compiler_flags_va_utils)
+        compiler_flags_va = ['--buildtype=release']
+        compiler_flags_va_utils = ['--buildtype=release', '-Ddrm=true']
+        self._clone_and_build_via_meson_system(LIBVA_URL, compiler_flags_va)
+        self._clone_and_build_via_meson_system(LIBVA_UTILS_URL, compiler_flags_va_utils)
 
     def build_vaapi(self):
         compiler_flags = ['--buildtype=release']
