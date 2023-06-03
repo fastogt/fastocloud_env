@@ -470,7 +470,7 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = []
         self._clone_and_build_via_cmake(GMM_LIB_URL, compiler_flags)
         self._clone_and_build_via_cmake(INTEL_MEDIA_DRIVER_URL, compiler_flags)
-        self._clone_and_build_via_cmake(MEDIA_SDK_URL, compiler_flags)
+        self._clone_and_build_via_cmake(MEDIA_SDK_URL, ['-DENABLE_OPENCL=OFF'])
 
     def build_openh264(self):
         compiler_flags = ['--buildtype=release']
