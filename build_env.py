@@ -121,7 +121,7 @@ class Debian(OperationSystem):
         return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'cargo']
 
     def get_build_exec(self) -> list:
-        return ['autoconf', 'automake', 'cmake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev']
+        return ['autoconf', 'automake', 'cmake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev', 'unifdef']
 
     def get_build_gst_exec(self) -> list:
         return ['gettext', 'bison', 'flex']
