@@ -164,7 +164,10 @@ PLUGINS = ['decodebin',
            'gssrc',
            'webrtcbin',
            'ndisrc',
-           'ndisink']
+           'ndisink',
+           's3src',
+           's3sink',
+          ]
 
 PLUGINS_ML = [
     'tinyyolov2',
