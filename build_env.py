@@ -131,7 +131,7 @@ class Debian(OperationSystem):
 
     def get_wpe_libs(self) -> list:
         return ['libegl-dev', 'libegl1-mesa-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby',
-                'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev',
+                'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libcurl4-openssl-dev',
                 'libgudev-1.0-dev', 'libgbm-dev', 'gperf', 'wayland-protocols']
 
     def get_mongo_libs(self) -> list:
@@ -600,7 +600,7 @@ def str2bool(v):
 if __name__ == "__main__":
     meson_default_version = '0.62.0'
     srt_default_version = '1.5.1'
-    gstreamer_default_version = '1.22.4'
+    gstreamer_default_version = '1.22.5'
     # https://wpewebkit.org/release/
     wpe_version = '1.14.1'
     wpe_backend_version = '1.14.2'
