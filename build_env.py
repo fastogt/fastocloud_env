@@ -1015,22 +1015,22 @@ if __name__ == "__main__":
         request.build_gstreamer(argv.gstreamer_version)
 
     if argv.with_gst_plugins_base and arg_install_gstreamer_packages:
-        request.build_gst_plugins_base(argv.gst_plugins_base_version, argv.gst_plugins_base_version == gstreamer_default_version)
+        request.build_gst_plugins_base(argv.gstreamer_version, argv.gstreamer_version == gstreamer_default_version)
 
     if build_wpe:
         request.build_wpe_webkit(wpe_webkit_version)
 
     if argv.with_gst_plugins_good and arg_install_gstreamer_packages:
-        request.build_gst_plugins_good(argv.gst_plugins_good_version)
+        request.build_gst_plugins_good(argv.gstreamer_version)
 
     if argv.with_gst_nice and arg_install_gstreamer_packages:
         request.build_gst_nice()
 
     if argv.with_gst_plugins_bad and arg_install_gstreamer_packages:
-        request.build_gst_plugins_bad(argv.gst_plugins_bad_version, build_mfx, build_vaapi)
+        request.build_gst_plugins_bad(argv.gstreamer_version, build_mfx, build_vaapi)
 
     if argv.with_gst_plugins_ugly and arg_install_gstreamer_packages:
-        request.build_gst_plugins_ugly(argv.gst_plugins_ugly_version)
+        request.build_gst_plugins_ugly(argv.gstreamer_version)
 
     if argv.with_gst_fastoml and arg_install_gstreamer_packages:
         request.build_gst_fastoml()
@@ -1042,9 +1042,9 @@ if __name__ == "__main__":
         request.build_gst_ndi()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
-        request.build_gst_libav(argv.gst_libav_version)
+        request.build_gst_libav(argv.gstreamer_version)
 
     if argv.with_gst_rtsp and arg_install_gstreamer_packages:
-        request.build_gst_rtsp(argv.gst_rtsp_version)
+        request.build_gst_rtsp(argv.gstreamer_version)
 
     check_plugins()
