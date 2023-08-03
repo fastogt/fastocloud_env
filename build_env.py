@@ -605,12 +605,6 @@ if __name__ == "__main__":
     wpe_version = '1.14.1'
     wpe_backend_version = '1.14.2'
     wpe_webkit_version = '2.40.2'
-    gst_plugins_base_default_version = gstreamer_default_version
-    gst_plugins_good_default_version = gstreamer_default_version
-    gst_plugins_bad_default_version = gstreamer_default_version
-    gst_plugins_ugly_default_version = gstreamer_default_version
-    gst_libav_default_version = gstreamer_default_version
-    gst_rtsp_default_version = gstreamer_default_version
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
@@ -823,57 +817,45 @@ if __name__ == "__main__":
     gst_plugins_base_grp = parser.add_mutually_exclusive_group()
     gst_plugins_base_grp.add_argument('--with-gst-plugins-base',
                                       help='build gst-plugins-base (default, version:{0})'.format(
-                                          gst_plugins_base_default_version),
+                                          gstreamer_default_version),
                                       dest='with_gst_plugins_base', action='store_true', default=True)
     gst_plugins_base_grp.add_argument('--without-gst-plugins-base', help='build without gst-plugins-base',
                                       dest='with_gst_plugins_base',
                                       action='store_false',
                                       default=False)
-    parser.add_argument('--gst-plugins-base-version',
-                        help='gst-plugins-base version (default: {0})'.format(gst_plugins_base_default_version),
-                        default=gst_plugins_base_default_version)
 
     # gst-plugins-good
     gst_plugins_good_grp = parser.add_mutually_exclusive_group()
     gst_plugins_good_grp.add_argument('--with-gst-plugins-good',
                                       help='build gst-plugins-good (default, version:{0})'.format(
-                                          gst_plugins_good_default_version),
+                                          gstreamer_default_version),
                                       dest='with_gst_plugins_good', action='store_true', default=True)
     gst_plugins_good_grp.add_argument('--without-gst-plugins-good', help='build without gst-plugins-good',
                                       dest='with_gst_plugins_good',
                                       action='store_false',
                                       default=False)
-    parser.add_argument('--gst-plugins-good-version',
-                        help='gst-plugins-good version (default: {0})'.format(gst_plugins_good_default_version),
-                        default=gst_plugins_good_default_version)
 
     # gst-plugins-bad
     gst_plugins_bad_grp = parser.add_mutually_exclusive_group()
     gst_plugins_bad_grp.add_argument('--with-gst-plugins-bad',
                                      help='build gst-plugins-bad (default, version:{0})'.format(
-                                         gst_plugins_bad_default_version),
+                                         gstreamer_default_version),
                                      dest='with_gst_plugins_bad', action='store_true', default=True)
     gst_plugins_bad_grp.add_argument('--without-gst-plugins-bad', help='build without gst-plugins-bad',
                                      dest='with_gst_plugins_bad',
                                      action='store_false',
                                      default=False)
-    parser.add_argument('--gst-plugins-bad-version',
-                        help='gst-plugins-bad version (default: {0})'.format(gst_plugins_bad_default_version),
-                        default=gst_plugins_bad_default_version)
 
     # gst-plugins-ugly
     gst_plugins_ugly_grp = parser.add_mutually_exclusive_group()
     gst_plugins_ugly_grp.add_argument('--with-gst-plugins-ugly',
                                       help='build gst-plugins-ugly (default, version:{0})'.format(
-                                          gst_plugins_ugly_default_version),
+                                          gstreamer_default_version),
                                       dest='with_gst_plugins_ugly', action='store_true', default=True)
     gst_plugins_ugly_grp.add_argument('--without-gst-plugins-ugly', help='build without gst-plugins-ugly',
                                       dest='with_gst_plugins_ugly',
                                       action='store_false',
                                       default=False)
-    parser.add_argument('--gst-plugins-ugly-version',
-                        help='gst-plugins-ugly version (default: {0})'.format(gst_plugins_ugly_default_version),
-                        default=gst_plugins_ugly_default_version)
 
     # gst-plugin-ndi
     gst_plugins_ndi_grp = parser.add_mutually_exclusive_group()
@@ -902,15 +884,12 @@ if __name__ == "__main__":
     gst_libav_grp = parser.add_mutually_exclusive_group()
     gst_libav_grp.add_argument('--with-gst-libav',
                                help='build gst-libav (default, version:{0})'.format(
-                                   gst_libav_default_version),
+                                   gstreamer_default_version),
                                dest='with_gst_libav', action='store_true', default=True)
     gst_libav_grp.add_argument('--without-gst-libav', help='build without gst-libav',
                                dest='with_gst_libav',
                                action='store_false',
                                default=False)
-    parser.add_argument('--gst-libav-version',
-                        help='gst-libav version (default: {0})'.format(gst_libav_default_version),
-                        default=gst_libav_default_version)
 
     # gst-nice
     gst_nice_grp = parser.add_mutually_exclusive_group()
@@ -926,15 +905,12 @@ if __name__ == "__main__":
     gst_rtsp_grp = parser.add_mutually_exclusive_group()
     gst_rtsp_grp.add_argument('--with-gst-rtsp',
                               help='build gst-rtsp (default, version:{0})'.format(
-                                  gst_rtsp_default_version),
+                                  gstreamer_default_version),
                               dest='with_gst_rtsp', action='store_true', default=True)
     gst_rtsp_grp.add_argument('--without-gst-rtsp', help='build without gst-rtsp',
                               dest='with_gst_rtsp',
                               action='store_false',
                               default=False)
-    parser.add_argument('--gst-rtsp-version',
-                        help='gst-rtsp version (default: {0})'.format(gst_rtsp_default_version),
-                        default=gst_rtsp_default_version)
 
     # other
     parser.add_argument("--hostname", help="server hostname (default: {0})".format(DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
