@@ -131,3 +131,5 @@ dmypy.json
 # other
 .idea
 build_linux_env
+
+.DS_Store

@@ -523,14 +523,16 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
-    def build_gst_plugins_base(self, version, is_defualt):
+    def build_gst_plugins_base(self, version, is_default):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
-        if is_defualt:
-            url = build_utils.generate_fastogt_github_path('gst-plugins-base-{0}'.format(version))
-            self._clone_and_build_via_meson(url, compiler_flags)
+
+        url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
+
+        if is_default:
+            patch_file = os.path.join(_file_path, "fastogt_patch", "gst-plugins-base-{0}.patch".format(version))
+            self._download_and_build_via_meson(url, compiler_flags, patch_file)
             return
-        url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_BASE_SRC_ROOT, version,
-                                                                    GST_PLUGINS_BASE_ARCH_EXT)
+
         self._download_and_build_via_meson(url, compiler_flags)
 
     def build_gst_plugins_good(self, version):
