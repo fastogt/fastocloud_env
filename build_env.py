@@ -528,7 +528,7 @@ class BuildRequest(build_utils.BuildRequest):
 #
         url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
         patch_files = [
-            self.get_patch_file_path("gst-plugins-base-{0}.patch".format(version))
+            self.get_patch_file_path("gst-plugins-base.patch")
         ]
 
         self._download_and_build_via_meson(url, compiler_flags, patch_files)
