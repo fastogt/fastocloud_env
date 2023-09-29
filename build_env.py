@@ -523,17 +523,18 @@ class BuildRequest(build_utils.BuildRequest):
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags)
 
-    def build_gst_plugins_base(self, version, is_default):
+    def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
-
+#
         url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
+        patch_files = [
+            self.get_patch_file_path("gst-plugins-base-{0}.patch".format(version))
+        ]
 
-        if is_default:
-            patch_file = os.path.join(_file_path, "fastogt_patch", "gst-plugins-base-{0}.patch".format(version))
-            self._download_and_build_via_meson(url, compiler_flags, patch_file)
-            return
+        self._download_and_build_via_meson(url, compiler_flags, patch_files)
 
-        self._download_and_build_via_meson(url, compiler_flags)
+    def get_patch_file_path(self, patch_file):
+        return os.path.join(_file_path, "fastogt_patch", "{0}".format(patch_file))
 
     def build_gst_plugins_good(self, version):
         compiler_flags = ['--buildtype=release']
@@ -1017,7 +1018,7 @@ if __name__ == "__main__":
         request.build_gstreamer(argv.gstreamer_version)
 
     if argv.with_gst_plugins_base and arg_install_gstreamer_packages:
-        request.build_gst_plugins_base(argv.gstreamer_version, argv.gstreamer_version == gstreamer_default_version)
+        request.build_gst_plugins_base(argv.gstreamer_version)
 
     if build_wpe:
         request.build_wpe_webkit(wpe_webkit_version)
