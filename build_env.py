@@ -546,7 +546,12 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
         url = '{0}gst-plugins-bad/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_BAD_SRC_ROOT, version,
                                                                   GST_PLUGINS_BAD_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        patch_files = [
+            self.get_patch_file_path("gst-plugins-bad.patch")
+        ]
+
+        self._download_and_build_via_meson(url, compiler_flags, patch_files)
+
         if mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
             self._clone_and_build_via_cmake(GSTREAMER_MFX_URL, compiler_flags_mfx)
