@@ -1047,7 +1047,7 @@ if __name__ == "__main__":
         request.build_gst_awss3()
 
     if argv.with_gst_ndi_plugin and arg_install_gstreamer_packages:
-        request.build_gst_ndi()
+        request.build_gst_ndi_plugin()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gstreamer_version)
