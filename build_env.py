@@ -484,7 +484,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_wpe_backend(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}/wpebackend-fdo-{1}.{2}'.format(WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_wpe_webkit(self, version):
         compiler_flags = ['-DPORT=WPE', '-DUSE_SOUP2=ON', '-DENABLE_ACCESSIBILITY=OFF', '-DUSE_OPENJPEG=OFF',
@@ -521,7 +521,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
@@ -540,7 +540,7 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-plugins-good/gst-plugins-good-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
         compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
@@ -558,13 +558,13 @@ class BuildRequest(build_utils.BuildRequest):
         if vaapi:
             compiler_flags_vaapi = ['--buildtype=release']
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
-            self._download_and_build_via_meson(url, compiler_flags_vaapi)
+            self._download_and_build_via_meson(url, compiler_flags_vaapi, [])
 
     def build_gst_plugins_ugly(self, version):
         compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
         url = '{0}gst-plugins-ugly/gst-plugins-ugly-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
                                                                     GST_PLUGINS_UGLY_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_fastoml(self):
         compiler_flags = ['--buildtype=release']
@@ -582,7 +582,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_nice(self):
         compiler_flags = ['--buildtype=release']
@@ -591,7 +591,7 @@ class BuildRequest(build_utils.BuildRequest):
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags)
+        self._download_and_build_via_meson(url, compiler_flags, [])
 
 
 def str2bool(v):
