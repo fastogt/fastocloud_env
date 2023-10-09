@@ -867,10 +867,10 @@ if __name__ == "__main__":
                                       action='store_false',
                                       default=False)
 
-    # gst-plugin-ndi
-    gst_plugins_ndi_grp = parser.add_mutually_exclusive_group()
-    gst_plugins_ndi_grp.add_argument('--with-gst-ndi-plugin', help='build with gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_true', default=False)
-    gst_plugins_ndi_grp.add_argument('--without-gst-ndi-plugin', help='build without gst-plugin-ndi', dest='with_gst_ndi_plugin', action='store_false', default=True)
+    # gst-plugins-rs
+    gst_plugins_rs_grp = parser.add_mutually_exclusive_group()
+    gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins', dest='with_gst_rs_plugins', action='store_true', default=False)
+    gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugin-ndi', dest='with_gst_rs_plugins', action='store_false', default=True)
 
     # gst-fastoml
     gst_fastoml_grp = parser.add_mutually_exclusive_group()
