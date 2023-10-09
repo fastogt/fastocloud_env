@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import sys
 from abc import ABCMeta, abstractmethod
+from typing import Required
 
 from pyfastogt import system_info, build_utils, utils
 
@@ -575,9 +576,10 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
-    def build_gst_ndi_plugin(self):
-        plugin = "gst-plugin-ndi" 
-        self._clone_and_build_via_cargo_c(GST_RUST_PLUGINS, plugin)
+    def build_gst_rs_plugins(self):
+        plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
+        for plugin in plugins:
+            self._clone_and_build_via_cargo_c(GST_RUST_PLUGINS, plugin)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
@@ -1046,8 +1048,8 @@ if __name__ == "__main__":
     if argv.with_gst_awss3 and arg_install_gstreamer_packages:
         request.build_gst_awss3()
 
-    if argv.with_gst_ndi_plugin and arg_install_gstreamer_packages:
-        request.build_gst_ndi_plugin()
+    if argv.with_gst_rs_plugins and arg_install_gstreamer_packages:
+        request.build_gst_rs_plugins()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
         request.build_gst_libav(argv.gstreamer_version)
