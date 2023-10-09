@@ -578,8 +578,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_rs_plugins(self):
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
-        for plugin in plugins:
-            self._clone_and_build_via_cargo_c(GST_RUST_PLUGINS, plugin)
+        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugin)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
