@@ -869,7 +869,7 @@ if __name__ == "__main__":
     # gst-plugins-rs
     gst_plugins_rs_grp = parser.add_mutually_exclusive_group()
     gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins', dest='with_gst_rs_plugins', action='store_true', default=False)
-    gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugin-ndi', dest='with_gst_rs_plugins', action='store_false', default=True)
+    gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugins-rs', dest='with_gst_rs_plugins', action='store_false', default=True)
 
     # gst-fastoml
     gst_fastoml_grp = parser.add_mutually_exclusive_group()
