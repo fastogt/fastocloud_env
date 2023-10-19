@@ -5,7 +5,6 @@ import subprocess
 import shutil
 import sys
 from abc import ABCMeta, abstractmethod
-from typing import Required
 
 from pyfastogt import system_info, build_utils, utils
 
