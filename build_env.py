@@ -14,7 +14,7 @@ _file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
 
-if sys.version_info < (3, 7): # streamlink
+if sys.version_info < (3, 8): # streamlink
     print('Tried to start script with an unsupported version of Python. build_env requires Python 3.7 or greater')
     sys.exit(1)
 
