@@ -421,8 +421,10 @@ class BuildRequest(build_utils.BuildRequest):
             self._install_package(lib)
 
         rust_home = self._install_rust_package()
-        env_path = os.environ.get("PATH")
-        os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
+        #env_path = os.environ.get("PATH")
+        #os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
+        subprocess.call(['ln', '-sf', '{0}/bin/cargo'.format(rust_home), '/usr/local/bin/cargo'])
+        subprocess.call(['ln', '-sf', '{0}/bin/rustc'.format(rust_home), '/usr/local/bin/rustc'])
         platform = self.platform()
         platform_name = platform.name()
 
