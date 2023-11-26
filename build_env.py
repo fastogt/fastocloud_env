@@ -421,12 +421,9 @@ class BuildRequest(build_utils.BuildRequest):
             self._install_package(lib)
 
         rust_home = self._install_rust_package()
+        subprocess.call(('source', rust_home))
         platform = self.platform()
         platform_name = platform.name()
-        if platform_name == 'linux':
-            subprocess.call(['ln', '-sf', '{0}/cargo'.format(rust_home), '/usr/bin/cargo'])
-            subprocess.call(['ln', '-sf', '{0}/rustc'.format(rust_home), '/usr/bin/rustc'])
-            subprocess.call(['ln', '-sf', '{0}/rustc'.format(rust_home), '/usr/bin/rustup'])
         
         # post install step
         if platform_name == 'linux':
