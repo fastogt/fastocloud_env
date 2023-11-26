@@ -4,6 +4,7 @@ set -ex
 # exports
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 export DEBIAN_FRONTEND=noninteractive
+export PATH=$PATH:$HOME/.cargo/bin
 
 # variables
 USER=fastocloud
