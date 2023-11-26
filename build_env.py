@@ -109,6 +109,10 @@ class OperationSystem(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def get_rust_libs(self) -> list:
+        pass
+
+    @abstractmethod
     def get_gst_build_libs(self):
         pass
 
@@ -118,7 +122,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'cargo']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'cmake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev', 'unifdef']
@@ -136,6 +140,9 @@ class Debian(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc-dev']
+    
+    def get_rust_libs(self) -> list:
+        return ['cargo']
 
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
@@ -177,6 +184,9 @@ class RedHat(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return ['mongo-c-driver-devel']
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
@@ -213,6 +223,9 @@ class Arch(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc']
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'glibc', 'glib-networking',
@@ -246,6 +259,9 @@ class FreeBSD(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return ['libmongoc']
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
@@ -281,6 +297,9 @@ class Windows64(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return []
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self):
         return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking']
@@ -312,6 +331,9 @@ class Windows32(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return []
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self):
         return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking']
@@ -341,6 +363,9 @@ class MacOSX(OperationSystem):
 
     def get_mongo_libs(self) -> list:
         return ['libmongo']
+    
+    def get_rust_libs(self) -> list:
+        return []
 
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking']
@@ -357,7 +382,7 @@ class BuildRequest(build_utils.BuildRequest):
 
         self.host = host
 
-    def get_system_libs(self, with_nvidia, with_wpe, with_mongo, with_gstreamer, repo_build):
+    def get_system_libs(self, with_nvidia, with_wpe, with_mongo, with_rust, with_gstreamer, repo_build):
         platform = self.platform_
         platform_name = platform.name()
         ar = platform.architecture()
@@ -405,6 +430,9 @@ class BuildRequest(build_utils.BuildRequest):
         if with_mongo:
             dep_libs.extend(current_system.get_mongo_libs())
 
+        if with_rust:
+            dep_libs.extend(current_system.get_rust_libs())
+
         return dep_libs
 
     def set_linux_hostname(self):
@@ -414,8 +442,8 @@ class BuildRequest(build_utils.BuildRequest):
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
 
-    def install_system(self, with_nvidia, with_wpe, with_mongo, with_gstreamer, repo_build):
-        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe, with_mongo=with_mongo,
+    def install_system(self, with_nvidia, with_wpe, with_mongo, with_rust, with_gstreamer, repo_build):
+        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe, with_mongo=with_mongo, with_rust=with_rust,
                                         with_gstreamer=with_gstreamer, repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
@@ -427,6 +455,9 @@ class BuildRequest(build_utils.BuildRequest):
             distribution = system_info.linux_get_dist()
             if distribution == 'RHEL':
                 subprocess.call(['ln', '-sf', '/usr/bin/ninja-build', '/usr/bin/ninja'])
+            elif distribution == 'DEBIAN':
+                subprocess.call(['curl', 'https://sh.rustup.rs', '-sSf', '|', 'sh'])
+
         elif platform_name == 'freebsd':
             subprocess.call(['dbus-uuidgen', '--ensure'])
 
