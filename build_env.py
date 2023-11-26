@@ -421,10 +421,12 @@ class BuildRequest(build_utils.BuildRequest):
             self._install_package(lib)
 
         rust_home = self._install_rust_package()
-        subprocess.call(('source', rust_home))
+        env_path = os.environ.get("PATH")
+        os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
+        subprocess.call(('sh', '{0}/.cargo/env'.format(os.environ['HOME'])))
         platform = self.platform()
         platform_name = platform.name()
-        
+
         # post install step
         if platform_name == 'linux':
             distribution = system_info.linux_get_dist()
