@@ -422,7 +422,7 @@ class BuildRequest(build_utils.BuildRequest):
 
         rust_home = self._install_rust_package()
         env_path = os.environ.get("PATH")
-        os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
+        os.environ["PATH"] = "{0}:{1}/bin".format(env_path, rust_home)
         platform = self.platform()
         platform_name = platform.name()
 
