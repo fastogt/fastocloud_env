@@ -421,10 +421,8 @@ class BuildRequest(build_utils.BuildRequest):
             self._install_package(lib)
 
         rust_home = self._install_rust_package()
-        #env_path = os.environ.get("PATH")
-        #os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
-        subprocess.call(['ln', '-sf', '{0}/bin/cargo'.format(rust_home), '/usr/local/bin/cargo'])
-        subprocess.call(['ln', '-sf', '{0}/bin/rustc'.format(rust_home), '/usr/local/bin/rustc'])
+        env_path = os.environ.get("PATH")
+        os.environ["PATH"] = "{0}:{1}".format(env_path, rust_home)
         platform = self.platform()
         platform_name = platform.name()
 
@@ -441,7 +439,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._install_via_pip3('speedtest-cli')
 
         args_cargo = ['--version', '0.9.21', 'cargo-c']
-        self._install_via_cargo_list(args_cargo)
+        self._install_via_cargo_list(args_cargo, env=os.environ)
 
     def install_nginx(self):
         self._install_package('nginx')
@@ -583,7 +581,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_rs_plugins(self):
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
-        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
+        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins, env=os.environ)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
