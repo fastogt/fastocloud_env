@@ -118,7 +118,7 @@ class OperationSystem(metaclass=ABCMeta):
 
 class Debian(OperationSystem):
     def get_required_exec(self) -> list:
-        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev', 'cargo']
+        return ['git', 'yasm', 'nasm', 'gcc', 'g++', 'make', 'ninja-build', 'python3-pip', 'python3-dev']
 
     def get_build_exec(self) -> list:
         return ['autoconf', 'automake', 'cmake', 'libtool', 'pkg-config', 'libudev-dev', 'libssl-dev', 'unifdef']
@@ -420,6 +420,8 @@ class BuildRequest(build_utils.BuildRequest):
         for lib in dep_libs:
             self._install_package(lib)
 
+        self._install_rust_package()
+        
         # post install step
         platform = self.platform()
         platform_name = platform.name()
