@@ -439,7 +439,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._install_via_pip3('speedtest-cli')
 
         args_cargo = ['--version', '0.9.21', 'cargo-c']
-        self._install_via_cargo_list(args_cargo, env=os.environ)
+        self._install_via_cargo_list(args_cargo)
 
     def install_nginx(self):
         self._install_package('nginx')
@@ -581,7 +581,7 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_rs_plugins(self):
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
-        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins, env=os.environ)
+        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
