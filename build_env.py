@@ -421,6 +421,7 @@ class BuildRequest(build_utils.BuildRequest):
             self._install_package(lib)
 
         rust_home = self._install_rust_package()
+        env = os.environ
         env['PATH'] = '$PATH:{0}'.format(rust_home)
         
         # post install step
