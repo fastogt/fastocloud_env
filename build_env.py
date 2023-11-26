@@ -420,7 +420,8 @@ class BuildRequest(build_utils.BuildRequest):
         for lib in dep_libs:
             self._install_package(lib)
 
-        self._install_rust_package()
+        rust_home = self._install_rust_package()
+        env['PATH'] = '$PATH:{0}'.format(rust_home)
         
         # post install step
         platform = self.platform()
