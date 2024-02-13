@@ -580,6 +580,7 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
     def build_gst_rs_plugins(self):
+        self._install_package('curl')
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
         self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
