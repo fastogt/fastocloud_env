@@ -615,9 +615,9 @@ if __name__ == "__main__":
     srt_default_version = '1.5.3'
     gstreamer_default_version = '1.24.0'
     # https://wpewebkit.org/release/
-    wpe_version = '1.14.1'
+    wpe_version = '1.14.2'
     wpe_backend_version = '1.14.2'
-    wpe_webkit_version = '2.42.0'
+    wpe_webkit_version = '2.42.5'
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
