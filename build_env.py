@@ -419,7 +419,8 @@ class BuildRequest(build_utils.BuildRequest):
                                         with_gstreamer=with_gstreamer, repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
-
+        
+        self._install_package('curl')
         rust_home = self._install_rust_package()
         env_path = os.environ.get("PATH")
         os.environ["PATH"] = "{0}:{1}/bin".format(env_path, rust_home)
@@ -580,7 +581,6 @@ class BuildRequest(build_utils.BuildRequest):
         self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
     def build_gst_rs_plugins(self):
-        self._install_package('curl')
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
         self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
