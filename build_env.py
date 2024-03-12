@@ -14,7 +14,7 @@ _file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
 
-if sys.version_info < (3, 8): # streamlink
+if sys.version_info < (3, 8):  # streamlink
     print('Tried to start script with an unsupported version of Python. build_env requires Python 3.8 or greater')
     sys.exit(1)
 
@@ -57,6 +57,7 @@ GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
 NDI_URL = 'https://github.com/Palakis/obs-ndi'
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
 OPENH264_URL = 'https://github.com/cisco/openh264'
+X264_URL = 'https://code.videolan.org/videolan/x264'
 LIBVA_URL = 'https://github.com/intel/libva'
 LIBVA_UTILS_URL = 'https://github.com/intel/libva-utils'
 INTEL_VAAPI_DRIVER_URL = 'https://github.com/intel/intel-vaapi-driver'
@@ -141,9 +142,10 @@ class Debian(OperationSystem):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
                 'libdrm-dev', 'libproxy-dev', 'libpciaccess-dev', 'libxfixes-dev',
                 'libblkid-dev', 'libsoup2.4-dev', 'libsoup-3.0-dev', 'libjpeg-dev',
-                'librtmp-dev', 'libasound2-dev', 'libx264-dev', 'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
+                'librtmp-dev', 'libasound2-dev',  # 'libx264-dev',
+                'libx265-dev', 'libfaad-dev', 'libmp3lame-dev',
                 'libvpx-dev',
-                'libxcb-dri3-dev', # 'libx11-xcb-dev',
+                'libxcb-dri3-dev',  # 'libx11-xcb-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
                 'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
@@ -181,7 +183,8 @@ class RedHat(OperationSystem):
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libXfixes-devel',
-                'librtmp-devel', 'libsoup-devel', 'libx264-devel', 'libx265-devel', 'alsa-lib-devel', 'lame-devel',
+                'librtmp-devel', 'libsoup-devel',  # 'libx264-devel',
+                'libx265-devel', 'alsa-lib-devel', 'lame-devel',
                 'libvpx-devel',
                 'libopus-devel', 'libvo-aacenc-devel',
                 'libjpeg-turbo-devel', 'gdk-pixbuf2-devel', 'libpango-devel', 'librsvg2-dev', 'pulseaudio-libs-devel',
@@ -217,7 +220,8 @@ class Arch(OperationSystem):
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
-                'rtmpdump', 'libsoup', 'x264', 'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'vpx',
+                'rtmpdump', 'libsoup',  # 'x264',
+                'x265', 'alsa-lib', 'lame', 'libjpeg', 'gdk-pixbuf2', 'vpx',
                 'opus', 'ocaml-voaacenc',
                 'srtp2', 'zlib'  # 'libffi', 'pcre'
                 ]
@@ -353,7 +357,8 @@ class MacOSX(OperationSystem):
 
 class BuildRequest(build_utils.BuildRequest):
     def __init__(self, host, platform, arch_name, dir_path, prefix_path):
-        build_utils.BuildRequest.__init__(self, platform, arch_name, dir_path, prefix_path)
+        build_utils.BuildRequest.__init__(
+            self, platform, arch_name, dir_path, prefix_path)
 
         self.host = host
 
@@ -419,7 +424,7 @@ class BuildRequest(build_utils.BuildRequest):
                                         with_gstreamer=with_gstreamer, repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
-        
+
         self._install_package('curl')
         rust_home = self._install_rust_package()
         env_path = os.environ.get("PATH")
@@ -431,7 +436,8 @@ class BuildRequest(build_utils.BuildRequest):
         if platform_name == 'linux':
             distribution = system_info.linux_get_dist()
             if distribution == 'RHEL':
-                subprocess.call(['ln', '-sf', '/usr/bin/ninja-build', '/usr/bin/ninja'])
+                subprocess.call(
+                    ['ln', '-sf', '/usr/bin/ninja-build', '/usr/bin/ninja'])
         elif platform_name == 'freebsd':
             subprocess.call(['dbus-uuidgen', '--ensure'])
 
@@ -451,11 +457,11 @@ class BuildRequest(build_utils.BuildRequest):
             src = os.path.join(_file_path, "nginx")
             dst = "/etc/nginx/sites-enabled"
 
-            names = map(lambda name: (os.path.join(src, name), os.path.join(dst, name)), os.listdir(src))
+            names = map(lambda name: (os.path.join(src, name),
+                        os.path.join(dst, name)), os.listdir(src))
 
             for srcname, dstname in names:
                 shutil.copy2(srcname, dstname)
-
 
     def build_faac(self):
         compiler_flags = []
@@ -465,11 +471,13 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags_va = ['--buildtype=release']
         compiler_flags_va_utils = ['--buildtype=release', '-Ddrm=true']
         self._clone_and_build_via_meson_system(LIBVA_URL, compiler_flags_va)
-        self._clone_and_build_via_meson_system(LIBVA_UTILS_URL, compiler_flags_va_utils)
+        self._clone_and_build_via_meson_system(
+            LIBVA_UTILS_URL, compiler_flags_va_utils)
 
     def build_vaapi(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson_system(INTEL_VAAPI_DRIVER_URL, compiler_flags)
+        self._clone_and_build_via_meson_system(
+            INTEL_VAAPI_DRIVER_URL, compiler_flags)
 
     def build_mfx(self):
         compiler_flags = []
@@ -479,7 +487,12 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_openh264(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(OPENH264_URL, compiler_flags, branch='v2.1.1')
+        self._clone_and_build_via_meson(
+            OPENH264_URL, compiler_flags, branch='v2.4.1')
+
+    def build_x264(self):
+        compiler_flags = []
+        self._clone_and_build_via_configure(X264_URL, compiler_flags)
 
     def build_wpe(self, version):
         compiler_flags = []
@@ -488,13 +501,15 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_wpe_backend(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}/wpebackend-fdo-{1}.{2}'.format(WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
+        url = '{0}/wpebackend-fdo-{1}.{2}'.format(
+            WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_wpe_webkit(self, version):
         compiler_flags = ['-DPORT=WPE', '-DUSE_SOUP2=ON', '-DENABLE_ACCESSIBILITY=OFF', '-DUSE_OPENJPEG=OFF',
                           '-DUSE_WOFF2=OFF', '-DUSE_LCMS=OFF', '-DUSE_AVIF=OFF', '-DENABLE_BUBBLEWRAP_SANDBOX=OFF', '-DENABLE_INTROSPECTION=OFF']
-        url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL, version, WPE_WEBKIT_ARCH_EXT)
+        url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL,
+                                             version, WPE_WEBKIT_ARCH_EXT)
         self._download_and_build_via_cmake(url, compiler_flags)
 
     def build_srt(self, version):
@@ -509,11 +524,13 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_libyaml(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('libyaml'), cmake_flags)
+        self._clone_and_build_via_cmake(
+            build_utils.generate_fastogt_github_path('libyaml'), cmake_flags)
 
     def build_fastoml(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
+        self._clone_and_build_via_cmake(
+            build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
 
     def build_aws(self):
         cmake_flags = ['-DBUILD_ONLY=s3;sts']
@@ -525,13 +542,15 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}gstreamer/gstreamer-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
+        url = '{0}gstreamer/gstreamer-{1}.{2}'.format(
+            GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
 #
-        url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
+        url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(
+            GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
         patch_files = [
             self.get_patch_file_path("gst-plugins-base.patch")
         ]
@@ -559,10 +578,12 @@ class BuildRequest(build_utils.BuildRequest):
 
         if mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
-            self._clone_and_build_via_cmake(GSTREAMER_MFX_URL, compiler_flags_mfx)
+            self._clone_and_build_via_cmake(
+                GSTREAMER_MFX_URL, compiler_flags_mfx)
         if vaapi:
             compiler_flags_vaapi = ['--buildtype=release']
-            url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
+            url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(
+                GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
             self._download_and_build_via_meson(url, compiler_flags_vaapi, [])
 
     def build_gst_plugins_ugly(self, version):
@@ -586,7 +607,8 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}gst-libav/gst-libav-{1}.{2}'.format(GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
+        url = '{0}gst-libav/gst-libav-{1}.{2}'.format(
+            GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_nice(self):
@@ -595,7 +617,8 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
-        url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
+        url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(
+            GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
         self._download_and_build_via_meson(url, compiler_flags, [])
 
 
@@ -622,7 +645,8 @@ if __name__ == "__main__":
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
 
-    parser = argparse.ArgumentParser(prog='build_env', usage='%(prog)s [options]')
+    parser = argparse.ArgumentParser(
+        prog='build_env', usage='%(prog)s [options]')
     # system
     system_grp = parser.add_mutually_exclusive_group()
     system_grp.add_argument('--with-system', help='build with system dependencies (default)', dest='with_system',
@@ -670,12 +694,21 @@ if __name__ == "__main__":
 
     # openh264
     openh264_grp = parser.add_mutually_exclusive_group()
-    openh264_grp.add_argument('--with-openh264', help='build openh264 (default, version: git master)',
+    openh264_grp.add_argument('--with-openh264', help='build openh264 (default, version: git v2.4.1)',
                               dest='with_openh264',
                               action='store_true', default=True)
     openh264_grp.add_argument('--without-openh264', help='build without openh264', dest='with_openh264',
                               action='store_false',
                               default=False)
+
+    # x264
+    x264_grp = parser.add_mutually_exclusive_group()
+    x264_grp.add_argument('--with-x264', help='build x264 (default, version: git master)',
+                          dest='with_x264',
+                          action='store_true', default=True)
+    x264_grp.add_argument('--without-x264', help='build without x264', dest='with_x264',
+                          action='store_false',
+                          default=False)
 
     # libva
     libva_grp = parser.add_mutually_exclusive_group()
@@ -715,7 +748,8 @@ if __name__ == "__main__":
     wpe_grp = parser.add_mutually_exclusive_group()
     wpe_grp.add_argument('--with-wpe', help='build wpe (default, version: git master)', dest='with_wpe',
                          action='store_true', default=False)
-    wpe_grp.add_argument('--without-wpe', help='build without wpe', dest='with_wpe', action='store_false', default=True)
+    wpe_grp.add_argument('--without-wpe', help='build without wpe',
+                         dest='with_wpe', action='store_false', default=True)
 
     # mongo
     mongo_grp = parser.add_mutually_exclusive_group()
@@ -783,9 +817,9 @@ if __name__ == "__main__":
     # libyaml
     libyaml_grp = parser.add_mutually_exclusive_group()
     libyaml_grp.add_argument('--with-libyaml-cpp', help='build libyaml (default, version: git master)',
-                                 dest='with_libyaml', action='store_true', default=True)
+                             dest='with_libyaml', action='store_true', default=True)
     libyaml_grp.add_argument('--without-libyaml-cpp', help='build without libyaml', dest='with_libyaml',
-                                 action='store_false', default=False)
+                             action='store_false', default=False)
 
     # fastoml
     fastoml_grp = parser.add_mutually_exclusive_group()
@@ -805,7 +839,7 @@ if __name__ == "__main__":
                          action='store_false',
                          default=True)
 
-    # ndi 
+    # ndi
     ndi_grp = parser.add_mutually_exclusive_group()
     ndi_grp.add_argument('--with-ndi', help='build ndi',
                          dest='with_ndi',
@@ -817,13 +851,15 @@ if __name__ == "__main__":
     # gstreamer
     gstreamer_grp = parser.add_mutually_exclusive_group()
     gstreamer_grp.add_argument('--with-gstreamer',
-                               help='build gstreamer (default, version:{0})'.format(gstreamer_default_version),
+                               help='build gstreamer (default, version:{0})'.format(
+                                   gstreamer_default_version),
                                dest='with_gstreamer', action='store_true', default=True)
     gstreamer_grp.add_argument('--without-gstreamer', help='build without gstreamer', dest='with_gstreamer',
                                action='store_false',
                                default=False)
     parser.add_argument('--gstreamer-version',
-                        help='gstreamer version (default: {0})'.format(gstreamer_default_version),
+                        help='gstreamer version (default: {0})'.format(
+                            gstreamer_default_version),
                         default=gstreamer_default_version)
 
     # gst-plugins-base
@@ -872,8 +908,10 @@ if __name__ == "__main__":
 
     # gst-plugins-rs
     gst_plugins_rs_grp = parser.add_mutually_exclusive_group()
-    gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins', dest='with_gst_rs_plugins', action='store_true', default=False)
-    gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugins-rs', dest='with_gst_rs_plugins', action='store_false', default=True)
+    gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins',
+                                    dest='with_gst_rs_plugins', action='store_true', default=False)
+    gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugins-rs',
+                                    dest='with_gst_rs_plugins', action='store_false', default=True)
 
     # gst-fastoml
     gst_fastoml_grp = parser.add_mutually_exclusive_group()
@@ -926,11 +964,14 @@ if __name__ == "__main__":
                               default=False)
 
     # other
-    parser.add_argument("--hostname", help="server hostname (default: {0})".format(DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
-    parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
+    parser.add_argument("--hostname", help="server hostname (default: {0})".format(
+        DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
+    parser.add_argument(
+        '--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
                         default=arch_host_os)
-    parser.add_argument('--prefix', help='prefix path (default: None)', default=None)
+    parser.add_argument(
+        '--prefix', help='prefix path (default: None)', default=None)
     parser.add_argument('--docker', help='docker build (default: False)', dest='docker', action='store_true',
                         default=False)
 
@@ -955,7 +996,8 @@ if __name__ == "__main__":
     arg_install_fastogt_packages = argv.install_fastogt_packages
     arg_install_gstreamer_packages = argv.install_gstreamer_packages
 
-    request = BuildRequest(arg_hostname, arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
+    request = BuildRequest(arg_hostname, arg_platform, arg_architecture,
+                           'build_' + arg_platform + '_env', arg_prefix_path)
     if argv_docker:
         request.prepare_docker()
 
@@ -977,6 +1019,9 @@ if __name__ == "__main__":
 
     if argv.with_openh264 and arg_install_other_packages:
         request.build_openh264()
+
+    if argv.with_x264 and arg_install_other_packages:
+        request.build_x264()
 
     if (argv.with_libva or argv.with_mfx) and arg_install_other_packages:
         request.build_libva()
@@ -1040,7 +1085,8 @@ if __name__ == "__main__":
         request.build_gst_nice()
 
     if argv.with_gst_plugins_bad and arg_install_gstreamer_packages:
-        request.build_gst_plugins_bad(argv.gstreamer_version, build_mfx, build_vaapi)
+        request.build_gst_plugins_bad(
+            argv.gstreamer_version, build_mfx, build_vaapi)
 
     if argv.with_gst_plugins_ugly and arg_install_gstreamer_packages:
         request.build_gst_plugins_ugly(argv.gstreamer_version)
