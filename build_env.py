@@ -491,7 +491,7 @@ class BuildRequest(build_utils.BuildRequest):
             OPENH264_URL, compiler_flags, branch='v2.4.1')
 
     def build_x264(self):
-        compiler_flags = []
+        compiler_flags = ['--enable-shared']
         self._clone_and_build_via_configure(X264_URL, compiler_flags)
 
     def build_wpe(self, version):
