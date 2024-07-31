@@ -638,9 +638,10 @@ if __name__ == "__main__":
     srt_default_version = '1.5.3'
     gstreamer_default_version = '1.24.6'
     # https://wpewebkit.org/release/
-    wpe_version = '1.14.2'
+    wpe_version = '1.16.0'
     wpe_backend_version = '1.14.2'
-    wpe_webkit_version = '2.42.5'
+    wpe_webkit_version = '2.44.2'
+    ffmpeg_version = 'n7.0.1'
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
@@ -1043,7 +1044,7 @@ if __name__ == "__main__":
         request.build_srt(argv.srt_version)
 
     if argv.with_ffmpeg and arg_install_other_packages:
-        request.build_ffmpeg()
+        request.build_ffmpeg(ffmpeg_version)
 
     if argv.with_opencv and arg_install_other_packages:
         request.build_opencv()
