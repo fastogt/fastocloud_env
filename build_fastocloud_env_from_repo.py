@@ -12,14 +12,16 @@ from check_plugins import check_plugins
 
 class BuildRequestRepo(BuildRequest):
     def __init__(self, host, platform, arch_name, dir_path, prefix_path):
-        super(BuildRequestRepo, self).__init__(host, platform, arch_name, dir_path, prefix_path)
+        super(BuildRequestRepo, self).__init__(
+            host, platform, arch_name, dir_path, prefix_path)
 
 
 if __name__ == "__main__":
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
 
-    parser = argparse.ArgumentParser(prog='build_env', usage='%(prog)s [options]')
+    parser = argparse.ArgumentParser(
+        prog='build_env', usage='%(prog)s [options]')
     # system
     system_grp = parser.add_mutually_exclusive_group()
     system_grp.add_argument('--with-system', help='build with system dependencies (default)', dest='with_system',
@@ -74,16 +76,19 @@ if __name__ == "__main__":
     # libyaml
     libyaml_grp = parser.add_mutually_exclusive_group()
     libyaml_grp.add_argument('--with-libyaml-cpp', help='build libyaml (default, version: git master)',
-                                 dest='with_libyaml', action='store_true', default=True)
+                             dest='with_libyaml', action='store_true', default=True)
     libyaml_grp.add_argument('--without-libyaml-cpp', help='build without libyaml', dest='with_libyaml',
-                                 action='store_false', default=False)
+                             action='store_false', default=False)
 
     # other
-    parser.add_argument("--hostname", help="server hostname (default: {0})".format(DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
-    parser.add_argument('--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
+    parser.add_argument("--hostname", help="server hostname (default: {0})".format(
+        DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
+    parser.add_argument(
+        '--platform', help='build for platform (default: {0})'.format(host_os), default=host_os)
     parser.add_argument('--architecture', help='architecture (default: {0})'.format(arch_host_os),
                         default=arch_host_os)
-    parser.add_argument('--prefix', help='prefix path (default: None)', default=None)
+    parser.add_argument(
+        '--prefix', help='prefix path (default: None)', default=None)
 
     parser.add_argument('--install-other-packages',
                         help='install other packages (--with-system, --with-tools --with-meson --with-jsonc --with-libev) (default: True)',
@@ -101,7 +106,8 @@ if __name__ == "__main__":
     arg_install_other_packages = argv.install_other_packages
     arg_install_fastogt_packages = argv.install_fastogt_packages
 
-    request = BuildRequestRepo(arg_hostname, arg_platform, arg_architecture, 'build_' + arg_platform + '_env', arg_prefix_path)
+    request = BuildRequestRepo(arg_hostname, arg_platform, arg_architecture,
+                               'build_' + arg_platform + '_env', arg_prefix_path)
     if argv.with_system and arg_install_other_packages:
         request.install_system(with_nvidia=False, with_wpe=False, with_mongo=False, with_gstreamer=True,
                                repo_build=True)

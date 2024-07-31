@@ -174,7 +174,7 @@ class CdnConfigBuilder:
                     continue
 
                 break
-            
+
             for _ in range(connections):
                 while True:
                     try:

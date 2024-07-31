@@ -169,7 +169,7 @@ PLUGINS = ['decodebin',
            'ndisink',
            'awss3src',
            'awss3sink',
-          ]
+           ]
 
 PLUGINS_ML = [
     'tinyyolov2',
@@ -198,18 +198,24 @@ def check_plugins():
         print('\nPlugins for FastoCloud COM/PRO:')
         for plugin in PLUGINS:
             try:
-                subprocess.check_output(['gst-inspect-1.0', plugin], env=env, stderr=devnull)
-                print_success('Check plugin {0}, success return code: {1}'.format(plugin, 0))
+                subprocess.check_output(
+                    ['gst-inspect-1.0', plugin], env=env, stderr=devnull)
+                print_success(
+                    'Check plugin {0}, success return code: {1}'.format(plugin, 0))
             except CalledProcessError as e:
-                print_error('Check plugin {0}, failed return code: {1}'.format(plugin, e.returncode))
+                print_error('Check plugin {0}, failed return code: {1}'.format(
+                    plugin, e.returncode))
 
         print('\nPlugins for FastoCloud ML:')
         for plugin in PLUGINS_ML:
             try:
-                subprocess.check_output(['gst-inspect-1.0', plugin], env=env, stderr=devnull)
-                print_success('Check plugin {0}, success return code: {1}'.format(plugin, 0))
+                subprocess.check_output(
+                    ['gst-inspect-1.0', plugin], env=env, stderr=devnull)
+                print_success(
+                    'Check plugin {0}, success return code: {1}'.format(plugin, 0))
             except CalledProcessError as e:
-                print_error('Check plugin {0}, failed return code: {1}'.format(plugin, e.returncode))
+                print_error('Check plugin {0}, failed return code: {1}'.format(
+                    plugin, e.returncode))
 
 
 if __name__ == "__main__":
