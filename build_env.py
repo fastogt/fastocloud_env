@@ -445,7 +445,7 @@ class BuildRequest(build_utils.BuildRequest):
         self.update_pyfastostream()
         self._install_via_pip3('speedtest-cli')
 
-        args_cargo = ['--version', '0.9.21', 'cargo-c']
+        args_cargo = ['--version', '0.9.21', 'cargo-c']  # ubuntu 24 need carcgo-c 0.9.29
         self._install_via_cargo_list(args_cargo)
 
     def install_nginx(self):
