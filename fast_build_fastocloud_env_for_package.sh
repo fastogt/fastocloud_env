@@ -12,10 +12,10 @@ USER=fastocloud
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     if [ -n "$(command -v yum)" ]; then
       yum update -y
-      yum install -y git python3-setuptools python3-pip rpm libnvidia-ml-dev
+      yum install -y git python3-setuptools python3-pip rpm
     elif [ -n "$(command -v apt-get)" ]; then
       apt-get update
-      apt-get install -y git python3-setuptools python3-pip rpm libnvidia-ml-dev --no-install-recommends
+      apt-get install -y git python3-setuptools python3-pip rpm --no-install-recommends
     else
 :
     fi
