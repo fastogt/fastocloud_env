@@ -636,12 +636,12 @@ def str2bool(v):
 if __name__ == "__main__":
     meson_default_version = '1.1.0'
     srt_default_version = '1.5.3'
-    gstreamer_default_version = '1.24.8'
+    gstreamer_default_version = '1.24.9'
     # https://wpewebkit.org/release/
     wpe_version = '1.16.0'
-    wpe_backend_version = '1.14.2'
-    wpe_webkit_version = '2.44.2'
-    ffmpeg_version = 'n7.0.1'
+    wpe_backend_version = '1.14.3'
+    wpe_webkit_version = '2.46.3'
+    ffmpeg_version = 'n7.1'
 
     host_os = system_info.get_os()
     arch_host_os = system_info.get_arch_name()
