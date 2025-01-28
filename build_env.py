@@ -106,10 +106,6 @@ class OperationSystem(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_mongo_libs(self) -> list:
-        pass
-
-    @abstractmethod
     def get_gst_build_libs(self):
         pass
 
@@ -134,9 +130,6 @@ class Debian(OperationSystem):
         return ['libegl-dev', 'libegl1-mesa-dev', 'libxkbcommon-dev', 'libwayland-dev', 'libepoxy-dev', 'ruby',
                 'libgcrypt20-dev', 'libwebp-dev', 'libxslt1-dev', 'libsystemd-dev', 'libcurl4-openssl-dev',
                 'libgudev-1.0-dev', 'libgbm-dev', 'gperf', 'wayland-protocols']
-
-    def get_mongo_libs(self) -> list:
-        return ['libmongoc-dev']
 
     def get_gst_build_libs(self):
         return ['libmount-dev', 'libglib2.0-dev', 'glib-networking',
@@ -177,9 +170,6 @@ class RedHat(OperationSystem):
     def get_wpe_libs(self) -> list:
         return []
 
-    def get_mongo_libs(self) -> list:
-        return ['mongo-c-driver-devel']
-
     def get_gst_build_libs(self):
         return ['libmount-devel', 'glib2-devel', 'glib-networking',
                 'libdrm-devel', 'libproxy-devel', 'libpciaccess-devel', 'libXfixes-devel',
@@ -214,9 +204,6 @@ class Arch(OperationSystem):
     def get_wpe_libs(self) -> list:
         return []
 
-    def get_mongo_libs(self) -> list:
-        return ['libmongoc']
-
     def get_gst_build_libs(self) -> list:
         return ['libutil-linux', 'glibc', 'glib-networking',
                 'libdrm', 'libproxy',
@@ -247,9 +234,6 @@ class FreeBSD(OperationSystem):
 
     def get_wpe_libs(self) -> list:
         return []
-
-    def get_mongo_libs(self) -> list:
-        return ['libmongoc']
 
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking',
@@ -283,9 +267,6 @@ class Windows64(OperationSystem):
     def get_wpe_libs(self) -> list:
         return []
 
-    def get_mongo_libs(self) -> list:
-        return []
-
     def get_gst_build_libs(self):
         return ['mingw-w64-x86_64-glib2', 'mingw-w64-x86_64-glib-networking']
 
@@ -314,9 +295,6 @@ class Windows32(OperationSystem):
     def get_wpe_libs(self) -> list:
         return []
 
-    def get_mongo_libs(self) -> list:
-        return []
-
     def get_gst_build_libs(self):
         return ['mingw-w64-i686-glib2', 'mingw-w64-i686-glib-networking']
 
@@ -343,9 +321,6 @@ class MacOSX(OperationSystem):
     def get_wpe_libs(self) -> list:
         return []
 
-    def get_mongo_libs(self) -> list:
-        return ['libmongo']
-
     def get_gst_build_libs(self):
         return ['glib2-devel', 'glib-networking']
 
@@ -362,7 +337,7 @@ class BuildRequest(build_utils.BuildRequest):
 
         self.host = host
 
-    def get_system_libs(self, with_nvidia, with_wpe, with_mongo, with_gstreamer, repo_build):
+    def get_system_libs(self, with_nvidia, with_wpe, with_gstreamer, repo_build):
         platform = self.platform_
         platform_name = platform.name()
         ar = platform.architecture()
@@ -407,9 +382,6 @@ class BuildRequest(build_utils.BuildRequest):
         if with_wpe:
             dep_libs.extend(current_system.get_wpe_libs())
 
-        if with_mongo:
-            dep_libs.extend(current_system.get_mongo_libs())
-
         return dep_libs
 
     def set_linux_hostname(self):
@@ -419,8 +391,8 @@ class BuildRequest(build_utils.BuildRequest):
     def prepare_docker(self):
         utils.regenerate_dbus_machine_id()
 
-    def install_system(self, with_nvidia, with_wpe, with_mongo, with_gstreamer, repo_build):
-        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe, with_mongo=with_mongo,
+    def install_system(self, with_nvidia, with_wpe, with_gstreamer, repo_build):
+        dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe,
                                         with_gstreamer=with_gstreamer, repo_build=repo_build)
         for lib in dep_libs:
             self._install_package(lib)
@@ -752,15 +724,6 @@ if __name__ == "__main__":
     wpe_grp.add_argument('--without-wpe', help='build without wpe',
                          dest='with_wpe', action='store_false', default=True)
 
-    # mongo
-    mongo_grp = parser.add_mutually_exclusive_group()
-    mongo_grp.add_argument('--with-mongo', help='build mongo (default, version: git master)',
-                           dest='with_mongo',
-                           action='store_true', default=False)
-    mongo_grp.add_argument('--without-mongo', help='build without mongo', dest='with_mongo',
-                           action='store_false',
-                           default=True)
-
     # srt
     srt_grp = parser.add_mutually_exclusive_group()
     srt_grp.add_argument('--with-srt', help='build srt (default, version:{0})'.format(srt_default_version),
@@ -1003,8 +966,7 @@ if __name__ == "__main__":
         request.prepare_docker()
 
     if argv.with_system and arg_install_other_packages:
-        request.install_system(with_nvidia=argv.with_nvidia, with_wpe=argv.with_wpe, with_mongo=argv.with_mongo,
-                               with_gstreamer=True, repo_build=False)
+        request.install_system(with_nvidia=argv.with_nvidia, with_wpe=argv.with_wpe, with_gstreamer=True, repo_build=False)
 
     if argv.with_tools and arg_install_other_packages:
         request.install_tools()
