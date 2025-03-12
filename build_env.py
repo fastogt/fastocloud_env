@@ -608,7 +608,7 @@ def str2bool(v):
 if __name__ == "__main__":
     meson_default_version = '1.4.0'
     srt_default_version = '1.5.3'
-    gstreamer_default_version = '1.26.0'
+    gstreamer_default_version = '1.24.12'
     # https://wpewebkit.org/release/
     wpe_version = '1.16.0'
     wpe_backend_version = '1.14.3'
