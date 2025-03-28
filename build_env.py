@@ -389,7 +389,8 @@ class BuildRequest(build_utils.BuildRequest):
             f.write(self.host)
 
     def prepare_docker(self):
-        utils.regenerate_dbus_machine_id()
+        pass
+        # utils.regenerate_dbus_machine_id()
 
     def install_system(self, with_nvidia, with_wpe, with_gstreamer, repo_build):
         dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe,
