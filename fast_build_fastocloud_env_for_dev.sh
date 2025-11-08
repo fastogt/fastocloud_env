@@ -39,7 +39,7 @@ fi
 # install pyfastogt
 git clone https://gitlab.com/fastogt/pyfastogt
 cd pyfastogt
-python3 setup.py install
+pip install .
 cd ../
 rm -rf pyfastogt
 
