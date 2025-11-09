@@ -14,8 +14,8 @@ _file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
 
-if sys.version_info < (3, 8):  # streamlink
-    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.8 or greater')
+if sys.version_info < (3, 10):  # pyfastostream
+    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.10 or greater')
     sys.exit(1)
 
 DEFAULT_HOSTNAME = "fastocloud.com"
@@ -385,8 +385,18 @@ class BuildRequest(build_utils.BuildRequest):
         return dep_libs
 
     def set_linux_hostname(self):
-        with open("/etc/hostname", "w+") as f:
-            f.write(self.host)
+        try:
+            # Backup original hostname
+            if os.path.exists("/etc/hostname"):
+                with open("/etc/hostname", "r") as f:
+                    original = f.read().strip()
+                if original and original != self.host:
+                    print(f"Changing hostname from '{original}' to '{self.host}'")
+
+            with open("/etc/hostname", "w") as f:
+                f.write(self.host)
+        except PermissionError:
+            print(f"Warning: Unable to set hostname to '{self.host}' (permission denied)")
 
     def prepare_docker(self):
         pass
@@ -418,7 +428,7 @@ class BuildRequest(build_utils.BuildRequest):
         self.update_pyfastostream()
         self._install_via_pip3('speedtest-cli')
 
-        args_cargo = ['--version', '0.9.21', 'cargo-c']  # ubuntu 24 need carcgo-c 0.9.29
+        args_cargo = ['--version', '0.9.29', 'cargo-c']  # ubuntu 24 needs cargo-c 0.9.29
         self._install_via_cargo_list(args_cargo)
 
     def install_nginx(self):
@@ -429,6 +439,13 @@ class BuildRequest(build_utils.BuildRequest):
         if platform_name == 'linux':
             src = os.path.join(_file_path, "nginx")
             dst = "/etc/nginx/sites-enabled"
+
+            if not os.path.exists(src):
+                print(f"Warning: nginx config directory not found: {src}")
+                return
+
+            if not os.path.exists(dst):
+                os.makedirs(dst, exist_ok=True)
 
             names = map(lambda name: (os.path.join(src, name),
                         os.path.join(dst, name)), os.listdir(src))

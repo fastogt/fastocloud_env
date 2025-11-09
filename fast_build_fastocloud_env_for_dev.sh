@@ -39,7 +39,7 @@ fi
 # install pyfastogt
 git clone https://gitlab.com/fastogt/pyfastogt
 cd pyfastogt
-pip install .
+pip3 install --break-system-packages .
 cd ../
 rm -rf pyfastogt
 
@@ -47,5 +47,7 @@ rm -rf pyfastogt
 ./build_env.py "$@"
 
 # add user
-useradd -m -U -d /home/$USER $USER -s /bin/bash
+if ! id "$USER" &>/dev/null; then
+    useradd -m -U -d /home/$USER $USER -s /bin/bash
+fi
 usermod -a -G video $USER
