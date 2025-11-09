@@ -140,7 +140,7 @@ class Debian(OperationSystem):
                 'libvpx-dev',
                 'libxcb-dri3-dev',  # 'libx11-xcb-dev',
                 'libopus-dev', 'libvo-aacenc-dev',
-                'libgdk-pixbuf2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
+                'libgdk-pixbuf-2.0-dev', 'libpango1.0-dev', 'librsvg2-dev', 'libpulse-dev',
                 # 'freeglut3-dev', # 'libegl1-mesa-dev',
                 'libsrtp2-dev', 'zlib1g-dev', 'libbz2-dev'
                 # 'libffi-dev', 'libxrandr-dev', 'intltool', 'liborc-0.4-dev', 'libxml2-dev'
