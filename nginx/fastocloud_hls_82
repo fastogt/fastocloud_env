@@ -11,6 +11,12 @@ server {
     stub_status;
   }
 
+  location = /touched-files {
+    # HLS server doesn't serve COD streams, return empty array
+    default_type application/json;
+    return 200 "[]";
+  }
+
   location / {
     # Disable cache
     add_header Cache-Control no-cache;

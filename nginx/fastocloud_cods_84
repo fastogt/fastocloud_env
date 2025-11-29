@@ -7,11 +7,60 @@ server {
 
   server_name _;
 
+  # Shared memory for touch file tracking
+  lua_shared_dict touched_files 10m;
+
+  # Initialize Lua functions
+  init_by_lua_block {
+    -- Function to extract stream ID from URI
+    function extract_stream_id(uri)
+      -- Match patterns like /stream123/segment001.ts
+      local stream_id = string.match(uri, "^/([^/]+)/")
+      return stream_id
+    end
+  }
+
   location = /status {
     stub_status;
   }
 
+  location = /touched-files {
+    content_by_lua_block {
+      local touched = ngx.shared.touched_files
+      local files = {}
+
+      -- Get all keys from shared memory
+      local keys = touched:get_keys(0)
+      for _, key in ipairs(keys) do
+        if string.sub(key, 1, 7) == "stream:" then
+          local stream_id = string.sub(key, 8)  -- Remove "stream:" prefix
+          local timestamp = touched:get(key)
+          table.insert(files, {
+            stream_id = stream_id,
+            timestamp = timestamp
+          })
+        end
+      end
+
+      ngx.header.content_type = "application/json"
+      ngx.say(cjson.encode(files))
+    }
+  }
+
   location / {
+    # Track file access for touch notifications
+    access_by_lua_block {
+      local touched = ngx.shared.touched_files
+      local uri = ngx.var.uri
+
+      -- Extract stream ID from URI
+      local stream_id = extract_stream_id(uri)
+      if stream_id then
+        -- Store touch with current timestamp (expire in 1 hour)
+        touched:set("stream:" .. stream_id, ngx.time(), 3600)
+      end
+    }
+
     # Disable cache
     add_header Cache-Control no-cache;
 

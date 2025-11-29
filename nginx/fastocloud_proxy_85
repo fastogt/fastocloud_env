@@ -1,6 +1,6 @@
 server {
-  access_log /var/log/nginx/fastocloud_proxy_84_access.log;
-  error_log /var/log/nginx/fastocloud_proxy_84_error.log;
+  access_log /var/log/nginx/fastocloud_proxy_85_access.log;
+  error_log /var/log/nginx/fastocloud_proxy_85_error.log;
 
   listen 85;
   listen [::]:85;
@@ -9,6 +9,12 @@ server {
 
   location = /status {
     stub_status;
+  }
+
+  location = /touched-files {
+    # Proxy server doesn't serve COD streams, return empty array
+    default_type application/json;
+    return 200 "[]";
   }
 
   location / {
