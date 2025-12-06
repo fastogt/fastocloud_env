@@ -21,7 +21,8 @@ def print_error(msg):
     print(FAIL + msg + ENDC)
 
 
-PLUGINS = ['decodebin',
+PLUGINS = ['decodebin3',
+           'parsebin',
            'fakesink',
            'testsink',
            'testsrcbin',
