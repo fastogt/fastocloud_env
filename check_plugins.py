@@ -23,6 +23,7 @@ def print_error(msg):
 
 PLUGINS = ['decodebin3',
            'parsebin',
+           'watchdog',
            'uridecodebin',
            'fakesink',
            'testsink',
