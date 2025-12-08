@@ -572,7 +572,7 @@ class BuildRequest(build_utils.BuildRequest):
         return os.path.join(_file_path, "fastogt_patch", "{0}".format(patch_file))
 
     def build_gst_plugins_good(self, version):
-        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
+        compiler_flags = ['--buildtype=release']  # Note: gst-plugins-good does not support -Dintrospection
         url = '{0}gst-plugins-good/gst-plugins-good-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
@@ -592,13 +592,13 @@ class BuildRequest(build_utils.BuildRequest):
             self.clone_and_build_via_cmake(
                 GSTREAMER_MFX_URL, compiler_flags_mfx)
         if vaapi:
-            compiler_flags_vaapi = ['--buildtype=release', '-Dintrospection=disabled']
+            compiler_flags_vaapi = ['--buildtype=release']  # Note: gstreamer-vaapi does not support -Dintrospection
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(
                 GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
             self.download_and_build_via_meson(url, compiler_flags_vaapi, [])
 
     def build_gst_plugins_ugly(self, version):
-        compiler_flags = ['--buildtype=release', '-Dgpl=enabled', '-Dintrospection=disabled']
+        compiler_flags = ['--buildtype=release', '-Dgpl=enabled']  # Note: gst-plugins-ugly does not support -Dintrospection
         url = '{0}gst-plugins-ugly/gst-plugins-ugly-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
                                                                     GST_PLUGINS_UGLY_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
