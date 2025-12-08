@@ -50,13 +50,14 @@ GST_RTSP_SRC_ROOT = GSTREAMER_SRC_ROOT
 GST_RTSP_ARCH_COMP = 'xz'
 GST_RTSP_ARCH_EXT = 'tar.' + GST_RTSP_ARCH_COMP
 
-GST_RUST_PLUGINS = 'https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs'
+# OPTIONAL plugins (default: OFF, require flags)
+GST_RUST_PLUGINS = 'https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs'  # --with-gst-rs-plugins (includes whipsink/whepsrc)
 
 AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
-AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
+AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'  # --with-gst-awss3
 GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
 # WPE elements (wpesrc, wpevideosrc) are built-in to gst-plugins-bad since 1.16
-GST_CEF_URL = 'https://github.com/centricular/gstcefsrc'
+GST_CEF_URL = 'https://github.com/centricular/gstcefsrc'  # --with-gst-cef (cefsrc element)
 
 NDI_URL = 'https://github.com/Palakis/obs-ndi'
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
@@ -501,6 +502,10 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--enable-shared']
         self.clone_and_build_via_configure(X264_URL, compiler_flags)
 
+    # OPTIONAL: WPE WebKit library (libwpe, wpebackend-fdo, wpewebkit)
+    # (default: OFF, requires --with-wpe)
+    # NOTE: WPE GStreamer elements (wpesrc, wpevideosrc) are built-in to gst-plugins-bad
+    # and do NOT require these libraries to be built
     def build_wpe(self, version):
         compiler_flags = []
         url = '{0}/libwpe-{1}.{2}'.format(WPE_URL, version, WPE_ARCH_EXT)
@@ -603,10 +608,13 @@ class BuildRequest(build_utils.BuildRequest):
         url = build_utils.generate_fastogt_github_path('gst-fastoml')
         self.clone_and_build_via_meson(url, compiler_flags)
 
+    # OPTIONAL: AWS S3 plugin (default: OFF, requires --with-gst-awss3)
     def build_gst_awss3(self):
         compiler_flags = ['--buildtype=release']
         self.clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
+    # OPTIONAL: Rust plugins including NDI and WebRTC-HTTP (whipsink/whepsrc)
+    # (default: OFF, requires --with-gst-rs-plugins)
     def build_gst_rs_plugins(self):
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
         self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
@@ -627,6 +635,8 @@ class BuildRequest(build_utils.BuildRequest):
             GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
 
+    # OPTIONAL: CEF plugin (cefsrc element)
+    # (default: OFF, requires --with-gst-cef)
     def build_gst_cef(self):
         compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         self.clone_and_build_via_meson(GST_CEF_URL, compiler_flags)
