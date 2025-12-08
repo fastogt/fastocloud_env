@@ -571,7 +571,7 @@ class BuildRequest(build_utils.BuildRequest):
         self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
-        compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
+        compiler_flags = ['--buildtype=release', '-Dgpl=enabled', '-Dintrospection=disabled']
         url = '{0}gst-plugins-bad/gst-plugins-bad-{1}.{2}'.format(GST_PLUGINS_BAD_SRC_ROOT, version,
                                                                   GST_PLUGINS_BAD_ARCH_EXT)
         patch_files = [
