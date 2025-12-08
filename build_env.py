@@ -444,6 +444,9 @@ class BuildRequest(build_utils.BuildRequest):
         self.update_pyfastostream()
         self.install_via_pip3('speedtest-cli')
 
+    # OPTIONAL: Install cargo-c for building Rust GStreamer plugins
+    # (only needed when --with-gst-rs-plugins is enabled)
+    def install_cargo_c(self):
         args_cargo = ['--version', '0.9.29', 'cargo-c']  # ubuntu 24 needs cargo-c 0.9.29
         self.install_via_cargo_list(args_cargo)
 
@@ -1117,6 +1120,7 @@ if __name__ == "__main__":
         request.build_gst_awss3()
 
     if argv.with_gst_rs_plugins and arg_install_gstreamer_packages:
+        request.install_cargo_c()  # Install cargo-c before building Rust plugins
         request.build_gst_rs_plugins()
 
     if argv.with_gst_libav and arg_install_gstreamer_packages:
