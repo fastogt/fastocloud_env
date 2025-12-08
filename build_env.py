@@ -419,10 +419,10 @@ class BuildRequest(build_utils.BuildRequest):
         dep_libs = self.get_system_libs(with_nvidia=with_nvidia, with_wpe=with_wpe,
                                         with_gstreamer=with_gstreamer, repo_build=repo_build)
         for lib in dep_libs:
-            self._install_package(lib)
+            self.install_package(lib)
 
-        self._install_package('curl')
-        rust_home = self._install_rust_package()
+        self.install_package('curl')
+        rust_home = self.install_rust_package()
         env_path = os.environ.get("PATH")
         os.environ["PATH"] = "{0}:{1}/bin".format(env_path, rust_home)
         platform = self.platform()
@@ -439,13 +439,13 @@ class BuildRequest(build_utils.BuildRequest):
 
     def install_tools(self):
         self.update_pyfastostream()
-        self._install_via_pip3('speedtest-cli')
+        self.install_via_pip3('speedtest-cli')
 
         args_cargo = ['--version', '0.9.29', 'cargo-c']  # ubuntu 24 needs cargo-c 0.9.29
-        self._install_via_cargo_list(args_cargo)
+        self.install_via_cargo_list(args_cargo)
 
     def install_nginx(self):
-        self._install_package('nginx')
+        self.install_package('nginx')
         # post install step
         platform = self.platform()
         platform_name = platform.name()
@@ -470,86 +470,86 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_faac(self):
         compiler_flags = []
-        self._download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
+        self.download_and_build_via_bootstrap(FAAC_URL, compiler_flags)
 
     def build_libva(self):
         compiler_flags_va = ['--buildtype=release']
         compiler_flags_va_utils = ['--buildtype=release', '-Ddrm=true']
-        self._clone_and_build_via_meson_system(LIBVA_URL, compiler_flags_va)
-        self._clone_and_build_via_meson_system(
+        self.clone_and_build_via_meson_system(LIBVA_URL, compiler_flags_va)
+        self.clone_and_build_via_meson_system(
             LIBVA_UTILS_URL, compiler_flags_va_utils)
 
     def build_vaapi(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson_system(
+        self.clone_and_build_via_meson_system(
             INTEL_VAAPI_DRIVER_URL, compiler_flags)
 
     def build_mfx(self):
         compiler_flags = []
-        self._clone_and_build_via_cmake(GMM_LIB_URL, compiler_flags)
-        self._clone_and_build_via_cmake(INTEL_MEDIA_DRIVER_URL, compiler_flags)
-        self._clone_and_build_via_cmake(MEDIA_SDK_URL, ['-DENABLE_OPENCL=OFF'])
+        self.clone_and_build_via_cmake(GMM_LIB_URL, compiler_flags)
+        self.clone_and_build_via_cmake(INTEL_MEDIA_DRIVER_URL, compiler_flags)
+        self.clone_and_build_via_cmake(MEDIA_SDK_URL, ['-DENABLE_OPENCL=OFF'])
 
     def build_openh264(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(
+        self.clone_and_build_via_meson(
             OPENH264_URL, compiler_flags, branch='v2.4.1')
 
     def build_x264(self):
         compiler_flags = ['--enable-shared']
-        self._clone_and_build_via_configure(X264_URL, compiler_flags)
+        self.clone_and_build_via_configure(X264_URL, compiler_flags)
 
     def build_wpe(self, version):
         compiler_flags = []
         url = '{0}/libwpe-{1}.{2}'.format(WPE_URL, version, WPE_ARCH_EXT)
-        self._download_and_build_via_cmake(url, compiler_flags)
+        self.download_and_build_via_cmake(url, compiler_flags)
 
     def build_wpe_backend(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}/wpebackend-fdo-{1}.{2}'.format(
             WPE_BACKEND_URL, version, WPE_BACKEND_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_wpe_webkit(self, version):
         compiler_flags = ['-DPORT=WPE', '-DUSE_SOUP2=ON', '-DENABLE_ACCESSIBILITY=OFF', '-DUSE_OPENJPEG=OFF',
                           '-DUSE_WOFF2=OFF', '-DUSE_LCMS=OFF', '-DUSE_AVIF=OFF', '-DENABLE_BUBBLEWRAP_SANDBOX=OFF', '-DENABLE_INTROSPECTION=OFF']
         url = '{0}/wpewebkit-{1}.{2}'.format(WPE_WEBKIT_URL,
                                              version, WPE_WEBKIT_ARCH_EXT)
-        self._download_and_build_via_cmake(url, compiler_flags)
+        self.download_and_build_via_cmake(url, compiler_flags)
 
     def build_srt(self, version):
         compiler_flags = []
         url = '{0}/v{1}.{2}'.format(SRT_SRC_URL, version, SRT_ARCH_EXT)
-        self._download_and_build_via_cmake(url, compiler_flags)
+        self.download_and_build_via_cmake(url, compiler_flags)
 
     def build_opencv(self):
         compiler_flags = ['-DBUILD_JAVA=OFF', '-DBUILD_TESTS=OFF', '-DWITH_GSTREAMER=OFF',
                           '-DOPENCV_GENERATE_PKGCONFIG=ON']
-        self._clone_and_build_via_cmake(OPENCV_URL, compiler_flags)
+        self.clone_and_build_via_cmake(OPENCV_URL, compiler_flags)
 
     def build_libyaml(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(
+        self.clone_and_build_via_cmake(
             build_utils.generate_fastogt_github_path('libyaml'), cmake_flags)
 
     def build_fastoml(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(
+        self.clone_and_build_via_cmake(
             build_utils.generate_fastogt_github_path('fastoml'), cmake_flags)
 
     def build_aws(self):
         cmake_flags = ['-DBUILD_ONLY=s3;sts']
-        self._clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
+        self.clone_and_build_via_cmake(AWS_SDK_URL, cmake_flags)
 
     def build_ndi(self):
         cmake_flags = []
-        self._clone_and_build_via_cmake(NDI_URL, cmake_flags)
+        self.clone_and_build_via_cmake(NDI_URL, cmake_flags)
 
     def build_gstreamer(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(
             GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
@@ -559,7 +559,7 @@ class BuildRequest(build_utils.BuildRequest):
             self.get_patch_file_path("gst-plugins-base.patch")
         ]
 
-        self._download_and_build_via_meson(url, compiler_flags, patch_files)
+        self.download_and_build_via_meson(url, compiler_flags, patch_files)
 
     def get_patch_file_path(self, patch_file):
         return os.path.join(_file_path, "fastogt_patch", "{0}".format(patch_file))
@@ -568,7 +568,7 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-plugins-good/gst-plugins-good-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_bad(self, version, mfx: bool, vaapi: bool):
         compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
@@ -578,52 +578,52 @@ class BuildRequest(build_utils.BuildRequest):
             self.get_patch_file_path("gst-plugins-bad.patch")
         ]
 
-        self._download_and_build_via_meson(url, compiler_flags, patch_files)
+        self.download_and_build_via_meson(url, compiler_flags, patch_files)
 
         if mfx:
             compiler_flags_mfx = ['-DWITH_WAYLAND=OFF', '-DMFX_SINK=OFF']
-            self._clone_and_build_via_cmake(
+            self.clone_and_build_via_cmake(
                 GSTREAMER_MFX_URL, compiler_flags_mfx)
         if vaapi:
             compiler_flags_vaapi = ['--buildtype=release']
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(
                 GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
-            self._download_and_build_via_meson(url, compiler_flags_vaapi, [])
+            self.download_and_build_via_meson(url, compiler_flags_vaapi, [])
 
     def build_gst_plugins_ugly(self, version):
         compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
         url = '{0}gst-plugins-ugly/gst-plugins-ugly-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
                                                                     GST_PLUGINS_UGLY_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_fastoml(self):
         compiler_flags = ['--buildtype=release']
         url = build_utils.generate_fastogt_github_path('gst-fastoml')
-        self._clone_and_build_via_meson(url, compiler_flags)
+        self.clone_and_build_via_meson(url, compiler_flags)
 
     def build_gst_awss3(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
+        self.clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
     def build_gst_rs_plugins(self):
         plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
-        self._clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
+        self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
     def build_gst_libav(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(
             GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_nice(self):
         compiler_flags = ['--buildtype=release']
-        self._clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
+        self.clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
 
     def build_gst_rtsp(self, version):
         compiler_flags = ['--buildtype=release']
         url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(
             GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
-        self._download_and_build_via_meson(url, compiler_flags, [])
+        self.download_and_build_via_meson(url, compiler_flags, [])
 
 
 def str2bool(v):
@@ -639,7 +639,7 @@ def str2bool(v):
 
 if __name__ == "__main__":
     meson_default_version = '1.4.0'
-    srt_default_version = '1.5.3'
+    srt_default_version = '1.5.4'
     gstreamer_default_version = '1.26.9'
     # https://wpewebkit.org/release/
     wpe_version = '1.16.0'

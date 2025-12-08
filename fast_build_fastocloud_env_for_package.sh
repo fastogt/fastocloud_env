@@ -12,10 +12,10 @@ USER=fastocloud
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     if [ -n "$(command -v yum)" ]; then
       yum update -y
-      yum install -y git python3-setuptools python3-pip rpm
+      yum install -y git ca-certificates python3-setuptools python3-pip rpm
     elif [ -n "$(command -v apt-get)" ]; then
       apt-get update
-      apt-get install -y git python3-setuptools python3-pip rpm --no-install-recommends
+      apt-get install -y ca-certificates git python3-setuptools python3-pip rpm --no-install-recommends
     else
 :
     fi
@@ -36,6 +36,10 @@ else
 fi
 
 # install pyfastogt
+if [ -d "pyfastogt" ]; then
+    echo "Removing existing pyfastogt directory..."
+    rm -rf pyfastogt
+fi
 git clone https://gitlab.com/fastogt/pyfastogt
 cd pyfastogt
 pip3 install --break-system-packages .
