@@ -55,6 +55,8 @@ GST_RUST_PLUGINS = 'https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs'
 AWS_SDK_URL = 'https://github.com/aws/aws-sdk-cpp'
 AWS_S3_URL = 'https://github.com/amzn/amazon-s3-gst-plugin'
 GST_NICE_URL = 'https://gitlab.freedesktop.org/libnice/libnice'
+# WPE elements (wpesrc, wpevideosrc) are built-in to gst-plugins-bad since 1.16
+GST_CEF_URL = 'https://github.com/centricular/gstcefsrc'
 
 NDI_URL = 'https://github.com/Palakis/obs-ndi'
 FAAC_URL = 'https://github.com/knik0/faac/archive/1_30.tar.gz'
@@ -546,13 +548,13 @@ class BuildRequest(build_utils.BuildRequest):
         self.clone_and_build_via_cmake(NDI_URL, cmake_flags)
 
     def build_gstreamer(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         url = '{0}gstreamer/gstreamer-{1}.{2}'.format(
             GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_plugins_base(self, version):
-        compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
+        compiler_flags = ['--buildtype=release', '-Dexamples=disabled', '-Dintrospection=disabled']
         url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(
             GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
         patch_files = [
@@ -565,7 +567,7 @@ class BuildRequest(build_utils.BuildRequest):
         return os.path.join(_file_path, "fastogt_patch", "{0}".format(patch_file))
 
     def build_gst_plugins_good(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         url = '{0}gst-plugins-good/gst-plugins-good-{1}.{2}'.format(GST_PLUGINS_GOOD_SRC_ROOT, version,
                                                                     GST_PLUGINS_GOOD_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
@@ -585,13 +587,13 @@ class BuildRequest(build_utils.BuildRequest):
             self.clone_and_build_via_cmake(
                 GSTREAMER_MFX_URL, compiler_flags_mfx)
         if vaapi:
-            compiler_flags_vaapi = ['--buildtype=release']
+            compiler_flags_vaapi = ['--buildtype=release', '-Dintrospection=disabled']
             url = '{0}gstreamer-vaapi/gstreamer-vaapi-{1}.{2}'.format(
                 GSTREAMER_SRC_ROOT, version, GSTREAMER_ARCH_EXT)
             self.download_and_build_via_meson(url, compiler_flags_vaapi, [])
 
     def build_gst_plugins_ugly(self, version):
-        compiler_flags = ['--buildtype=release', '-Dgpl=enabled']
+        compiler_flags = ['--buildtype=release', '-Dgpl=enabled', '-Dintrospection=disabled']
         url = '{0}gst-plugins-ugly/gst-plugins-ugly-{1}.{2}'.format(GST_PLUGINS_UGLY_SRC_ROOT, version,
                                                                     GST_PLUGINS_UGLY_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
@@ -610,20 +612,24 @@ class BuildRequest(build_utils.BuildRequest):
         self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
     def build_gst_libav(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(
             GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
 
     def build_gst_nice(self):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         self.clone_and_build_via_meson(GST_NICE_URL, compiler_flags)
 
     def build_gst_rtsp(self, version):
-        compiler_flags = ['--buildtype=release']
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
         url = '{0}gst-rtsp-server/gst-rtsp-server-{1}.{2}'.format(
             GST_RTSP_SRC_ROOT, version, GST_RTSP_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
+
+    def build_gst_cef(self):
+        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
+        self.clone_and_build_via_meson(GST_CEF_URL, compiler_flags)
 
 
 def str2bool(v):
@@ -959,6 +965,14 @@ if __name__ == "__main__":
                               action='store_false',
                               default=False)
 
+    # gst-cef (cefsrc element)
+    gst_cef_grp = parser.add_mutually_exclusive_group()
+    gst_cef_grp.add_argument('--with-gst-cef', help='build gst-cef/cefsrc (version: git master)',
+                             dest='with_gst_cef', action='store_true', default=False)
+    gst_cef_grp.add_argument('--without-gst-cef', help='build without gst-cef (default)', dest='with_gst_cef',
+                             action='store_false',
+                             default=True)
+
     # other
     parser.add_argument("--hostname", help="server hostname (default: {0})".format(
         DEFAULT_HOSTNAME), default=DEFAULT_HOSTNAME)
@@ -1100,5 +1114,8 @@ if __name__ == "__main__":
 
     if argv.with_gst_rtsp and arg_install_gstreamer_packages:
         request.build_gst_rtsp(argv.gstreamer_version)
+
+    if argv.with_gst_cef and arg_install_gstreamer_packages:
+        request.build_gst_cef()
 
     check_plugins()
