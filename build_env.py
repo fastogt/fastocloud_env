@@ -397,8 +397,19 @@ class BuildRequest(build_utils.BuildRequest):
 
             with open("/etc/hostname", "w") as f:
                 f.write(self.host)
+
+            # Actually set the hostname for current session
+            subprocess.run(['hostnamectl', 'set-hostname', self.host], check=True)
         except PermissionError:
             print(f"Warning: Unable to set hostname to '{self.host}' (permission denied)")
+        except subprocess.CalledProcessError as e:
+            print(f"Warning: Failed to set hostname with hostnamectl: {e}")
+        except FileNotFoundError:
+            # hostnamectl not available, try hostname command
+            try:
+                subprocess.run(['hostname', self.host], check=True)
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                print(f"Warning: Could not activate hostname '{self.host}' (wrote to /etc/hostname only)")
 
     def prepare_docker(self):
         pass
@@ -449,10 +460,12 @@ class BuildRequest(build_utils.BuildRequest):
             if not os.path.exists(dst):
                 os.makedirs(dst, exist_ok=True)
 
-            names = map(lambda name: (os.path.join(src, name),
-                        os.path.join(dst, name)), os.listdir(src))
-
-            for srcname, dstname in names:
+            for name in os.listdir(src):
+                srcname = os.path.join(src, name)
+                if not os.path.isfile(srcname):  # Skip directories
+                    continue
+                dstname = os.path.join(dst, name)
+                print(f"Installing nginx config: {name}")
                 shutil.copy2(srcname, dstname)
 
     def build_faac(self):
@@ -540,7 +553,6 @@ class BuildRequest(build_utils.BuildRequest):
 
     def build_gst_plugins_base(self, version):
         compiler_flags = ['--buildtype=release', '-Dexamples=disabled']
-#
         url = '{0}gst-plugins-base/gst-plugins-base-{1}.{2}'.format(
             GST_PLUGINS_BASE_SRC_ROOT, version, GST_PLUGINS_BASE_ARCH_EXT)
         patch_files = [
@@ -628,11 +640,11 @@ def str2bool(v):
 if __name__ == "__main__":
     meson_default_version = '1.4.0'
     srt_default_version = '1.5.3'
-    gstreamer_default_version = '1.24.12'
+    gstreamer_default_version = '1.26.9'
     # https://wpewebkit.org/release/
     wpe_version = '1.16.0'
     wpe_backend_version = '1.14.3'
-    wpe_webkit_version = '2.46.3'
+    wpe_webkit_version = '2.50.2'
     ffmpeg_version = 'n7.1.1'
 
     host_os = system_info.get_os()

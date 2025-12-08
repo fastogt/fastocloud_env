@@ -37,6 +37,10 @@ else
 fi
 
 # install pyfastogt
+if [ -d "pyfastogt" ]; then
+    echo "Removing existing pyfastogt directory..."
+    rm -rf pyfastogt
+fi
 git clone https://gitlab.com/fastogt/pyfastogt
 cd pyfastogt
 pip3 install --break-system-packages .
