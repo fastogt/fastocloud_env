@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+import sys
+
+# Check Python version before any external imports
+if sys.version_info < (3, 10):
+    print('Tried to start script with an unsupported version of Python. build_fastocloud_env_from_repo requires Python 3.10 or greater')
+    sys.exit(1)
+
 import argparse
 
 from pyfastogt import system_info

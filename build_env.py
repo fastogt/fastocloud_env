@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+import sys
+
+# Check Python version before any external imports
+if sys.version_info < (3, 10):  # pyfastostream
+    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.10 or greater')
+    sys.exit(1)
+
 import argparse
 import os
 import subprocess
 import shutil
-import sys
 from abc import ABCMeta, abstractmethod
 
 from pyfastogt import system_info, build_utils, utils
@@ -13,10 +19,6 @@ from check_plugins import check_plugins
 _file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Script for building environment on clean machine
-
-if sys.version_info < (3, 10):  # pyfastostream
-    print('Tried to start script with an unsupported version of Python. build_env requires Python 3.10 or greater')
-    sys.exit(1)
 
 DEFAULT_HOSTNAME = "fastocloud.com"
 
