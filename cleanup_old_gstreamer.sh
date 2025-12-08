@@ -1,12 +1,12 @@
 #!/bin/bash
-# Script to remove ALL GStreamer libraries from /usr/local/lib
+# Script to remove ALL GStreamer and libnice libraries from /usr/local/lib
 # Use this before reinstalling/updating GStreamer
 
 set -e
 
 LIB_DIR="/usr/local/lib"
 
-echo "=== Removing ALL GStreamer libraries from $LIB_DIR ==="
+echo "=== Removing ALL GStreamer and libnice libraries from $LIB_DIR ==="
 echo ""
 
 # Check if running as root
@@ -18,12 +18,16 @@ fi
 cd "$LIB_DIR"
 
 # Count files before removal
-TOTAL_FILES=$(find . -maxdepth 1 \( -name "libgst*.so*" -o -name "libgst*.a" -o -name "libgst*.la" \) | wc -l)
-echo "Found $TOTAL_FILES GStreamer library files to remove"
+GST_FILES=$(find . -maxdepth 1 \( -name "libgst*.so*" -o -name "libgst*.a" -o -name "libgst*.la" \) | wc -l)
+NICE_FILES=$(find . -maxdepth 1 \( -name "libnice*.so*" -o -name "libnice*.a" -o -name "libnice*.la" \) | wc -l)
+TOTAL_FILES=$((GST_FILES + NICE_FILES))
+echo "Found $GST_FILES GStreamer library files to remove"
+echo "Found $NICE_FILES libnice library files to remove"
+echo "Total: $TOTAL_FILES files"
 echo ""
 
 # Confirm before proceeding
-echo "WARNING: This will remove ALL GStreamer libraries, symlinks, and static libraries"
+echo "WARNING: This will remove ALL GStreamer and libnice libraries, symlinks, and static libraries"
 echo "Press Ctrl+C within 5 seconds to cancel..."
 sleep 5
 echo ""
@@ -32,6 +36,12 @@ echo ""
 echo "Step 1: Removing all GStreamer library files..."
 find . -maxdepth 1 \( -name "libgst*.so*" -o -name "libgst*.a" -o -name "libgst*.la" \) -delete
 echo "Removed all GStreamer library files"
+echo ""
+
+# Step 1b: Remove all libnice library files
+echo "Step 1b: Removing all libnice library files..."
+find . -maxdepth 1 \( -name "libnice*.so*" -o -name "libnice*.a" -o -name "libnice*.la" \) -delete
+echo "Removed all libnice library files"
 echo ""
 
 # Step 2: Remove GStreamer plugins directory
@@ -76,12 +86,26 @@ echo ""
 
 # Step 5: Verify removal
 echo "Step 5: Verifying removal..."
-REMAINING=$(find . -maxdepth 1 -name "libgst*" | wc -l)
-if [ "$REMAINING" -gt 0 ]; then
-    echo "WARNING: $REMAINING GStreamer files still remain:"
+GST_REMAINING=$(find . -maxdepth 1 -name "libgst*" | wc -l)
+NICE_REMAINING=$(find . -maxdepth 1 -name "libnice*" | wc -l)
+TOTAL_REMAINING=$((GST_REMAINING + NICE_REMAINING))
+
+if [ "$GST_REMAINING" -gt 0 ]; then
+    echo "WARNING: $GST_REMAINING GStreamer files still remain:"
     find . -maxdepth 1 -name "libgst*"
 else
-    echo "SUCCESS: All GStreamer libraries removed from $LIB_DIR"
+    echo "SUCCESS: All GStreamer libraries removed"
+fi
+
+if [ "$NICE_REMAINING" -gt 0 ]; then
+    echo "WARNING: $NICE_REMAINING libnice files still remain:"
+    find . -maxdepth 1 -name "libnice*"
+else
+    echo "SUCCESS: All libnice libraries removed"
+fi
+
+if [ "$TOTAL_REMAINING" -eq 0 ]; then
+    echo "SUCCESS: All libraries removed from $LIB_DIR"
 fi
 echo ""
 
