@@ -14,7 +14,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     if [ -n "$(command -v yum)" ]; then
       yum update -y
       yum install -y git ca-certificates python3-setuptools python3-pip rpm
-    elif [ -n "$(command -v apt-get)" ]]; then
+    elif [ -n "$(command -v apt-get)" ]; then
       apt-get update
       apt-get install -y ca-certificates git python3-setuptools python3-pip rpm --no-install-recommends
     else
