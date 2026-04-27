@@ -616,12 +616,11 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         self.clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
-    # OPTIONAL: Rust plugins
+    # Rust plugins (built by default; disable with --without-gst-rs-plugins)
     # - gst-plugin-ndi:        NDI source/sink
-    # - gst-plugin-webrtchttp: whipsink / whepsrc (WebRTC-HTTP)
+    # - gst-plugin-webrtchttp: whipsink / whepsrc (WebRTC-HTTP, used by fastocloud_pro)
     # - gst-plugin-mp4:        cmafmux / isofmp4mux (fragmented-MP4 muxers, required for AV1+HLS)
     # - gst-plugin-hlssink3:   hlssink3 (TS) + hlscmafsink (CMAF/fMP4, required for AV1+HLS)
-    # (default: OFF, requires --with-gst-rs-plugins)
     def build_gst_rs_plugins(self):
         plugins = [
             "gst-plugin-ndi",
@@ -930,10 +929,10 @@ if __name__ == "__main__":
                                       action='store_false',
                                       default=False)
 
-    # gst-plugins-rs
+    # gst-plugins-rs (default: ON — required for whipsink/whepsrc/cmafmux/hlscmafsink/NDI)
     gst_plugins_rs_grp = parser.add_mutually_exclusive_group()
-    gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins',
-                                    dest='with_gst_rs_plugins', action='store_true', default=False)
+    gst_plugins_rs_grp.add_argument('--with-gst-rs-plugins', help='build with rust gst-plugins (default)',
+                                    dest='with_gst_rs_plugins', action='store_true', default=True)
     gst_plugins_rs_grp.add_argument('--without-gst-rs-plugins', help='build without gst-plugins-rs',
                                     dest='with_gst_rs_plugins', action='store_false', default=True)
 
