@@ -616,10 +616,19 @@ class BuildRequest(build_utils.BuildRequest):
         compiler_flags = ['--buildtype=release']
         self.clone_and_build_via_meson(AWS_S3_URL, compiler_flags)
 
-    # OPTIONAL: Rust plugins including NDI and WebRTC-HTTP (whipsink/whepsrc)
+    # OPTIONAL: Rust plugins
+    # - gst-plugin-ndi:        NDI source/sink
+    # - gst-plugin-webrtchttp: whipsink / whepsrc (WebRTC-HTTP)
+    # - gst-plugin-mp4:        cmafmux / isofmp4mux (fragmented-MP4 muxers, required for AV1+HLS)
+    # - gst-plugin-hlssink3:   hlssink3 (TS) + hlscmafsink (CMAF/fMP4, required for AV1+HLS)
     # (default: OFF, requires --with-gst-rs-plugins)
     def build_gst_rs_plugins(self):
-        plugins = ["gst-plugin-ndi", "gst-plugin-webrtchttp"]
+        plugins = [
+            "gst-plugin-ndi",
+            "gst-plugin-webrtchttp",
+            "gst-plugin-mp4",
+            "gst-plugin-hlssink3",
+        ]
         self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
     def build_gst_libav(self, version):
