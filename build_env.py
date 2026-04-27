@@ -620,13 +620,16 @@ class BuildRequest(build_utils.BuildRequest):
     # Rust plugins (built by default; disable with --without-gst-rs-plugins)
     # - gst-plugin-ndi:        NDI source/sink
     # - gst-plugin-webrtchttp: whipsink / whepsrc (WebRTC-HTTP, used by fastocloud_pro)
-    # - gst-plugin-mp4:        cmafmux / isofmp4mux (fragmented-MP4 muxers, required for AV1+HLS)
+    # - gst-plugin-isobmff:    cmafmux / isofmp4mux / mp4mux (fragmented-MP4 muxers,
+    #                          required for AV1+HLS). Note: workspace renamed
+    #                          mux/mp4 -> mux/isobmff upstream; plugin crate
+    #                          is gst-plugin-isobmff (not gst-plugin-mp4).
     # - gst-plugin-hlssink3:   hlssink3 (TS) + hlscmafsink (CMAF/fMP4, required for AV1+HLS)
     def build_gst_rs_plugins(self):
         plugins = [
             "gst-plugin-ndi",
             "gst-plugin-webrtchttp",
-            "gst-plugin-mp4",
+            "gst-plugin-isobmff",
             "gst-plugin-hlssink3",
         ]
         self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
