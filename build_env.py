@@ -444,11 +444,12 @@ class BuildRequest(build_utils.BuildRequest):
         self.update_pyfastostream()
         self.install_via_pip3('speedtest-cli')
 
-    # OPTIONAL: Install cargo-c for building Rust GStreamer plugins
-    # (only needed when --with-gst-rs-plugins is enabled)
+    # Install cargo-c for building Rust GStreamer plugins.
+    # Always uses the latest cargo-c — pinning to 0.9.x stops working with
+    # current gst-plugins-rs because that release's bundled cargo manifest
+    # parser doesn't understand `resolver = "3"` (introduced in Rust 1.84).
     def install_cargo_c(self):
-        args_cargo = ['--version', '0.9.29', 'cargo-c']  # ubuntu 24 needs cargo-c 0.9.29
-        self.install_via_cargo_list(args_cargo)
+        self.install_via_cargo('cargo-c')
 
     def install_nginx(self):
         self.install_package('nginx')
@@ -631,7 +632,9 @@ class BuildRequest(build_utils.BuildRequest):
         self.clone_and_build_via_cargo_c_arr(GST_RUST_PLUGINS, plugins)
 
     def build_gst_libav(self, version):
-        compiler_flags = ['--buildtype=release', '-Dintrospection=disabled']
+        # gst-libav 1.26 dropped the `introspection` meson option (libav has
+        # no public API to introspect — it's a thin wrapper around ffmpeg).
+        compiler_flags = ['--buildtype=release']
         url = '{0}gst-libav/gst-libav-{1}.{2}'.format(
             GST_LIBAV_SRC_ROOT, version, GST_LIBAV_ARCH_EXT)
         self.download_and_build_via_meson(url, compiler_flags, [])
