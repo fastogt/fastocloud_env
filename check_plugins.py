@@ -207,6 +207,7 @@ PLUGINS = ['decodebin3',
            'ndisink',
            'awss3src',
            'awss3sink',
+           'fastowhisper',
            ]
 
 PLUGINS_ML = [
@@ -231,9 +232,11 @@ PLUGINS_ML = [
 def check_plugins():
     env = os.environ.copy()
     gst_plugin_path = env.get('GST_PLUGIN_PATH', '')
+    fastocloud_gst = env.get('FASTOCLOUD_GST_PLUGIN_PATH', '/usr/local/lib/fastocloud/gst-plugins/')
     env['GST_PLUGIN_PATH'] = (
         f"{gst_plugin_path}:/usr/local/lib/gstreamer-1.0/"
         ":/opt/nvidia/deepstream/deepstream/lib/gst-plugins/"
+        f":{fastocloud_gst}"
     ).lstrip(':')
 
     with open(os.devnull, 'w') as devnull:
