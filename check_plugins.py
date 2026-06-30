@@ -230,10 +230,11 @@ PLUGINS_ML = [
 
 def check_plugins():
     env = os.environ.copy()
-    ld_library_path = env.get('LD_LIBRARY_PATH', '')
-    env['LD_LIBRARY_PATH'] = f"{ld_library_path}:/usr/local/TensorRT-7.2.2.3/lib:/usr/local/VideoFX/lib/".lstrip(':')
     gst_plugin_path = env.get('GST_PLUGIN_PATH', '')
-    env['GST_PLUGIN_PATH'] = f"{gst_plugin_path}:/usr/local/lib/gstreamer-1.0/".lstrip(':')
+    env['GST_PLUGIN_PATH'] = (
+        f"{gst_plugin_path}:/usr/local/lib/gstreamer-1.0/"
+        ":/opt/nvidia/deepstream/deepstream/lib/gst-plugins/"
+    ).lstrip(':')
 
     with open(os.devnull, 'w') as devnull:
         print('\nPlugins for FastoCloud COM/PRO:')
