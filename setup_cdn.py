@@ -28,20 +28,71 @@ from contextlib import closing
 from typing import Dict, List, Any
 
 
+CDN_TYPE_FASTOCLOUD = 0
+CDN_TYPE_NGINX = 1
+CDN_TYPE_GOCDN = 2
+
+# lua_shared_dict and init_by_lua_block are http-context directives, so they
+# cannot sit in a server block and may only be declared once. conf.d is included
+# from http, which makes it the one place both are legal for every vhost.
+NGINX_LUA_SHARED_TEMPLATE = """
+lua_shared_dict touched_files 10m;
+
+init_by_lua_block {
+  function extract_stream_id(uri)
+    return string.match(uri, "^/([^/]+)/")
+  end
+}
+"""
+
+# CDNNginxController polls /touched-files, so an NGINX-type node has to expose
+# it; a FASTOCLOUD or GOCDN node reports touches itself and gets none of this.
+NGINX_LUA_TOUCHED_LOCATION = """
+    location = /touched-files {
+        content_by_lua_block {
+            local cjson = require "cjson"
+            local touched = ngx.shared.touched_files
+            local files = {}
+
+            for _, key in ipairs(touched:get_keys(0)) do
+                if string.sub(key, 1, 7) == "stream:" then
+                    table.insert(files, {
+                        stream_id = string.sub(key, 8),
+                        timestamp = touched:get(key)
+                    })
+                end
+            end
+
+            ngx.header.content_type = "application/json"
+            ngx.say(cjson.encode(files))
+        }
+    }
+"""
+
+NGINX_LUA_TRACK = """
+        access_by_lua_block {
+            local stream_id = extract_stream_id(ngx.var.uri)
+            if stream_id then
+                ngx.shared.touched_files:set("stream:" .. stream_id, ngx.time(), 3600)
+            end
+        }
+"""
+
 NGINX_TEMPLATE = """
 server {{
     access_log {access_log};
     error_log {error_log};
 
-    {listen_port} 
+    {listen_port}
 
     server_name _;
 
     location = /status {{
         stub_status;
     }}
-
+{lua_touched_location}
     location / {{
+{lua_track}
         # Disable cache
         add_header Cache-Control no-cache;
 
@@ -137,6 +188,8 @@ FASTOCLOUD_CONFIG_DIR = "/etc"
 
 NGINX_SITES_AVAILABLE_FOLDER = "/etc/nginx/sites-available"
 NGINX_SITES_ENABLED_FOLDER = "/etc/nginx/sites-enabled"
+NGINX_CONF_D_FOLDER = "/etc/nginx/conf.d"
+NGINX_LUA_SHARED_FILENAME = "fastocloud_lua.conf"
 
 
 def is_open_socket(host, port) -> bool:
@@ -207,8 +260,8 @@ class CdnConfigBuilder:
                         print("Type should be an int value")
                         continue
 
-                    if type < 0 or type >= 2:
-                        print("Type can be only 0 or 1")
+                    if type < CDN_TYPE_FASTOCLOUD or type > CDN_TYPE_GOCDN:
+                        print("Type can be only 0 (fastocloud), 1 (nginx) or 2 (gocdn)")
                         continue
 
                     break
@@ -267,6 +320,8 @@ class CdnConfigBuilder:
             f.write(config)
 
     def _build_nginx_config(self, data: Dict[str, List[Dict[str, Any]]]) -> None:
+        uses_lua = False
+
         for template in (HLS_TEMPLATE, VODS_TEMPLATE, CODS_TEMPLATE):
             nodes = data[template["name"]]
 
@@ -275,17 +330,48 @@ class CdnConfigBuilder:
             for node in nodes:
                 port = node["url"].port
                 port_string = self.__get_listen_port_string(port)
+                lua = node["type"] == CDN_TYPE_NGINX
+                uses_lua = uses_lua or lua
 
                 server = NGINX_TEMPLATE.format(
                     access_log=template["access_log"].format(port=port),
                     error_log=template["error_log"].format(port=port),
                     listen_port=port_string,
                     alias=template["alias"],
+                    lua_touched_location=NGINX_LUA_TOUCHED_LOCATION if lua else "",
+                    lua_track=NGINX_LUA_TRACK if lua else "",
                 ).expandtabs(4)
 
                 new_config += "\n" + server
 
             self._write_nginx_config(template["filename"], new_config)
+
+        self._write_nginx_lua_shared(uses_lua)
+
+    def _write_nginx_lua_shared(self, uses_lua: bool) -> None:
+        path = os.path.join(NGINX_CONF_D_FOLDER, NGINX_LUA_SHARED_FILENAME)
+
+        if not uses_lua:
+            # Leaving it behind would declare a shared dict no vhost uses, and
+            # break nginx outright on a host without the Lua module.
+            if os.path.exists(path):
+                os.remove(path)
+            return
+
+        with open(path, "w+") as shared:
+            shared.write(NGINX_LUA_SHARED_TEMPLATE)
+
+        # Every Lua directive above is unknown to nginx without this module, and
+        # an unknown directive stops nginx starting at all — including vhosts
+        # that have nothing to do with the CDN.
+        try:
+            subprocess.check_call(["apt-get", "install", "-y", "libnginx-mod-http-lua"])
+        except (subprocess.CalledProcessError, OSError) as err:
+            print(
+                f"WARNING: could not install libnginx-mod-http-lua ({err}).\n"
+                f"nginx will refuse to start until it is installed or "
+                f"{path} is removed."
+            )
 
     def _write_nginx_config(self, filename: str, config: str) -> None:
         available_path = os.path.join(NGINX_SITES_AVAILABLE_FOLDER, filename)

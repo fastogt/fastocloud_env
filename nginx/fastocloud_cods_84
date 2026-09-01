@@ -7,18 +7,7 @@ server {
 
   server_name _;
 
-  # Shared memory for touch file tracking
-  lua_shared_dict touched_files 10m;
 
-  # Initialize Lua functions
-  init_by_lua_block {
-    -- Function to extract stream ID from URI
-    function extract_stream_id(uri)
-      -- Match patterns like /stream123/segment001.ts
-      local stream_id = string.match(uri, "^/([^/]+)/")
-      return stream_id
-    end
-  }
 
   location = /status {
     stub_status;
@@ -26,6 +15,7 @@ server {
 
   location = /touched-files {
     content_by_lua_block {
+      local cjson = require "cjson"
       local touched = ngx.shared.touched_files
       local files = {}
 
